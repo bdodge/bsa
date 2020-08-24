@@ -1,0 +1,218 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifdef _WIN32
+	#include <Windows.h>
+    #include "stdids.h"
+#else
+	#include "bsawinapi.h"
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_BCDIAL DIALOG DISCARDABLE  0, 0, 262, 154
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "",IDC_BUTTON1,5,5,250,28
+    PUSHBUTTON      "",IDC_BUTTON2,73,37,182,14
+    PUSHBUTTON      "",IDC_BUTTON3,6,37,30,14
+    PUSHBUTTON      "",IDC_BUTTON4,40,37,30,14
+    PUSHBUTTON      "Store",IDC_BUTTON5,202,55,53,14
+    PUSHBUTTON      "Recall",IDC_BUTTON6,202,71,53,14
+    PUSHBUTTON      "Sci/Trig",IDC_BUTTON7,202,87,53,14
+    PUSHBUTTON      "Program",IDC_BUTTON8,202,103,53,14
+    PUSHBUTTON      "Constants",IDC_BUTTON10,202,119,53,14
+    PUSHBUTTON      "=",IDC_BUTTON11,90,135,53,14
+    PUSHBUTTON      "D",IDC_BUTTON12,6,55,25,14
+    PUSHBUTTON      "A",IDC_BUTTON13,6,71,25,14
+    PUSHBUTTON      "7",IDC_BUTTON14,6,87,25,14
+    PUSHBUTTON      "4",IDC_BUTTON15,6,103,25,14
+    PUSHBUTTON      "1",IDC_BUTTON16,6,119,25,14
+    PUSHBUTTON      "0",IDC_BUTTON17,6,135,25,14
+    PUSHBUTTON      "E",IDC_BUTTON18,34,55,25,14
+    PUSHBUTTON      "B",IDC_BUTTON19,34,71,25,14
+    PUSHBUTTON      "8",IDC_BUTTON20,34,87,25,14
+    PUSHBUTTON      "5",IDC_BUTTON21,34,103,25,14
+    PUSHBUTTON      "2",IDC_BUTTON22,34,119,25,14
+    PUSHBUTTON      ".",IDC_BUTTON23,34,135,25,14
+    PUSHBUTTON      "F",IDC_BUTTON24,62,55,25,14
+    PUSHBUTTON      "C",IDC_BUTTON25,62,71,25,14
+    PUSHBUTTON      "9",IDC_BUTTON26,62,87,25,14
+    PUSHBUTTON      "6",IDC_BUTTON27,62,103,25,14
+    PUSHBUTTON      "3",IDC_BUTTON28,62,119,25,14
+    PUSHBUTTON      "+/-",IDC_BUTTON29,62,135,25,14
+    PUSHBUTTON      "Clear",IDC_BUTTON30,90,55,25,14
+    PUSHBUTTON      "|",IDC_BUTTON31,90,71,25,14
+    PUSHBUTTON      "^",IDC_BUTTON32,90,87,25,14
+    PUSHBUTTON      "X",IDC_BUTTON33,90,103,25,14
+    PUSHBUTTON      "+",IDC_BUTTON34,90,119,25,14
+    PUSHBUTTON      "Quit",IDC_BUTTON35,230,135,25,14
+    PUSHBUTTON      "All",IDC_BUTTON36,118,55,25,14
+    PUSHBUTTON      "&&",IDC_BUTTON37,118,71,25,14
+    PUSHBUTTON      "~",IDC_BUTTON38,118,87,25,14
+    PUSHBUTTON      "/",IDC_BUTTON39,118,103,25,14
+    PUSHBUTTON      "-",IDC_BUTTON40,118,119,25,14
+    PUSHBUTTON      "exp",IDC_BUTTON41,202,135,25,14
+    PUSHBUTTON      "Del",IDC_BUTTON42,146,55,25,14
+    PUSHBUTTON      "<<",IDC_BUTTON43,146,71,25,14
+    PUSHBUTTON      "int",IDC_BUTTON44,146,87,25,14
+    PUSHBUTTON      "%",IDC_BUTTON45,146,103,25,14
+    PUSHBUTTON      "x^2",IDC_BUTTON46,146,119,25,14
+    PUSHBUTTON      "(",IDC_BUTTON47,146,135,25,14
+    PUSHBUTTON      "Cpy",IDC_BUTTON48,174,55,25,14
+    PUSHBUTTON      ">>",IDC_BUTTON49,174,71,25,14
+    PUSHBUTTON      "frac",IDC_BUTTON50,174,87,25,14
+    PUSHBUTTON      "1/X",IDC_BUTTON51,174,103,25,14
+    PUSHBUTTON      "sqrt",IDC_BUTTON52,174,119,25,14
+    PUSHBUTTON      ")",IDC_BUTTON53,174,135,25,14
+END
+
+IDD_ABOUT DIALOG DISCARDABLE  40, 40, 186, 68
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About BCALC"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,46,50,14
+    LTEXT           "BCALC v6.0 - Programmable Calculator",IDC_STATIC,44,20,
+                    127,9
+    ICON            IDI_BCALCICON,IDC_STATIC,15,14,21,20
+    LTEXT           "Copyright (C) 1991-2005 Brian Dodge",IDC_STATIC,43,31,
+                    125,8
+END
+
+IDD_LOADFILE DIALOG DISCARDABLE  40, 40, 186, 46
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BCALC - Load Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,25,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,25,50,14
+    EDITTEXT        IDC_FILENAME,7,7,172,12,ES_AUTOHSCROLL
+END
+
+IDD_SAVEFILE DIALOG DISCARDABLE  40, 40, 186, 47
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BCALC - Store Program"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,26,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,26,50,14
+    EDITTEXT        IDC_FILENAME,7,7,172,13,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_BCDIAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 255
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    IDD_LOADFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 39
+    END
+
+    IDD_SAVEFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 40
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_BCALCICON           ICON    DISCARDABLE     "bcalc.ico"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

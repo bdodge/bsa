@@ -1,0 +1,6 @@
+*.bak
+.dep*
+.obj*
+*.o
+*.a
+*.exe

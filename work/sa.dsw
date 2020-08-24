@@ -1,0 +1,450 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "bcalc"=.\bcalc\bcalc.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bcalc
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name bsaframe
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaopenfile
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsapersist
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsautils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsawiz
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaxml
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "bcalclib"=.\bcalclib\bcalclib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bcalclib
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bed"=.\bed\bed.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bed
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name bsabs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaftp
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsashell
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsautils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsawiz
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaxml
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsasercom
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsapersist
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsatelcom
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaframe
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bcalclib
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaopenfile
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "bmibtool"=.\snmp\bmibtool\bmibtool.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    bmibtool
+    .\snmp
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name bsabs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaframe
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsamibc
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaopenfile
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsapersist
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsautils
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "brc"=.\brc\brc.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\brc
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name bsabs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsahttp
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsautils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsawiz
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsaxml
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name bsadocbs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name zlib
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "bsabs"=.\bsabs\bsabs.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsabs
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsadb"=.\bsadb\bsadb.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsaframe"=.\bsaframe\bsaframe.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsaframe
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsaftp"=.\bsaftp\bsaftp.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsaftp
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsamibc"=.\bsamibc\bsamibc.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsamibc
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsaopenfile"=.\bsaopenfile\bsaopenfile.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsapersist"=.\bsapersist\bsapersist.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsasercom"=.\bsasercom\bsasercom.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsasercom
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsashell"=.\bsashell\bsashell.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsashell
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsasnmp"=.\snmp\bsasnmp\bsasnmp.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    bsasnmp
+    .\snmp\bsasnmp
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsatelcom"=.\bsatelcom\bsatelcom.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsatelcom
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsautils"=.\bsautils\bsautils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsawinapi"=.\bsawinapi\bsawinapi.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsawiz"=.\bsawiz\bsawiz.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsawiz
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "bsaxml"=.\bsaxml\bsaxml.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .\bsaxml
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "zlib"=..\opensource\zlib\zlib.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    ..\opensource\zlib
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+    begin source code control
+    Perforce Project
+    .
+    end source code control
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

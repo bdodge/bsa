@@ -1,0 +1,68 @@
+<!--***************************************************************************
+    Copyright (c) 2019 Zoran Corporation.
+    $Header: //depot/imgeng/sw/inferno/appsrc/build/tools/docgen/docgen.css#2 $
+    $Change: 152127 $ $Date: 2010/02/12 $
+*************************************************************************** -->
+
+bbody,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	color: #333333;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+body {
+    background-color:#FFFFFF;
+}
+
+.title {
+	font: bold 18pt Verdana, Arial, Helvetica, sans-serif;
+	color: #404040;
+}
+
+.copyright {
+	font: normal 9pt Verdana, Arial, Helvetica, sans-serif;
+	color: #000000;
+}
+
+.doctitle {
+	font: bold 14pt Verdana, Arial, Helvetica, sans-serif;
+	color: #AA6666;
+}
+
+.doctext {
+    font: 13pt Times, Roman;
+	color: #000000;
+	margin-left: 15pt; margin-right: 15pt;
+}
+
+.docdir {
+	font: 12pt Verdana, Arial, Helvetica, sans-serif;
+	margin-left: 15pt;
+}
+
+.subsysdir {
+	font: 12pt Verdana, Arial, Helvetica, sans-serif;
+	margin-left: 15pt;
+}
+
+.subsysstatic {
+	font: 12pt Verdana, Arial, Helvetica, sans-serif;
+	margin-left: 15pt;
+}
+
+.subsystitle {
+	font: bold 14pt Verdana, Arial, Helvetica, sans-serif;
+	color: #444488;
+}
+
+.subsystext {
+    font: 13pt Times, Roman;
+	color: #000000;
+	margin-left: 15pt; margin-right: 15pt;
+}
+
+

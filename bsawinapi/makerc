@@ -1,0 +1,7 @@
+
+bsarc: bsarc.o
+	gcc -o bsarc bsarc.o
+
+bsarc.o: bsarc.c
+	gcc -c bsarc.c
+

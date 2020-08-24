@@ -1,0 +1,781 @@
+//--------------------------------------------------------------------
+//
+// File: font.c
+// Desc: text functions for winapi
+// Auth: Brian Dodge
+//
+// (C)opyright 2003  - BSA and Brian Dodge
+// ALL RIGHTS RESERVED
+//
+//--------------------------------------------------------------------
+
+
+#ifndef Windows
+#include "winapix.h"
+#ifdef LINUX
+#include <fontconfig/fontconfig.h>
+#endif
+//#define DBG_FONTS 1
+
+//-----------------------------------------------------------------------------
+
+struct _tag_fontSubs
+{
+	LPCTSTR winname;
+	LPCTSTR x11name;
+}
+fontSubstitutions[] = 
+{
+	/* MS Windows Name */			/* X11 name */
+	{ _T("Arial"),				 	_T("helvetica") },
+	{ _T("Arial"), _T("
+	{ _T("Bembo"),					_T("bembo") },
+	{ _T("Bookman"),				_T("bookman") },
+	{ _T("Century Schoolbook"),		_T("century schoolbook") },
+	{ _T("Chancery"),				_T("chancery") },
+	{ _T("Charter"),				_T("charter") },
+	{ _T("Courier"),				_T("courier") },
+	{ _T("Courier New"),			_T("courier") },
+	{ _T("Helvetica"),				_T("clean") },
+	{ _T("Fixed"),					_T("fixed") },
+	{ _T("Gallant"),				_T("gallant") },
+	{ _T("Gill"),					_T("gill") },
+	{ _T("GillSansSerif"),			_T("gillsans") },
+	{ _T("Gothic"),					_T("gothic") },
+	{ _T("Helvetica"),				_T("helvetica") },
+	{ _T("Lucida Sans"),			_T("lucida sans") },
+	{ _T("Lucida Console"),			_T("lucidatypewriter") },
+	{ _T("Microsoft Sans Serif"),	_T("helvetica") },
+	{ _T("New Century Schoolbook"),	_T("new century schoolbook") },
+	{ _T("Palatino"),				_T("palatino") },
+	{ _T("System"),					_T("lucidatypewriter") },
+	{ _T("Times Roman Bold"),		_T("timb") },
+	{ _T("Times Roman Bold Italic"),_T("timbi") },
+	{ _T("Times Roman"),			_T("times") },
+	{ _T("Times Italic"),			_T("timi") },
+	{ _T("Times New Roman"),		_T("times") },
+	{ _T("Wingdings"),				_T("zapfdingbats") },
+	{ _T("ZapfChancery"),			_T("zapfchancery") },
+	{ _T("ZapfDingbats"),			_T("zapfdingbats") },
+	{ NULL,				 			NULL }
+};
+
+struct
+{
+	LPCTSTR familyname;
+	LPCTSTR facename;
+}
+faceSubstitutions[] =
+{
+	{	_T("Swiss"),		_T("helvetica") },
+	{	_T("SansSerif"),	_T("helvetica") },
+	{ 	NULL, 				NULL }
+};
+
+extern LPZGDIOBJ _zg_zgdi_objects;
+extern HFONT	 _zg_sysFont;
+
+//**************************************************************************
+HFONT _w_newFont(LPCTSTR pFace, LPTEXTMETRIC ptm, BOOL antialias)
+{
+	LPZGDIOBJ 	obj;
+	LPZFONT		font;
+	int			size;
+	int			found;
+	
+	char*		szWeight;
+	char*		szSetwidth;
+	char*		szAngle;
+	
+	int			stage;
+	
+	XFontStruct*	xfont;
+
+	#ifdef XFT_FONT
+	XftFont*		xftfont;
+	#endif
+
+	char			szFace[BSA_MAX_FONTFACE_LEN + 2];
+	char*			pf;
+	char			fontname[256];
+	#ifdef DBG_FONTS	
+	char			xFace[256];
+	#endif
+	
+	if(! pFace || (_tcslen(pFace) >= BSA_MAX_FONTFACE_LEN))
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return NULL;
+	}
+	#ifdef DBG_FONTS
+	TCharToChar(xFace, pFace);
+	#endif	
+	// scale the height specified into a point size from device
+	// units.  This is really harder than it seems since we are
+	// probably using bitmaps or at least a small set of prescaled
+	// fonts whereas windows can scale to any size.  Windows programs
+	// usuall call create font with a point size scaled backwards
+	// from device units as in "height = 75 * size / 72" or something
+	//
+	if(ptm->tmHeight < 0)				// char "em" height spec
+		size = BSA_SCALE_CHAR_TO_PS(-ptm->tmHeight);
+	else if(ptm->tmHeight == 0)			// default font size
+		size = BSA_DEFAULT_FONTSIZE;
+	else								// char cell height spec
+		size = BSA_SCALE_CHAR_TO_PS(ptm->tmHeight);
+	
+	// assuming the font is specified in "windows" realm 
+	// substitute the X11 font name for the face name
+	//
+	for(found = 0; fontSubstitutions[found].x11name; found++)
+		if(! _tcsicmp(pFace, fontSubstitutions[found].winname))
+			break;
+	if(fontSubstitutions[found].x11name)
+		pFace = fontSubstitutions[found].x11name;
+	
+	// if the face isn't substituted, make sure it
+	// is at least all lower case (x11 style)
+	//	
+	TCharToChar(szFace, pFace);
+
+	for(pf = szFace; *pf; pf++)
+		if(*pf >= 'A' && *pf <= 'Z')
+			*pf = *pf - 'A' + 'a';
+
+	#ifdef DBG_FONTS
+	printf("scaled %d to %d pts, face in=%s out=%s\n",
+			ptm->tmHeight, size, xFace, szFace);
+	#endif
+			
+	// look for face in list of fonts already loaded
+	//
+	for(obj = _zg_zgdi_objects; obj; obj = obj->next)
+	{
+		if(obj->type == gdiFont)
+		{
+			font = (LPZFONT)obj->obj;
+			if(font && ! _tcscmp(pFace, font->face))
+			{
+				/*
+					_tprintf(_T("face %ls=%ls size %d=%d\n"),  font->face, pFace, font->size, size);
+					_tprintf(_T("wt %d=%d ht %d=%d\n"), font->tm.tmWeight, ptm->tmWeight, font->tm.tmHeight, ptm->tmHeight);
+					_tprintf(_T("aa %d=%d\n"), font->antialias, antialias);
+				*/
+				if(
+						font->size == size
+					&&	font->tm.tmWeight == ptm->tmWeight
+					&&	font->antialias == antialias
+				)
+				{
+					//_tprintf(_T("ret cached %p\n"), obj->obj);
+					return (HFONT)_w_refZGDIOBJ(obj);
+				}
+			}
+		}
+	}
+	// not found, so make it / get it from X11
+	//
+	if(! antialias)
+	{
+		if(ptm->tmWeight > FW_MEDIUM)
+			szWeight = "-bold";
+		else
+			szWeight = "-medium";
+		
+		if(ptm->tmItalic)
+			szAngle = "-i";
+		else
+			szAngle = "-r";
+		
+		if(0)
+			szSetwidth = "-semicondensed";
+		else
+			szSetwidth = "-normal";
+		
+		// wasn't created yet, so make it already, selectively removing 
+		// requirements until a font is found, or default is returned
+		//
+		found = FALSE;
+		stage = 0;
+		
+		while(! found)
+		{
+			// form the X11 name for a font
+			//
+			switch(stage)
+			{
+			case 0:
+				break;
+	
+			case 1:
+				// round up to the nearest point size of the font face/etc 
+				//
+				snprintf(fontname,	256, "-*-%s%s%s%s*",
+						szFace, szWeight, szAngle, szSetwidth);
+			
+				xfont = XLoadQueryFont(_zg_display, fontname);
+				if(xfont)
+				{
+					int tpsz;
+					
+					XFreeFont(_zg_display, xfont);
+	
+					// getting here means the font DOES exist and can be loaded
+					// with A point size, so try between requested size and + 10
+					//
+					for(tpsz = size+1; tpsz < size+10; tpsz++)
+					{
+						snprintf(fontname,	256, "-*-%s%s%s%s-*-%d-*",
+								szFace, szWeight, szAngle, szSetwidth, tpsz);
+						//printf("  trying %s\n", fontname);
+						xfont = XLoadQueryFont(_zg_display, fontname);
+						if(xfont)
+						{
+							size = tpsz;
+							found = TRUE;
+							break;
+						}
+					}
+					if(! found)
+					{
+						// try 0, incase the font is fixed somehow
+						//
+						snprintf(fontname,	256, "-*-%s%s%s%s-*-%d-*",
+								szFace, szWeight, szAngle, szSetwidth, 0);
+						#ifdef DBG_FONTS
+						printf("  trying 0 sized %s\n", fontname);
+						#endif
+						xfont = XLoadQueryFont(_zg_display, fontname);
+						if(xfont)
+						{
+							size = tpsz;
+							found = TRUE;
+							break;
+						}
+					}
+					#ifdef DBG_FONTS
+					if(! found)
+						printf("  == no font found in pz %d to %d\n", size, tpsz);
+					#endif
+				}
+				break;
+	
+			case 2:
+				szSetwidth = "*";
+				break;
+	
+			case 3:
+				szWeight = "*";
+				break;
+	
+			case 4:
+				szAngle = "*";
+				break;
+				
+			default:
+				found = TRUE;
+				break;
+			}
+			stage++;
+			
+			if(! found)
+			{
+				// example: "courier-bold-i-normal--14"
+				//
+				snprintf(fontname,	256, "-*-%s%s%s%s-*-%d-*",
+						szFace, szWeight, szAngle, szSetwidth, size);
+				
+				// attempt to load and query the font
+				//
+				xfont = XLoadQueryFont(_zg_display, fontname);
+	
+				#ifdef DBG_FONTS
+				if(! xfont)
+				{
+					printf("stage %d - cant load font=%s=\n", stage, fontname);
+				}
+				#endif
+			}		
+			if(xfont)
+			{
+				font = (LPZFONT)malloc(sizeof(ZFONT));
+				
+				if(! font)
+				{
+					SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+					return NULL;
+				}
+				font->size  	= size;
+				font->antialias = FALSE;
+				font->font  	= xfont;
+				font->isxft 	= FALSE;
+				_tcscpy(font->face, pFace);
+				memcpy(&font->tm, ptm, sizeof(TEXTMETRIC));
+				
+				// fill in textmetric info from xfont
+				font->tm.tmAscent	= xfont->ascent;
+				font->tm.tmDescent	= xfont->descent;
+				font->tm.tmHeight	= font->tm.tmAscent + font->tm.tmDescent;
+				font->tm.tmFirstChar= xfont->min_char_or_byte2;
+				font->tm.tmLastChar	= xfont->max_char_or_byte2;
+				#ifdef DBG_FONTS
+				printf("leaving with loaded font=%s=\n\n", fontname);
+				#endif
+				return (HFONT)_w_newZGDIOBJ(gdiFont, font);
+			}
+		}
+	}
+	else
+	{
+		int weight, angle, setwidth, use_aa;
+
+		//if(size < 10)
+		//	use_aa = 0;
+		//else
+			use_aa = 1;
+		
+		switch(ptm->tmWeight)
+		{
+		case FW_THIN:
+			#ifdef FC_WEIGHT_THIN
+			weight = FC_WEIGHT_THIN;
+			#else
+			weight = FC_WEIGHT_LIGHT;
+			#endif
+			break;
+		case FW_EXTRALIGHT:
+			#ifdef FC_WEIGHT_EXTRALIGHT
+			weight = FC_WEIGHT_EXTRALIGHT;
+			#else
+			weight = FC_WEIGHT_LIGHT;
+			#endif
+			break;
+		case FW_LIGHT:
+			weight = FC_WEIGHT_LIGHT;
+			break;
+		default:
+		case FW_DONTCARE:
+		case FW_NORMAL:
+			#ifdef FC_WEIGHT_REGULAR
+			weight = FC_WEIGHT_REGULAR;
+			#else
+			weight = FC_WEIGHT_MEDIUM;
+			#endif
+			break;
+		case FW_MEDIUM:
+			weight = FC_WEIGHT_MEDIUM;
+			break;
+		case FW_SEMIBOLD:
+			weight = FC_WEIGHT_DEMIBOLD;
+			break;
+		case FW_BOLD:
+			weight = FC_WEIGHT_BOLD;
+			break;
+		case FW_EXTRABOLD:
+			#ifdef FC_WEIGHT_EXTRABOLD
+			weight = FC_WEIGHT_EXTRABOLD;
+			#else
+			weight = FC_WEIGHT_BOLD;
+			#endif
+			break;
+		case FW_HEAVY:
+			weight = FC_WEIGHT_BLACK;
+			break;
+		}
+		if(ptm->tmItalic)
+		{
+			angle = FC_SLANT_ITALIC;
+		}
+		else
+		{
+			angle = FC_SLANT_ROMAN;
+		}
+		#ifdef FC_WIDTH_SEMICONDENSED
+		if(1)
+			setwidth = 	FC_WIDTH_SEMICONDENSED;
+		else
+		#endif
+		#ifdef FC_WIDTH_NORMAL
+			setwidth = 	FC_WIDTH_NORMAL;
+		#else
+		setwidth = 0;
+		#endif
+		
+		xftfont = XftFontOpen(
+								_zg_display,
+								DefaultScreen(_zg_display),
+								XFT_FAMILY,
+									XftTypeString,
+									szFace,
+								XFT_SIZE,
+									XftTypeDouble,
+									(double)size * 0.86,
+								XFT_WEIGHT,
+									XftTypeInteger,
+									weight,
+								XFT_SLANT,
+									XftTypeInteger,
+									angle,
+								XFT_ANTIALIAS,
+									XftTypeBool,
+									use_aa,
+								XFT_SPACING,
+									XftTypeInteger,
+									XFT_PROPORTIONAL,
+								NULL
+							);
+		#endif
+		if(xftfont)
+		{
+			font = (LPZFONT)malloc(sizeof(ZFONT));
+			
+			if(! font)
+			{
+				SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+				return NULL;
+			}
+			font->size		= size;
+			font->antialias = TRUE;
+			font->xftfont	= xftfont;
+			font->isxft		= TRUE;
+			_tcscpy(font->face, pFace);
+			memcpy(&font->tm, ptm, sizeof(TEXTMETRIC));
+			
+			// fill in textmetric info
+			font->tm.tmAscent	= xftfont->ascent;
+			font->tm.tmDescent	= xftfont->descent;
+			font->tm.tmHeight	= font->tm.tmAscent + font->tm.tmDescent;
+			font->tm.tmFirstChar= 0;  // not used
+			font->tm.tmLastChar	= 255;
+	
+			#ifdef DBG_FONTS
+			printf("leaving with loaded font=%s=\n\n", fontname);
+			#endif
+			return (HFONT)_w_newZGDIOBJ(gdiFont, font);
+		}
+	}
+	#ifdef DBG_FONTS
+	printf("new font abandoned, use system font\n");
+	#endif
+	return (HFONT)_w_refZGDIOBJ(_zg_sysFont);
+}
+
+//**************************************************************************
+void DeleteFont(HFONT hFont)
+{
+	DeleteObject(hFont);
+}
+
+//**************************************************************************
+BOOL WINAPI GetTextMetrics(HDC hDC, LPTEXTMETRIC lpTM)
+{
+	LPZGC		zGC;
+	LPZGDIOBJ	zObj;
+	LPZFONT		zFont;
+	
+	if(! (zGC = (LPZGC)hDC) || ! lpTM)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
+	}
+	if(! (zObj = (LPZGDIOBJ)zGC->hFONT))
+		if(! (zObj = _zg_sysFont))
+			return FALSE;
+	
+	if(zObj->tag != ZGDIO_TAG || zObj->type != gdiFont)
+		return FALSE;
+	
+	if(! (zFont = (LPZFONT)zObj->obj))
+		return FALSE;
+	
+	memcpy(lpTM, &zFont->tm, sizeof(TEXTMETRIC));
+	return TRUE;
+}
+
+//**************************************************************************
+BOOL WINAPI GetTextExtentPoint32(
+								HDC		hDC,
+								LPCTSTR	text,
+								int		nText,
+								LPSIZE	size
+								)
+{
+	LPZGC		 zGC;
+	LPZGDIOBJ	 zObj;
+	LPZFONT		 zFont;
+	char* 		 texta;
+	int			 i;
+	
+	if(! (zGC = (LPZGC)hDC) || !text || !size)
+	{
+		SetLastError(ERROR_INVALID_PARAMETER);
+		return FALSE;
+	}
+	if(! (zObj = (LPZGDIOBJ)zGC->hFONT))
+		if(! (zObj = _zg_sysFont))
+			return FALSE;
+	
+	if(zObj->tag != ZGDIO_TAG || zObj->type != gdiFont)
+		return FALSE;
+	
+	if(! (zFont = (LPZFONT)zObj->obj))
+		return FALSE;
+
+	if(! zFont->isxft)
+	{
+		texta = (char*)malloc(nText + 2);
+		
+		if(! texta)
+		{
+			SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+			return FALSE;
+		}
+		if(nText > 0)
+		{
+			for(i = 0; i < nText; i++)
+				texta[i] = (char)text[i];
+		}
+		else
+		{
+			i = 0;
+			texta[i++] = 'm';
+		}
+		texta[i] = '\0';
+	}
+	
+	
+	if(! zFont->isxft)
+	{
+		int dir, ascent, descent;
+		XCharStruct xchr;
+		
+		if(! zFont->font)
+		{
+			// cant happen ?
+			size->cy = zFont->tm.tmAscent + zFont->tm.tmDescent;
+			size->cx = size->cy * nText * 7 / 8;
+		}
+		else
+		{
+			XTextExtents(zFont->font, texta, nText, &dir, &ascent, &descent, &xchr);
+			size->cx = (nText > 0) ? xchr.width : 0;
+			size->cy = ascent + descent;
+		}
+	}
+	else
+	{
+		XGlyphInfo extents;
+		
+		if(! zFont->xftfont)
+		{
+			// cant happen ?
+			size->cy = zFont->tm.tmAscent + zFont->tm.tmDescent;
+			size->cx = size->cy * nText * 7 / 8;
+		}
+		else
+		{
+	#ifdef UNICODE
+			XftTextExtents32(_zg_display, zFont->xftfont, (unsigned int*)text, nText, &extents);
+	#else
+			XftTextExtents8(_zg_display, zFont->xftfont, text, nText, &extents);
+	#endif
+			//_tprintf(_T("tx=%c =%d nt=%d\n"), (char*)text[0], extents.xOff, nText);
+			size->cx = (nText > 0) ? extents.xOff : 0;
+			size->cy = zFont->tm.tmAscent + zFont->tm.tmDescent;
+		}
+	}
+	if(! zFont->isxft)
+	{
+		free(texta);
+	}
+	return TRUE;
+}
+
+//**************************************************************************
+HFONT WINAPI CreateFontIndirect(LPLOGFONT logfont)
+{
+	TEXTMETRIC tm;
+	
+	// set qualities we want in tm, the others are filled in
+	// when the font is created
+	//
+	memset(&tm, 0, sizeof(tm));
+	
+	tm.tmHeight 		= logfont->lfHeight;
+	tm.tmWeight 		= logfont->lfWeight;
+	tm.tmItalic 		= logfont->lfItalic;
+	tm.tmUnderlined 	= logfont->lfUnderline;
+	tm.tmStruckOut 		= logfont->lfStrikeOut;
+	tm.tmPitchAndFamily = logfont->lfPitchAndFamily;
+	tm.tmCharSet 		= logfont->lfCharSet;
+		
+	return _w_newFont(logfont->lfFaceName, &tm, (logfont->lfQuality >= ANTIALIASED_QUALITY));
+}
+
+//**************************************************************************
+HFONT WINAPI CreateFont(
+						int nHeight,               // height of font
+						int nWidth,                // average character width
+						int nEscapement,           // angle of escapement
+						int nOrientation,          // base-line orientation angle
+						int fnWeight,              // font weight
+						DWORD fdwItalic,           // italic attribute option
+						DWORD fdwUnderline,        // underline attribute option
+						DWORD fdwStrikeOut,        // strikeout attribute option
+						DWORD fdwCharSet,          // character set identifier
+						DWORD fdwOutputPrecision,  // output precision
+						DWORD fdwClipPrecision,    // clipping precision
+						DWORD fdwQuality,          // output quality
+						DWORD fdwPitchAndFamily,   // pitch and family
+						LPCTSTR lpszFace           // typeface name
+					   )
+{
+	LOGFONT lf;
+	
+	lf.lfHeight 		= nHeight;
+	lf.lfWidth 			= nWidth;
+	lf.lfEscapement 	= nEscapement;
+	lf.lfOrientation 	= nOrientation;
+	lf.lfWeight 		= fnWeight;
+	lf.lfItalic 		= fdwItalic;
+	lf.lfUnderline 		= fdwUnderline;
+	lf.lfStrikeOut 		= fdwStrikeOut;
+	lf.lfCharSet 		= fdwCharSet;
+	lf.lfOutPrecision 	= fdwOutputPrecision;
+	lf.lfClipPrecision 	= fdwClipPrecision;
+	lf.lfQuality 		= fdwQuality;
+	lf.lfPitchAndFamily	= fdwPitchAndFamily;
+
+	_tcsncpy(lf.lfFaceName, lpszFace, BSA_MAX_FONTFACE_LEN-1);
+	lf.lfFaceName[BSA_MAX_FONTFACE_LEN-1] = _T('\0');
+
+	return CreateFontIndirect(&lf);
+}
+
+
+//**************************************************************************
+int EnumFonts(HDC hdc, LPCTSTR lpFaceName, FONTENUMPROC lpFontFunc, LPARAM lParam)
+{
+	struct _tag_fontSubs* 	psub;
+	int						rv, lrv = 1, didone = 0;
+	LOGFONT					logFont;
+	TEXTMETRIC				textmex;
+	
+#ifndef USE_WIN32_FONTSUBS
+	char	**pfnames;
+	char	**pnames;
+	char	*pfn;
+	int		bc, fc;
+	char	fnb[80];
+	char	pzb[32];
+	
+	pfnames = pnames = XListFonts(_zg_display, "*", 4000, &fc);
+
+	while(fc-- > 0)
+	{
+		pfn = *pnames++;
+		if(pfn)
+		{
+		//printf("xfn%d=%s\n", fc, pfn);
+		
+		// extract face name from font name of style
+		// -type-name-weight-italic-setwidth--pointsize-lalalala
+		// or
+		// name-pointsize
+		//
+		fnb[0] = '\0';
+		pzb[0] = '\0';
+		
+		if(*pfn == '-')
+		{
+			// new style (ala 1980s new) xfont name
+			//
+			pfn++;
+			
+			while(*pfn && *pfn != '-')
+				pfn++;
+			if(*pfn == '-')
+			{
+				pfn++;
+				for(bc = 0; bc < sizeof(fnb); bc++)
+				{
+					if(*pfn == '-' || ! *pfn)
+						break;
+					fnb[bc] = *pfn++;
+				}
+				fnb[bc] = '\0';
+				if(*pfn == '-')
+				{
+					;
+				}
+			}
+		}
+		else
+		{
+			// old style xfont name
+			//
+			for(bc = 0; bc < sizeof(fnb)-1; bc++)
+			{
+				if(*pfn == '-' || ! *pfn)
+					break;
+				fnb[bc] = *pfn++;
+			}
+			fnb[bc] = '\0';
+		}
+		if(fnb[0] != '\n')
+		{
+			memset(&logFont, 0, sizeof(logFont));
+			
+			CharToTChar(logFont.lfFaceName, fnb);
+
+			memset(&textmex, 0, sizeof(textmex));
+			
+			rv = lpFontFunc(&logFont, &textmex, TRUETYPE_FONTTYPE, lParam);	
+			if(rv) lrv = rv;
+			if(! rv)
+			{
+				printf("callback returns 0\n");
+				break;
+			}
+			didone = 1;
+		}
+		else
+		{
+			//printf("%s had no name\n", *pnames[-1]);
+		}
+		}
+		else
+		{
+			//_tprintf(_T("%d is null\n"), fc);
+		}
+	}
+	if(pfnames)
+	{
+		XFreeFontNames(pfnames);
+	}
+	if(! didone)
+	{
+		; // !!!
+	}
+#endif
+	if(! didone)
+	{
+		// as a bonus, add the "windows" names in the font subst table
+		//
+		for(psub = fontSubstitutions, rv = 1; rv && psub->winname; psub++)
+		{
+			memset(&logFont, 0, sizeof(logFont));
+			_tcscpy(logFont.lfFaceName, psub->winname);
+			
+			memset(&textmex, 0, sizeof(textmex));
+			
+			// callback
+			//
+			rv = lpFontFunc(&logFont, &textmex, TRUETYPE_FONTTYPE, lParam);	
+			if(rv) lrv = rv;
+		}
+	}
+	return lrv;
+}
+
+

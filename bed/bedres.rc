@@ -1,0 +1,994 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef __MINGW32__
+//#include "afxres.h"
+#include "Windows.h"
+#include "winres.h"
+// File commands
+#define ID_FILE_NEW                     0xE100
+#define ID_FILE_OPEN                    0xE101
+#define ID_FILE_CLOSE                   0xE102
+#define ID_FILE_SAVE                    0xE103
+#define ID_FILE_SAVE_AS                 0xE104
+#define ID_FILE_PAGE_SETUP              0xE105
+#define ID_FILE_PRINT_SETUP             0xE106
+#define ID_FILE_PRINT                   0xE107
+#define ID_FILE_PRINT_DIRECT            0xE108
+#define ID_FILE_PRINT_PREVIEW           0xE109
+#define ID_FILE_UPDATE                  0xE10A
+#define ID_FILE_SAVE_COPY_AS            0xE10B
+#define ID_FILE_SEND_MAIL               0xE10C
+
+#define ID_FILE_MRU_FIRST               0xE110
+#define ID_FILE_MRU_FILE1               0xE110
+#define ID_FILE_MRU_FILE2               0xE111
+#define ID_FILE_MRU_FILE3               0xE112
+#define ID_FILE_MRU_FILE4               0xE113
+#define ID_FILE_MRU_FILE5               0xE114
+#define ID_FILE_MRU_FILE6               0xE115
+#define ID_FILE_MRU_FILE7               0xE116
+#define ID_FILE_MRU_FILE8               0xE117
+#define ID_FILE_MRU_FILE9               0xE118
+#define ID_FILE_MRU_FILE10              0xE119
+#define ID_FILE_MRU_FILE11              0xE11A
+#define ID_FILE_MRU_FILE12              0xE11B
+#define ID_FILE_MRU_FILE13              0xE11C
+#define ID_FILE_MRU_FILE14              0xE11D
+#define ID_FILE_MRU_FILE15              0xE11E
+#define ID_FILE_MRU_FILE16              0xE11F
+#define ID_FILE_MRU_LAST                0xE11F
+
+// Edit commands
+#define ID_EDIT_CLEAR                   0xE120
+#define ID_EDIT_CLEAR_ALL               0xE121
+#define ID_EDIT_COPY                    0xE122
+#define ID_EDIT_CUT                     0xE123
+#define ID_EDIT_FIND                    0xE124
+#define ID_EDIT_PASTE                   0xE125
+#define ID_EDIT_PASTE_LINK              0xE126
+#define ID_EDIT_PASTE_SPECIAL           0xE127
+#define ID_EDIT_REPEAT                  0xE128
+#define ID_EDIT_REPLACE                 0xE129
+#define ID_EDIT_SELECT_ALL              0xE12A
+#define ID_EDIT_UNDO                    0xE12B
+#define ID_EDIT_REDO                    0xE12C
+
+// Window commands
+#define ID_WINDOW_NEW                   0xE130
+#define ID_WINDOW_ARRANGE               0xE131
+#define ID_WINDOW_CASCADE               0xE132
+#define ID_WINDOW_TILE_HORZ             0xE133
+#define ID_WINDOW_TILE_VERT             0xE134
+#define ID_WINDOW_SPLIT                 0xE135
+
+#define ID_APP_ABOUT                    0xE140
+#define ID_APP_EXIT                     0xE141
+#define ID_HELP_INDEX                   0xE142
+#define ID_HELP_FINDER                  0xE143
+#define ID_HELP_USING                   0xE144
+#define ID_CONTEXT_HELP                 0xE145      // shift-F1
+
+#define ID_HELP                         0xE146      // first attempt for F1
+#define ID_DEFAULT_HELP                 0xE147      // last attempt
+
+// Misc
+#define ID_NEXT_PANE                    0xE150
+#define ID_PREV_PANE                    0xE151
+
+// Format
+#define ID_FORMAT_FONT                  0xE160
+
+
+#define ID_VIEW_TOOLBAR                 0xE800
+#define ID_VIEW_STATUS_BAR              0xE801
+#define ID_VIEW_REBAR                   0xE804
+
+#define ID_VIEW_SMALLICON               0xE810
+#define ID_VIEW_LARGEICON               0xE811
+#define ID_VIEW_LIST                    0xE812
+#define ID_VIEW_DETAILS                 0xE813
+#define ID_VIEW_LINEUP                  0xE814
+#define ID_VIEW_BYNAME                  0xE815
+
+#define ID_RECORD_FIRST                 0xE900
+#define ID_RECORD_LAST                  0xE901
+#define ID_RECORD_NEXT                  0xE902
+#define ID_RECORD_PREV                  0xE903
+
+#else
+#ifdef Windows
+    #include "winuser.h"
+    #include "commctrl.h"
+    #define IDC_STATIC (-1)
+#else
+    #include "bsawinapi.h"
+#endif
+#include "stdids.h"
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifndef __MINGW32__
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#endif
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_GENSTRING DIALOG 0, 0, 203, 47
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - String"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_STRING,7,26,129,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,146,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,146,25,50,14
+    LTEXT           "String Parameter",IDC_PROMPT,10,10,128,8
+END
+
+IDD_BROWSEFILE DIALOG 0, 0, 245, 199
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Browse File"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,7,177,42,14
+    CONTROL         "Tree2",IDC_BF_DIRTREE,"SysTreeView32",TVS_HASLINES | TVS_LINESATROOT | WS_BORDER | WS_TABSTOP,7,20,94,152
+    CONTROL         "Tree1",IDC_BF_FILETREE,"SysTreeView32",TVS_HASLINES | TVS_LINESATROOT | WS_BORDER | WS_TABSTOP,105,21,133,170
+    LTEXT           "",IDC_BF_PATH,7,7,231,11,WS_BORDER
+    PUSHBUTTON      "OK",IDOK,56,177,45,14
+END
+
+IDD_OPENFILE DIALOG 0, 0, 214, 153
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Open File"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_OF_FILENAME,34,7,172,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,154,113,50,14
+    PUSHBUTTON      "Browse...",IDC_OFBROWSE,155,28,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,154,132,50,14
+    GROUPBOX        "Encoding",IDC_STATIC,7,23,142,107,WS_GROUP
+    CONTROL         "Auto ",IDC_OF_TE_AUTO,"Button",BS_AUTORADIOBUTTON,13,37,125,10
+    CONTROL         "ANSI (US Ascii)",IDC_OF_TE_ANSI,"Button",BS_AUTORADIOBUTTON,13,50,125,10
+    CONTROL         "UTF-8 ",IDC_OF_TE_UTF8,"Button",BS_AUTORADIOBUTTON,13,63,125,10
+    CONTROL         "UCS-2 (Windows x86)",IDC_OF_TE_UCS2L,"Button",BS_AUTORADIOBUTTON,13,75,125,10
+    CONTROL         "UCS-2 Big Endian",IDC_OF_TE_UCS2B,"Button",BS_AUTORADIOBUTTON,13,88,125,10
+    CONTROL         "UCS-4 (Linux Ix86)",IDC_OF_TE_UCS4L,"Button",BS_AUTORADIOBUTTON,13,101,125,10
+    CONTROL         "UCS-4 BE (PPC Mac/Linux)",IDC_OF_TE_UCS4B,"Button",BS_AUTORADIOBUTTON,13,114,125,10
+    GROUPBOX        "Open As",IDC_STATIC,156,51,50,52,WS_GROUP
+    CONTROL         "Auto",IDC_OF_TF_AUTO,"Button",BS_AUTORADIOBUTTON,160,64,38,10
+    CONTROL         "Text",IDC_OF_TF_TEXT,"Button",BS_AUTORADIOBUTTON,160,76,37,10
+    CONTROL         "Binary",IDC_OF_TF_BINARY,"Button",BS_AUTORADIOBUTTON,160,88,40,10
+    LTEXT           "File:",IDC_STATIC,7,9,19,8
+    CONTROL         "DOS/Windows CRLF Format",IDC_CRLF,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,135,141,10
+END
+
+IDD_ABOUT DIALOGEX 60, 140, 222, 78
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Bed"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,153,54,50,14
+    CONTROL         IDB_BIGBED,IDC_STATIC,"Static",SS_BITMAP,5,0,85,79
+    LTEXT           "BED  -  Editor v 6.0",IDC_STATIC,96,9,110,9
+    LTEXT           "Copyright 1991-2010 Brian Dodge",IDC_STATIC,93,31,112,9
+END
+
+IDD_SANDR DIALOG 0, 0, 212, 59
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Replace"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_FT,62,7,143,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_RT,62,21,143,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&Replace",IDC_REPLACE,7,38,45,14
+    PUSHBUTTON      "&Find Next",IDNO,59,38,42,14
+    PUSHBUTTON      "&All",IDC_ALL,109,38,42,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,159,38,46,14
+    LTEXT           "Find Text",IDC_STATIC,7,9,48,8
+    LTEXT           "Replace With",IDC_STATIC,7,23,52,8
+END
+
+IDD_PROJECT DIALOG 0, 0, 207, 186
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Project Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PROJNAME,79,7,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SRCDIR,79,22,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BLDDIR,79,38,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BLDCMD,79,54,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BLDTARGET,79,70,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_BLDSHELL,79,86,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SHELLSWITCH,79,102,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SHELLSEP,79,119,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_INCLPATHS,79,135,119,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,79,167,51,14
+    PUSHBUTTON      "Cancel",IDCANCEL,148,167,50,14
+    CONTROL         "Also use the include path(s) in Environment",IDC_INCLINCLS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,152,186,9
+    LTEXT           "Project Name",IDC_STATIC,7,9,67,8
+    LTEXT           "Source Directory",IDC_STATIC,7,24,67,8
+    LTEXT           "Build Directory",IDC_STATIC,7,40,67,8
+    LTEXT           "Build Command",IDC_STATIC,7,56,67,8
+    LTEXT           "Build Target",IDC_STATIC,7,71,67,8
+    LTEXT           "Build Shell",IDC_STATIC,7,87,67,8
+    LTEXT           "Shell Switches",IDC_STATIC,7,103,67,8
+    LTEXT           "Include Path",IDC_STATIC,7,135,67,8
+    LTEXT           "Command Separator",IDC_STATIC,7,119,67,8
+END
+
+IDD_FONTPICK DIALOG 0, 0, 255, 110
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Choose Font"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_FONTSIZE,141,58,29,12,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,119,89,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,201,87,50,14
+    PUSHBUTTON      "=",IDC_FONTSIZESET,173,58,13,13
+    PUSHBUTTON      "+",IDC_FONTBIGGER,188,58,13,13
+    PUSHBUTTON      "-",IDC_FONTSMALLER,202,58,14,13
+    CONTROL         "Bold",IDC_FONTBOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,76,36,8
+    CONTROL         "Italic",IDC_FONTITAL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,76,34,8
+    CONTROL         "Anti-Alias",IDC_FONTAA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,207,76,48,8
+    CONTROL         "Tree1",IDC_FONTLIST,"SysTreeView32",TVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,7,106,96
+    CTEXT           "Abc Xyz 123",IDC_FONTTEST,119,7,129,46,SS_CENTERIMAGE | WS_BORDER
+    LTEXT           "Size",IDC_STATIC,119,60,22,8
+END
+
+IDD_FTPAUTH DIALOG 0, 0, 165, 75
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - FTP Authentication"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,108,37,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,108,54,50,14
+    EDITTEXT        IDC_FTPUSER,54,7,104,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FTPPASSWORD,54,21,104,12,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "Remember Password",IDC_FTPPERSTPASS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,42,94,10
+    CONTROL         "Anonymous Login",IDC_FTPANON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,56,94,10
+    LTEXT           "User",IDC_STATIC,8,9,40,8
+    LTEXT           "Password",IDC_STATIC,7,22,41,8
+END
+
+IDD_PRINTER DIALOG 0, 0, 185, 137
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Select Printer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PRTNAME,53,8,125,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,128,99,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,128,116,50,14
+    GROUPBOX        "Destination",IDC_STATIC,7,26,85,49,WS_GROUP
+    CONTROL         "LPR Queue",IDC_PRTLPR,"Button",BS_AUTORADIOBUTTON,13,38,69,10
+    CONTROL         "File",IDC_PRTFILE,"Button",BS_AUTORADIOBUTTON,13,49,63,10
+    CONTROL         "Port",IDC_PRTPORT,"Button",BS_AUTORADIOBUTTON,13,60,69,10
+    GROUPBOX        "Color",IDC_STATIC,7,79,86,51
+    CONTROL         "Monochrome",IDC_PRTMONO,"Button",BS_AUTORADIOBUTTON,13,90,68,10
+    CONTROL         "Gray",IDC_PRTGRAY,"Button",BS_AUTORADIOBUTTON,13,101,67,10
+    CONTROL         "Color",IDC_PRTCOLOR,"Button",BS_AUTORADIOBUTTON,13,113,71,10
+    GROUPBOX        "Printer Language",IDC_STATIC,98,26,80,49,WS_GROUP
+    CONTROL         "Postscript",IDC_PRTPS,"Button",BS_AUTORADIOBUTTON,103,38,68,10
+    CONTROL         "PCL (PCL5C)",IDC_PRTPCL,"Button",BS_AUTORADIOBUTTON,103,50,69,10
+    CONTROL         "Use PJL",IDC_PRTPJL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,104,61,71,10
+    LTEXT           "Printer",IDC_PRTLABEL,10,10,41,8
+    PUSHBUTTON      "Media",IDC_MEDIA,128,80,50,14
+END
+
+IDD_MEDIA DIALOG 0, 0, 182, 111
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Media Select"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,125,71,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,125,91,50,14
+    GROUPBOX        "Preferred Media",IDC_STATIC,7,7,84,98,WS_GROUP
+    CONTROL         "Tree1",IDC_PRTMEDIA,"SysTreeView32",TVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,10,18,76,83
+    GROUPBOX        "Finishing",IDC_STATIC,95,7,80,55,WS_GROUP
+    CONTROL         "Duplex",IDC_PRTDUPLEX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,99,19,69,10
+    CONTROL         "Landscape",IDC_PRTLANDSCAPE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,99,32,70,10
+    CONTROL         "Manual Feed",IDC_PRTMANFEED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,99,45,69,10
+END
+
+IDD_SCCS DIALOG 0, 0, 219, 116
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Source Control Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_SCCSSHELL,98,7,113,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SCCSSHELLSWITCH,98,22,113,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SCCS_CO,98,38,113,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SCCS_CI,98,54,113,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SCCS_RV,98,70,113,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,98,95,51,14
+    PUSHBUTTON      "Cancel",IDCANCEL,161,95,50,14
+    LTEXT           "SCCS Shell",IDC_STATIC,7,9,67,8
+    LTEXT           "Shell Switches",IDC_STATIC,7,23,67,8
+    LTEXT           "Check-Out Command",IDC_STATIC,7,39,85,8
+    LTEXT           "Check-In Command",IDC_STATIC,7,55,79,8
+    LTEXT           "Revert Command",IDC_STATIC,7,71,79,8
+END
+
+IDD_KEYBIND DIALOG 0, 0, 203, 86
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Key Bindings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,146,44,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,146,63,50,14
+    GROUPBOX        "Key Bindings",IDC_STATIC,7,7,132,70,WS_GROUP
+    CONTROL         "Native (BED)",IDC_BIND_NATIVE,"Button",BS_AUTORADIOBUTTON,16,22,114,10
+    CONTROL         "Emacs",IDC_BIND_EMACS,"Button",BS_AUTORADIOBUTTON,16,34,114,10
+    CONTROL         "Visual C++",IDC_BIND_MSVC,"Button",BS_AUTORADIOBUTTON,16,46,110,10
+    CONTROL         "Code Warrior",IDC_BIND_CW,"Button",BS_AUTORADIOBUTTON,16,59,108,10
+END
+
+IDD_COLORPICK DIALOG 0, 0, 407, 96
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED 6.0 - Choose Color"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,350,75,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,294,75,50,14
+    CONTROL         "Slider1",IDC_HUE,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,53,7,347,12
+    CONTROL         "Slider2",IDC_SATURATION,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,53,21,347,12
+    CONTROL         "Slider3",IDC_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,53,35,347,13
+    CONTROL         "Slider3",IDC_TRANSPARENCY,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,53,49,347,13
+    GROUPBOX        "Preview",IDC_COLOR,7,62,282,27
+    LTEXT           "Hue",IDC_STATIC,7,9,46,8
+    LTEXT           "Saturation",IDC_STATIC,7,23,46,8
+    LTEXT           "Brightness",IDC_STATIC,7,36,46,8
+    LTEXT           "Transparency",IDC_STATIC,7,50,46,8
+END
+
+IDD_FINDINFILES DIALOG 0, 0, 222, 108
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED 6.0 - Find in Files"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_GREPPAT,81,7,134,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_GREPFILEPAT,81,22,134,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_GREPDIR,81,38,101,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,165,69,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,165,86,50,14
+    CONTROL         "Recurse Directories",IDC_GREPRECURSIVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,60,112,10
+    CONTROL         "Case Sensitive",IDC_GREPCASESENSI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,73,117,10
+    CONTROL         "Match Whole Word",IDC_GREPWHOLEWORD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,86,117,10
+    PUSHBUTTON      "...",IDC_BROWSEDIR,188,36,27,14
+    LTEXT           "Look For:",IDC_STATIC,7,10,70,8
+    LTEXT           "In Directory:",IDC_STATIC,7,41,70,8
+    LTEXT           "In Files Matching:",IDC_STATIC,7,25,69,8
+END
+
+IDD_RS232CONN DIALOG 0, 0, 228, 214
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "RS232 Connection Details"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,157,174,56,14
+    PUSHBUTTON      "Cancel",IDCANCEL,157,192,56,14
+    PUSHBUTTON      "&Emulation...",IDC_EMULATION,157,156,56,14
+    PUSHBUTTON      "&Port...",IDC_SETPORT,157,114,56,14
+    GROUPBOX        "Baud",IDC_STATIC,7,7,63,196,WS_DISABLED | WS_GROUP
+    CONTROL         "300",IDC_BR300,"Button",BS_AUTORADIOBUTTON,14,19,50,10
+    CONTROL         "600",IDC_BR600,"Button",BS_AUTORADIOBUTTON,14,30,50,10
+    CONTROL         "1200",IDC_BR1200,"Button",BS_AUTORADIOBUTTON,14,41,50,10
+    CONTROL         "2400",IDC_BR2400,"Button",BS_AUTORADIOBUTTON,14,52,50,10
+    CONTROL         "4800",IDC_BR4800,"Button",BS_AUTORADIOBUTTON,14,63,50,10
+    CONTROL         "9600",IDC_BR9600,"Button",BS_AUTORADIOBUTTON,14,74,50,10
+    CONTROL         "19200",IDC_BR19K,"Button",BS_AUTORADIOBUTTON,14,85,50,10
+    CONTROL         "38400",IDC_BR38K,"Button",BS_AUTORADIOBUTTON,14,96,50,10
+    CONTROL         "57600",IDC_BR57K,"Button",BS_AUTORADIOBUTTON,14,107,50,10
+    CONTROL         "115200",IDC_BR115K,"Button",BS_AUTORADIOBUTTON,14,118,50,10
+    CONTROL         "230400",IDC_BR230K,"Button",BS_AUTORADIOBUTTON,14,129,50,10
+    CONTROL         "460800",IDC_BR460K,"Button",BS_AUTORADIOBUTTON,14,140,50,10
+    CONTROL         "921600",IDC_BR921K,"Button",BS_AUTORADIOBUTTON,14,151,50,10
+    GROUPBOX        "Port",IDC_STATIC,76,7,74,95,WS_GROUP
+    CONTROL         "COM1",IDC_PORT0,"Button",BS_AUTORADIOBUTTON,82,19,62,10
+    CONTROL         "COM2",IDC_PORT1,"Button",BS_AUTORADIOBUTTON,82,31,62,10
+    CONTROL         "COM3",IDC_PORT2,"Button",BS_AUTORADIOBUTTON,82,42,62,10
+    CONTROL         "COM4",IDC_PORT3,"Button",BS_AUTORADIOBUTTON,82,53,62,10
+    CONTROL         "COM5",IDC_PORT4,"Button",BS_AUTORADIOBUTTON,82,64,62,10
+    CONTROL         "COM6",IDC_PORT5,"Button",BS_AUTORADIOBUTTON,82,75,62,10
+    CONTROL         "COM7",IDC_PORTX,"Button",BS_AUTORADIOBUTTON,82,86,62,10
+    GROUPBOX        "Bits",IDC_STATIC,76,108,74,40,WS_GROUP
+    CONTROL         "7",IDC_BI7,"Button",BS_AUTORADIOBUTTON,83,122,50,10
+    CONTROL         "8",IDC_BI8,"Button",BS_AUTORADIOBUTTON,83,133,50,10
+    GROUPBOX        "Flow Control",IDC_STATIC,155,7,63,50,WS_GROUP
+    CONTROL         "None",IDC_FCNONE,"Button",BS_AUTORADIOBUTTON,162,18,51,10
+    CONTROL         "Hardware",IDC_FCHW,"Button",BS_AUTORADIOBUTTON,162,29,51,10
+    CONTROL         "Software",IDC_FCSW,"Button",BS_AUTORADIOBUTTON,162,40,51,9
+    GROUPBOX        "Stop Bits",IDC_STATIC,76,154,74,40,WS_GROUP
+    CONTROL         "1",IDC_SB1,"Button",BS_AUTORADIOBUTTON,83,167,45,10
+    CONTROL         "2",IDC_SB2,"Button",BS_AUTORADIOBUTTON,83,178,45,10
+    GROUPBOX        "Parity",IDC_STATIC,155,60,63,50,WS_GROUP
+    CONTROL         "None",IDC_PAR0,"Button",BS_AUTORADIOBUTTON,162,71,46,10
+    CONTROL         "Odd",IDC_PAR1,"Button",BS_AUTORADIOBUTTON,162,82,44,10
+    CONTROL         "Even",IDC_PAR2,"Button",BS_AUTORADIOBUTTON,162,93,45,10
+    LTEXT           "port",IDC_PORTN,157,132,56,14,SS_CENTERIMAGE,WS_EX_CLIENTEDGE
+END
+
+IDD_TELNETCONN DIALOG 0, 0, 206, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Telnet Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Remote Host Setting",IDC_STATIC,7,7,191,49,WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,7,60,50,14
+    PUSHBUTTON      "&Emulation...",IDC_EMULATION,70,61,63,14
+    PUSHBUTTON      "Cancel",IDCANCEL,148,61,50,14
+    EDITTEXT        IDC_TELNET_HOST,53,19,114,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TELNET_PORT,53,36,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Host",IDC_STATIC,17,22,28,8
+    LTEXT           "Port",IDC_STATIC,17,39,31,8
+END
+
+IDD_DEBUG DIALOG 0, 0, 207, 177
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BED - Debugger Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Use Project Settings for Target",IDC_USEPROJECTFORTARGET,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,6,192,9
+    EDITTEXT        IDC_DBGTARGET,79,20,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DBGSRCDIR,79,36,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DBGDIR,79,53,119,12,ES_AUTOHSCROLL
+    GROUPBOX        "Debugger",-1,6,67,192,35,WS_GROUP
+    CONTROL         "GDB",IDC_USEGDB,"Button",BS_AUTORADIOBUTTON,79,76,114,10
+    CONTROL         "DEBUG",IDC_USEDEBUG,"Button",BS_AUTORADIOBUTTON,79,87,116,10
+    EDITTEXT        IDC_DBGSHELL,79,105,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DBGSHELLSWITCH,79,121,119,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DBGSHELLSEP,79,138,119,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,79,157,51,14
+    PUSHBUTTON      "Cancel",IDCANCEL,148,157,50,14
+    LTEXT           "Debug Target",-1,5,23,68,8
+    LTEXT           "Source Directory",-1,5,38,68,8
+    LTEXT           "Debug Directory",-1,5,54,68,8
+    LTEXT           "Debug Shell",-1,6,107,68,8
+    LTEXT           "Shell Switches",-1,6,123,68,8
+    LTEXT           "Command Separator",-1,6,139,68,8
+END
+
+IDD_EMULSET DIALOG 50, 50, 142, 209
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Terminal Emulation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,188,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,85,188,50,14
+    GROUPBOX        "Emulation",IDC_STATIC,7,7,127,79,WS_GROUP
+    CONTROL         "None",IDC_VTNONE,"Button",BS_AUTORADIOBUTTON,13,20,103,10
+    CONTROL         "VT100",IDC_VT100,"Button",BS_AUTORADIOBUTTON,13,32,103,10
+    CONTROL         "VT102",IDC_VT102,"Button",BS_AUTORADIOBUTTON,13,45,103,10
+    CONTROL         "VT220",IDC_VT220,"Button",BS_AUTORADIOBUTTON,13,57,103,10
+    CONTROL         "XTERM",IDC_VTXTERM,"Button",BS_AUTORADIOBUTTON,13,69,103,10
+    GROUPBOX        "Misc Settings",IDC_STATIC,7,89,128,94,WS_GROUP
+    CONTROL         "Treat CR as CR-LF",IDC_CRNL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,104,118,10
+    CONTROL         "Local Echo",IDC_ECHO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,116,118,10
+    CONTROL         "Wrap Lines",IDC_WRAP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,127,119,10
+    CONTROL         "Suppress Bells",IDC_QUIET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,139,117,10
+    CONTROL         "Log To File",IDC_LOGGING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,150,119,10
+    PUSHBUTTON      "&Set Log File Directory...",IDC_LOGPATH,11,164,102,14
+END
+
+IDD_HEXFORMAT DIALOG 0, 0, 247, 102
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set Data Formatting"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,81,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,189,81,50,14
+    GROUPBOX        "View Format",IDC_STATIC,7,7,102,54,WS_GROUP
+    CONTROL         "Bytes",IDC_VIEW_BYTES,"Button",BS_AUTORADIOBUTTON,15,20,83,10
+    CONTROL         "16 Bit Words",IDC_VIEW_WORDS,"Button",BS_AUTORADIOBUTTON,15,32,84,10
+    CONTROL         "32 Bit Words",IDC_VIEW_DWORDS,"Button",BS_AUTORADIOBUTTON,15,44,85,10
+    CONTROL         "Little Endian Format",IDC_VIEWBYTESWAPPED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,20,118,10
+    CONTROL         "Don't show addresses",IDC_SUPPRESSADDR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,33,120,10
+    LTEXT           "Note that word formatting is applied only with radix 2 and 16 views",IDC_STATIC,7,66,232,8
+END
+
+IDD_PERFORCE DIALOG 0, 0, 219, 206
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Perforce Settings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Client",IDC_STATIC,7,7,205,40,WS_GROUP
+    LTEXT           "Perforce Client",IDC_STATIC,21,17,64,8
+    EDITTEXT        IDC_P4_CLIENT,90,15,113,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Use environment variable P4CLIENT",IDC_P4_ENV_CLIENT,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,20,30,183,10
+    GROUPBOX        "Server",IDC_STATIC,7,50,205,46,WS_GROUP
+    LTEXT           "Perforce Port",IDC_STATIC,23,61,64,8
+    EDITTEXT        IDC_P4_PORT,90,57,113,12,ES_AUTOHSCROLL | WS_GROUP
+    CONTROL         "Use environment variable P4PORT",IDC_P4_ENV_PORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,20,78,183,10
+    GROUPBOX        "Authentication",IDC_STATIC,7,101,205,75,WS_GROUP
+    LTEXT           "Perforce User",IDC_STATIC,20,113,66,8
+    EDITTEXT        IDC_P4_USER,90,111,113,12,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Perforce Password",IDC_STATIC,20,126,66,8
+    EDITTEXT        IDC_P4_PASSWD,90,123,113,12,ES_AUTOHSCROLL
+    CONTROL         "Server requires Authentication",IDC_P4_AUTH,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,20,142,183,10
+    CONTROL         "Use env. vas P4USER/P4PASSWD",IDC_P4_ENV_AUTH,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,20,156,183,10
+    DEFPUSHBUTTON   "OK",IDOK,7,184,50,14
+    PUSHBUTTON      "P4 Shell Settings...",IDC_P4SHELL,71,184,72,14
+    PUSHBUTTON      "Cancel",IDCANCEL,162,184,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_BROWSEFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 238
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        RIGHTMARGIN, 216
+    END
+
+    IDD_PROJECT, DIALOG
+    BEGIN
+        VERTGUIDE, 7
+        VERTGUIDE, 74
+        VERTGUIDE, 79
+        VERTGUIDE, 198
+        BOTTOMMARGIN, 172
+        HORZGUIDE, 181
+    END
+
+    IDD_FONTPICK, DIALOG
+    BEGIN
+    END
+
+    IDD_FTPAUTH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 158
+        VERTGUIDE, 54
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 68
+    END
+
+    IDD_PRINTER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 178
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 130
+    END
+
+    IDD_MEDIA, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 175
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 105
+    END
+
+    IDD_SCCS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 211
+        VERTGUIDE, 98
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 109
+    END
+
+    IDD_KEYBIND, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 196
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 77
+    END
+
+    IDD_COLORPICK, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 400
+        VERTGUIDE, 53
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+
+    IDD_FINDINFILES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 215
+        VERTGUIDE, 81
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
+
+    IDD_RS232CONN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 218
+        VERTGUIDE, 14
+        VERTGUIDE, 64
+        VERTGUIDE, 70
+        VERTGUIDE, 76
+        VERTGUIDE, 82
+        VERTGUIDE, 144
+        VERTGUIDE, 157
+        VERTGUIDE, 162
+        VERTGUIDE, 213
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 183
+    END
+
+    IDD_TELNETCONN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 198
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+
+    IDD_DEBUG, DIALOG
+    BEGIN
+        VERTGUIDE, 6
+        VERTGUIDE, 74
+        VERTGUIDE, 79
+        VERTGUIDE, 198
+        HORZGUIDE, 171
+    END
+
+    IDD_EMULSET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_HEXFORMAT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 239
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 95
+    END
+
+    IDD_PERFORCE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 212
+        VERTGUIDE, 20
+        VERTGUIDE, 90
+        VERTGUIDE, 203
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 180
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_FILERO16            ICON                    "icons/file16ro.ico"
+IDI_BUF16               ICON                    "icons/buf16.ico"
+IDI_BED                 ICON                    "icons/bed32.ico"
+IDI_CLASS               ICON                    "icons/class.ico"
+IDI_FUNCTION            ICON                    "icons/func.ico"
+IDI_DATA                ICON                    "icons/data.ico"
+IDI_BUFMOD16            ICON                    "icons/buf16mod.ico"
+IDI_DIR16               ICON                    "icons/dir16.ico"
+IDI_DIROPEN16           ICON                    "icons/dir16op.ico"
+IDI_FILE16              ICON                    "icons/file16.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_VERTSIZE            CURSOR                  "vsize.cur"
+IDC_HORIZSIZE           CURSOR                  "hsize.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_BEDMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New...",                     ID_FILE_NEW
+        MENUITEM "&Open...",                    ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Check O&ut",                  ID_FILE_CHECKOUT
+        MENUITEM "Check &In",                   ID_FILE_CHECKIN
+        MENUITEM "Re&vert",                     ID_FILE_REVERT
+        MENUITEM SEPARATOR
+        MENUITEM "New Pro&ject...",             ID_FILE_NEW_PROJECT
+        MENUITEM "O&pen Project...",            ID_FILE_OPEN_PROJECT
+        MENUITEM "Close Projec&t",              ID_FILE_CLOSE_PROJECT
+        MENUITEM SEPARATOR
+        MENUITEM "&Save",                       ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVEAS
+        MENUITEM "Save Al&l",                   ID_FILE_SAVEALL
+        MENUITEM SEPARATOR
+        POPUP "&Print"
+        BEGIN
+            MENUITEM "&Document",                   ID_FILE_PRINT_DOCUMENT
+            MENUITEM "&Window",                     ID_FILE_PRINT_WINDOW
+            MENUITEM "&Selection",                  ID_FILE_PRINT_SELECTION
+        END
+        MENUITEM "P&age Setup...",              ID_FILE_PAGESETUP
+        MENUITEM SEPARATOR
+        POPUP "&Recent Files"
+        BEGIN
+            MENUITEM "",                            ID_RECENTFILE_1
+        END
+        POPUP "Recent Projects"
+        BEGIN
+            MENUITEM "",                            ID_RECENT_PROJECTS_1
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo",                       ID_EDIT_UNDO
+        MENUITEM "&Redo",                       ID_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        ID_EDIT_CUT
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "&Paste",                      ID_EDIT_PASTE
+        MENUITEM "&Delete",                     ID_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "&Select All",                 ID_EDIT_SELECTALL
+        MENUITEM SEPARATOR
+        MENUITEM "C&ase Sensitive",             ID_EDIT_CASE_SENSITIVE
+        MENUITEM "&Overstrike",                 ID_EDIT_OVERSTRIKE
+        MENUITEM "Tri&m Whitespace",            ID_EDIT_TRIMWHITESPACE
+        MENUITEM SEPARATOR
+        MENUITEM "&Goto...",                    ID_EDIT_GOTO
+        MENUITEM "&Find...",                    ID_EDIT_FIND
+        MENUITEM "Find &in Files...",           ID_EDIT_FINDINFILE
+        MENUITEM "&Replace...",                 ID_EDIT_REPLACE
+        MENUITEM SEPARATOR
+        POPUP "&Advanced"
+        BEGIN
+            MENUITEM "T&rim Whitespace",            ID_ADVANCED_TRIMWHITESPACE
+            MENUITEM "&Format",                     ID_EDIT_ADVANCED_FORMAT
+            MENUITEM "&Tabify",                     ID_EDIT_ADVANCED_TABIFY
+            MENUITEM "&Untab",                      ID_EDIT_ADVANCED_UNTAB
+            MENUITEM "&Make Writable",              ID_EDIT_ADVANCED_MAKEWRITABLE
+            MENUITEM "Drop CR in Line Endings",     ID_EDIT_ADVANCED_DROPCR
+            MENUITEM SEPARATOR
+            MENUITEM "Ta&bs as Spaces",             ID_EDIT_ADVANCED_TABSASSPACES
+            MENUITEM "&Auto Tab detect",            ID_EDIT_ADVANCED_AUTOTABDETECT
+        END
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "&Windows"
+        BEGIN
+            MENUITEM "&Picker",                     ID_VIEW_WINDOWS_PICKER
+            MENUITEM "Calc&ulator",                 ID_VIEW_WINDOWS_CALCULATOR
+            MENUITEM "&Functions",                  ID_VIEW_WINDOWS_FUNCTIONS
+            MENUITEM "&Files",                      ID_VIEW_WINDOWS_FILES
+            MENUITEM "&Info",                       ID_VIEW_WINDOWS_INFO
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Tab Space...",               ID_VIEW_TABSPACE
+        MENUITEM "&Indent Space...",            ID_VIEW_INDENTSPACE
+        MENUITEM "&Key Bindings...",            ID_VIEW_KEYBINDINGS
+        MENUITEM SEPARATOR
+        POPUP "&Font..."
+        BEGIN
+            MENUITEM "&Set All",                    ID_VIEW_FONT
+            MENUITEM "&Normal Text...",             ID_VIEW_FONTS_NORMAL
+            MENUITEM "&Quoted Text...",             ID_VIEW_FONTS_QUOTED
+            MENUITEM "&Comments...",                ID_VIEW_FONTS_COMMENT
+            MENUITEM "&Keywords...",                ID_VIEW_FONTS_BUILTIN
+            MENUITEM "Builtin &Types...",           ID_VIEW_FONTS_BUILTINTYPE
+            MENUITEM "Builtin &Functions...",       ID_VIEW_FONTS_BUILTINFUNCTION
+            MENUITEM "&Addin-Types...",             ID_VIEW_FONTS_ADDINTYPE
+            MENUITEM "Addin-F&unction...",          ID_VIEW_FONTS_ADDINFUNCTION
+            MENUITEM "&Macros...",                  ID_VIEW_FONTS_MACRO
+            MENUITEM "&Operators...",               ID_VIEW_FONTS_OPERATOR
+            MENUITEM "&Special Text...",            ID_VIEW_FONTS_SPECIALTEXT
+            MENUITEM SEPARATOR
+            MENUITEM "Set as Defau&lt",             ID_VIEW_FONT_SETDEFAULT
+        END
+        POPUP "&Colors..."
+        BEGIN
+            MENUITEM "&Background...",              ID_VIEW_COLORS_BACKGROUND
+            MENUITEM "&Normal Text...",             ID_VIEW_COLORS_NORMAL
+            MENUITEM "&Quoted Text...",             ID_VIEW_COLORS_QUOTED
+            MENUITEM "&Comments...",                ID_VIEW_COLORS_COMMENT
+            MENUITEM "&Keywords...",                ID_VIEW_COLORS_BUILTIN
+            MENUITEM "Builtin &Types...",           ID_VIEW_COLORS_BUILTINTYPE
+            MENUITEM "Builtin &Functions...",       ID_VIEW_COLORS_BUILTINFUNCTION
+            MENUITEM "&Addin-Types...",             ID_VIEW_COLORS_ADDINTYPE
+            MENUITEM "Addin-F&unction...",          ID_VIEW_COLORS_ADDINFUNCTION
+            MENUITEM "&Macros...",                  ID_VIEW_COLORS_MACRO
+            MENUITEM "&Operators...",               ID_VIEW_COLORS_OPERATOR
+            MENUITEM "&Special Text",               ID_VIEW_COLORS_SPECIALTEXT
+            MENUITEM "&Selected Background...",     ID_VIEW_COLORS_SELECTEDBACKGROUND
+            MENUITEM "&Highlight Background...",    ID_VIEW_COLORS_HIGHLIGHTBACKGROUND
+            MENUITEM "&Line-num Background...",     ID_VIEW_COLORS_LINOBACKGROUND
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Show Line &Numbers",          ID_VIEW_SHOWLINENUMS
+        MENUITEM "Show &Whitespace",            ID_VIEW_SHOWWHITESPACE
+        MENUITEM SEPARATOR
+        MENUITEM "View As HE&X",                ID_VIEW_VIEWASHEX
+        MENUITEM "View &Radix...",              ID_VIEW_VIEWRADIX
+        MENUITEM "&View Format...",             ID_VIEW_VIEWFORMAT
+        MENUITEM "View Col&umns...",            ID_VIEW_VIEWCOLUMNS
+    END
+    POPUP "&Tools"
+    BEGIN
+        POPUP "&Project"
+        BEGIN
+            MENUITEM "&Edit Settings...",           ID_TOOLS_PROJECT_EDIT
+            MENUITEM "E&xport Makefile...",         ID_TOOLS_PROJECT_EXPORTMAKE, GRAYED
+            MENUITEM SEPARATOR
+            MENUITEM "Project &Wizard....",         ID_TOOLS_PROJECT_WIZARD
+        END
+        POPUP "&Source Control"
+        BEGIN
+            MENUITEM "&Disable Source Control",     ID_TOOLS_SOURCECONTROL_ENABLE
+            MENUITEM "&Edit Settings",              ID_TOOLS_SOURCECONTROL_EDITSETTINGS
+            MENUITEM SEPARATOR
+            MENUITEM "Setup &Wizard",               ID_TOOLS_SOURCECONTROL_SETUPWIZARD
+        END
+        POPUP "Program &Database"
+        BEGIN
+            MENUITEM "&Always Enabled",             ID_TOOLS_PROGRAMDATABASE_ENABLE_ALWAYS
+            MENUITEM "On &Project Load",            ID_TOOLS_PROGRAMDATABASE_ENABLE_ONPROJECTLOAD
+            MENUITEM "&Never Enabled",              ID_TOOLS_PROGRAMDATABASE_ENABLE_NEVER
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Local S&hell",                ID_TOOLS_SHELL
+        MENUITEM "&Remote Shell",               ID_TOOLS_REMOTESHELL
+        MENUITEM "&Terminal (Serial)",          ID_TOOLS_TERMINAL
+        POPUP "&Shell Settings"
+        BEGIN
+            MENUITEM "&COM Settings...",            ID_TOOLS_SHELLSETTINGS_SERIAL
+            MENUITEM "&Local Shells...",            ID_TOOLS_SHELLSETTINGS_LOCAL
+            MENUITEM "&Remote Shells...",           ID_TOOLS_SHELLSETTINGS_REMOTE
+        END
+        MENUITEM "C&lear Window",               ID_TOOLS_CLEAR
+    END
+    MENUITEM "&Build",                      ID_BUILD
+    POPUP "&Debug"
+    BEGIN
+        MENUITEM "&Start Debugging",            ID_DEBUG_STARTDEBUGGING
+        MENUITEM "Sto&p Debugging",             ID_DEBUG_STOPDEBUGGING
+        POPUP "&Run"
+        BEGIN
+            MENUITEM "&Go",                         ID_DEBUG_RUN_GO
+            MENUITEM "&Stop",                       ID_DEBUG_RUN_STOP
+            MENUITEM "Step &In",                    ID_DEBUG_RUN_STEPIN
+            MENUITEM "Step &Out",                   ID_DEBUG_RUN_STEPOUT
+            MENUITEM "Run to &Cursor",              ID_DEBUG_RUN_RUNTOCURSOR
+        END
+        POPUP "&Windows"
+        BEGIN
+            MENUITEM "&Registers",                  ID_DEBUG_WINDOWS_REGISTERS
+            MENUITEM "&Stack",                      ID_DEBUG_WINDOWS_STACK
+            MENUITEM "&Watch",                      ID_DEBUG_WINDOWS_WATCH
+            MENUITEM "&Variables",                  ID_DEBUG_WINDOWS_VARIABLES
+            MENUITEM "&Threads",                    ID_DEBUG_WINDOWS_THREADS
+            MENUITEM "&Memory",                     ID_DEBUG_WINDOWS_MEMORY
+        END
+        MENUITEM "&Breakpoints...",             ID_DEBUG_BREAKPOINTS
+        MENUITEM "Watc&hpoints...",             ID_DEBUG_WATCHPOINTS
+        MENUITEM SEPARATOR
+        MENUITEM "Set Break at &Cursor",        ID_DEBUG_SETBREAKATCURSOR
+        MENUITEM "R&un to Cursor",              ID_DEBUG_RUNTOCURSOR
+        MENUITEM SEPARATOR
+        MENUITEM "&Edit Settings...",           ID_DEBUG_EDITSETTINGS
+        MENUITEM "Run Setup &Wizard...",        ID_DEBUG_RUNSETUPWIZARD
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Close",                      ID_WINDOW_CLOSE
+        MENUITEM "Close &All",                  ID_WINDOW_CLOSEALL
+        MENUITEM SEPARATOR
+        MENUITEM "Split &Vertical",             ID_WINDOW_SPLITVERTICAL
+        MENUITEM "Split &Horizontal",           ID_WINDOW_SPLITHORIZONTAL
+        MENUITEM SEPARATOR
+        MENUITEM "&Next",                       ID_WINDOW_NEXT
+        MENUITEM "&Previous",                   ID_WINDOW_PREVIOUS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "Commands",                    ID_HELP_COMMANDS
+        MENUITEM "&Key Bindings",               ID_HELP_KEYBINDINGS
+        MENUITEM SEPARATOR
+        MENUITEM "&About",                      ID_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BUF16               BITMAP                  "icons/buf16.bmp"
+IDB_BUFMOD16            BITMAP                  "icons/buf16mod.bmp"
+IDB_FILE16              BITMAP                  "icons/file16.bmp"
+IDB_FILERO16            BITMAP                  "icons/file16ro.bmp"
+IDB_DIR16               BITMAP                  "icons/dir16.bmp"
+IDB_DIROPEN16           BITMAP                  "icons/dir16op.bmp"
+IDB_WIZMAP              BITMAP                  "wizimg.bmp"
+IDB_BIGBED              BITMAP                  "bed128.bmp"
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

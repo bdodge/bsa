@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.02 [en] (X11; U; SunOS 5.6 sun4u) [Netscape]">
+</HEAD>
+<BODY>
+
+<H2>
+Welcome to the BED Download page</H2>
+
+<H4>
+From here you can download all of my programs</H4>
+
+<H3>
+Instructions:</H3>
+&nbsp;
+<H4>
+Linux (tar.gz files)</H4>
+
+<UL>For UNIX and LINUX downloads, the gzipped tar file contains the executable(s)
+and other files.&nbsp; The file name format is bed_arch_os_ws.tar (.gz),
+where arch is the system architecture, os is the operating system, and
+ws is the windowing system.&nbsp; For example, bed_sparc_solaris_x.tar
+is bed for Sun Sparcs running Solaris under X11.&nbsp; To extract the files,
+download the gzipped file, ucompress the file (gunzip filename) and untar
+the resulting tar file in your home directory (e.g. tar -xvf&nbsp; bed_sparc_solaris_x.tar).
+Tar will create the directory&nbsp; ~/bed which will contain tcl script
+examples.&nbsp; It will create the directory ~/icons and place a bunch
+of usefull xpixmaps in there.&nbsp; It will create (or use) a ~/bin directory
+in which will be placed all the executables (bed, bcalc, bexp, etc.).&nbsp;
+AREADME.TXT is extracted to your home directory.&nbsp; You will need to
+copy the icon files into the appropriate directory(s) for your window manager
+to be able to use them.
+<BR>&nbsp;</UL>
+
+<H4>
+&nbsp;&nbsp;&nbsp; Windows NT and 95</H4>
+
+<UL>For Windows downloads, the file downloaded is the executable.&nbsp;
+Just save the file in the proper directory.&nbsp; For Windows 95 use C:/Windows/Desktop/bed.exe
+and for NT C:/Windows/Profiles/..../Desktop/bed.exe.&nbsp;&nbsp; That is
+assuming you have windows intalled in the default location.&nbsp; If you
+need the TCL examples and/or README file that comes with the .tar.gz files,
+download one of those also and use winzip to extract the files you need.&nbsp;
+To run bed on Windows, you will also need to install TCL v8.0 which can
+be downloaded freely. following the link below
+<BR>&nbsp;</UL>
+
+<H3>
+Download:</H3>
+
+<UL><A HREF="bed_sparc_solaris_x.tar.gz">Download BED for&nbsp; Sparc -
+Solaris (X windows)</A>
+
+<P><A HREF="bed_sparc_sunos_x.tar.gz">Download BED for&nbsp; Sparc - SunOS
+(X windows)</A>
+
+<P><A HREF="bed_sparc_solaris_vt.tar.gz">Download BED for&nbsp; Sparc -
+Solaris (VT100)</A>
+
+<P><A HREF="bed_sparc_sunos_vt.tar.gz">Download BED for&nbsp; Sparc - SunOS
+(VT100)</A>
+
+<P><A HREF="bed.exe">Download BED.EXE for&nbsp; Intel - Windows 95/NT 4.0</A>
+
+<P><A HREF="bcalc.exe">Download BCALC.EXE for&nbsp; Intel - Windows 95/NT4.0</A>
+
+<P><A HREF="bed_4_intel_linux_x.tar.gz">Download BED for&nbsp; Intel -
+Linux (X windows)</A>
+
+<P><A HREF="bed_4_intel_linux_vt.tar.gz">Download BED for&nbsp; Intel -
+Linux (VT100)</A>
+
+<P><A HREF="http://www.scriptics.com/software/8.0.html" TARGET="new">Download
+TCL 8.0 Intallation for Windows</A></UL>
+&nbsp;
+</BODY>
+</HTML>
