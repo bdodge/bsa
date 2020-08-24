@@ -1561,7 +1561,11 @@ Bview* Bed::ProperViewForBuffer(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		break;
 
 	case btTelnet:
-			pView = new BviewTelnet(pBuf, pEditor, pPanel);
+		pView = new BviewTelnet(pBuf, pEditor, pPanel);
+		break;
+
+	case btSSH:
+		pView = new BviewSSH(pBuf, pEditor, pPanel);
 		break;
 
 	case btTerm:
@@ -2126,6 +2130,7 @@ LPCTSTR Bed::GetTypeName(BufType type)
 	case btShell:		return _T("Shell");
 	case btSwift:		return _T("Swift");
 	case btTelnet:		return _T("Telnet");
+	case btSSH:			return _T("SecureShell");
 	case btTerm:		return _T("Terminal");
 	}
 }

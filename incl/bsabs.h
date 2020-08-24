@@ -131,6 +131,10 @@ public:
 
 public:
 	virtual ERRCODE		Open		(LPCSTR pAddress, short port);
+	virtual ERRCODE		Close		(void)  { return BsocketStream::Close(); }
+	virtual ERRCODE		Read		(BYTE* pBuf, int& cnt) { return BsocketStream::Read(pBuf, cnt); }
+	virtual ERRCODE		Write		(BYTE* pBuf, int& cnt) { return BsocketStream::Write(pBuf, cnt); }
+	virtual ERRCODE		Pend		(int to_s, int to_us) { return BsocketStream::Pend(to_s, to_us); }
 	virtual ERRCODE		Connect		(int to_s, int to_us);
 	virtual ERRCODE		Accept		(Bstream*& pConnection, int tos = -1, int tous = 0);
 	virtual ERRCODE		SetNODELAY	(bool nodelay);
@@ -142,6 +146,28 @@ protected:
 	struct sockaddr_in	m_hostaddr;
 	DWORD				m_ip;
 	bool				m_nodelay;
+};
+
+//***********************************************************************
+// io bytestream class based on TLS on connection oriented TCP/IP socket
+//
+class BS_API BtlsStream : public BtcpStream
+{
+public:
+	BtlsStream(bool nbio = true, bool ndelay = true);
+	BtlsStream(SOCKET sock, LPCSTR pIP = NULL, short port = 23);
+	virtual ~BtlsStream();
+
+public:
+	virtual ERRCODE		Close		(void);
+	virtual ERRCODE		Read		(BYTE* pBuf, int& cnt);
+	virtual ERRCODE		Write		(BYTE* pBuf, int& cnt);
+	virtual ERRCODE		Pend		(int to_s, int to_us);
+	virtual ERRCODE		Connect		(int to_s, int to_us);
+
+protected:
+	void                *m_sslctx;
+	static bool			m_ssh_inited;
 };
 
 //***********************************************************************

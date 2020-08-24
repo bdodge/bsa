@@ -1790,6 +1790,10 @@ ERRCODE Bbuffer::GetUntitledName(BufType type, LPCTSTR extension, LPTSTR pName, 
 		tn = _T("Remote");
 		dext = _T("");
 		break;
+	case btSSH:
+		tn = _T("SecureShell");
+		dext = _T("");
+		break;
 	case btTerm:
 		tn = _T("Terminal");
 		dext = _T("");

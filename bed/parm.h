@@ -25,6 +25,7 @@ enum BufType
 	btShell,
 	btSwift,
 	btTelnet,
+	btSSH,
 	btTerm
 };
 

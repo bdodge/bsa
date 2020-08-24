@@ -268,6 +268,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 					g_editor->EditBuffer(szArg, true, btTelnet);
 					break;
 	
+				case 'h':
+					skiparg = true;
+					g_editor->EditBuffer(szArg, true, btSSH);
+					break;
+	
 				case 't':
 					forceType = btText;
 					break;
@@ -1277,6 +1282,10 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		case ID_TOOLS_REMOTESHELL:
 			if(pBed) pBed->EditBuffer(NULL, true, btTelnet);
+			break;
+
+		case ID_TOOLS_SECURESHELL:
+			if(pBed) pBed->EditBuffer(NULL, true, btSSH);
 			break;
 
 		case ID_TOOLS_TERMINAL:

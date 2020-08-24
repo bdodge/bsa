@@ -43,6 +43,7 @@ SOURCES		=					\
 					viewstream.cpp				\
 					viewrs232.cpp				\
 					viewtelnet.cpp				\
+					viewssh.cpp					\
 					dispatch.cpp				\
 					tclscript.cpp				\
 					ftpauth.cpp					\
@@ -106,10 +107,10 @@ ifndef STATIC
 
 ifeq ($(TARGET_OS),Darwin)
 	EXTRA_LDFLAGS=-L/usr/X11R6/lib
-	SYSTEM_SHARED_LIBRARIES	= fontconfig Xft X11 pthread util
+	SYSTEM_SHARED_LIBRARIES	=  ssl crypto fontconfig Xft X11 pthread util
 endif
 ifeq ($(TARGET_OS),Linux)
-	SYSTEM_SHARED_LIBRARIES	= fontconfig Xft X11 pthread util
+	SYSTEM_SHARED_LIBRARIES	=  ssl crypto fontconfig Xft X11 pthread util
 endif
 
 #ifeq ($(TARGET_OS),OSX)

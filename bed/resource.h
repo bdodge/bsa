@@ -344,6 +344,7 @@
 #define ID_VIEW_SHOWWHITESPACE          40167
 #define ID_EDIT_TRIMWHITESPACE          40168
 #define ID_VIEW_VIEWASHEX               40169
+#define ID_TOOLS_SECURESHELL            40170
 
 // Next default values for new objects
 // 
