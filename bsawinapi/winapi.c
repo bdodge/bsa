@@ -1651,7 +1651,10 @@ BOOL WINAPI CloseWindow(HWND hWnd)
 		SetFocus(GetParent(hWnd));
 	}
 	xWnd = zWnd->xWnd;
+	#ifndef COCOA
+	// x11 xwnd is already closed to get here?
 	zWnd->xWnd = 0;
+	#endif
 	if (xWnd)	
 		_w_destroyWindow(xWnd);
 	PostMessage(hWnd, WM_CLOSE, 0, 0);
