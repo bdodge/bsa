@@ -4,4 +4,8 @@
 *.o
 *.a
 *.exe 
+work/bed/*/bed
+work/bed/*/depgen
+work/bcalc/*/bcalc
+work/bcalc/*/depgen
 
