@@ -252,7 +252,16 @@ ERRCODE Bshell::Poll(int fd, int tos, int tous)
 //**************************************************************************
 int Bshell::Read(HSIO fd, char* buffer, int nRead)
 {
-	return read(fd, buffer, nRead);
+	int ret;
+	ret = read(fd, buffer, nRead);
+/*
+	if (ret > 0)
+	{
+		buffer[nRead] = 0;
+		printf("READ %s", buffer);
+	}
+*/
+	return ret;
 }
 
 //**************************************************************************

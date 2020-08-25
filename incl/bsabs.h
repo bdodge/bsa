@@ -149,28 +149,6 @@ protected:
 };
 
 //***********************************************************************
-// io bytestream class based on TLS on connection oriented TCP/IP socket
-//
-class BS_API BtlsStream : public BtcpStream
-{
-public:
-	BtlsStream(bool nbio = true, bool ndelay = true);
-	BtlsStream(SOCKET sock, LPCSTR pIP = NULL, short port = 23);
-	virtual ~BtlsStream();
-
-public:
-	virtual ERRCODE		Close		(void);
-	virtual ERRCODE		Read		(BYTE* pBuf, int& cnt);
-	virtual ERRCODE		Write		(BYTE* pBuf, int& cnt);
-	virtual ERRCODE		Pend		(int to_s, int to_us);
-	virtual ERRCODE		Connect		(int to_s, int to_us);
-
-protected:
-	void                *m_sslctx;
-	static bool			m_ssh_inited;
-};
-
-//***********************************************************************
 // io bytestream class based on connectionles UDP (IP datagram) socket
 //
 class BS_API BudpStream : public BtcpStream

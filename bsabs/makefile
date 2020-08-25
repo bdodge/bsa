@@ -2,7 +2,6 @@
 SOURCES		=	\
 			bsx.cpp			\
 			bsinit.cpp		\
-			bs.cpp			\
-			bstls.cpp
+			bs.cpp
 
 include $(ROOT)/build/template.mak

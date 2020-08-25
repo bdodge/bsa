@@ -4,10 +4,8 @@
 //**************************************************************************
 BviewSSH::BviewSSH(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		:
-		BviewStream(pBuf, pEditor, pPanel)
+		BviewShell(pBuf, pEditor, pPanel)
 {
-	BsocketStream::Init();
-	
 	m_host[0] = _T('\0');
 	m_port = 22;
 	
@@ -62,6 +60,7 @@ BviewSSH::~BviewSSH()
 //**************************************************************************
 void BviewSSH::Activate()
 {
+	TCHAR commandLine[256];
 	bool issetup = false;
 
 	if(GetEditor()->GetPersist())
@@ -84,16 +83,24 @@ void BviewSSH::Activate()
 		GetEditor()->GetPersist()->GetNvStr(_T("SSH/CurrentHost"), m_host, MAX_PATH, _T(""));
 
 	}
-	ReopenPort();
 	if(GetEditor()->GetPersist())
 		GetEditor()->GetPersist()->SetNvBool(_T("SSH/SetupValid"), true);
+
+	if(! m_pid)
+	{
+		// init shell
+		//
+		_sntprintf(commandLine, 256, _T("/usr/bin/ssh " _Pfs_ " -p %u"),
+				m_host, (unsigned)(unsigned short)m_port);
+		Init(commandLine);
+	}
 	BviewTerminal::Activate();
 }
 	
 //**************************************************************************
 void BviewSSH::FitToPanel()
 {
-	BviewStream::FitToPanel();
+	BviewShell::FitToPanel();
 	/*
 	if(m_io)
 	{
@@ -128,57 +135,9 @@ ERRCODE BviewSSH::ApplyPortSettings()
 	else
 		m_emulation = emulXTERM;
 
-	m_iochanging = true;
-	if(m_io)
-	{
-		ec = m_io->Close();
-	}
-	else
-	{
-		m_io = new BtlsStream();
-	}
-	m_iochanging = false;
 	
 	TCharToChar(ahost, m_host);
-	ec = ((BtlsStream*)m_io)->Open(ahost, m_port);
-
-	if(ec == errOK)
-	{
-		ec = m_io->Connect(5, 0);
-	}
-	if(ec != errOK)
-	{
-		int l;
 	
-		l = _sntprintf(vname, 200, _T("Can't open: "_Pfs_":%d"), m_host, m_port);
-		MessageBox(NULL, vname, _T("BED 6.0 - Port Error"), MB_OK);
-	}
-	else
-	{
-		int fh, fw;
-		RECT rc;
-
-		fh = GetFontHeight();
-		fw = GetFontWidth();
-
-		GetClientRect(m_hwnd, &rc);
-		/*
-		((BtlsStream*)m_io)->SSHSetWindowSize((rc.right - rc.left) / fw, (rc.bottom - rc.top) / fh);
-		*/
-		// send willtells
-		if(0) {
-			BYTE xx[32];
-
-			xx[0] = 255;
-			xx[1] = 251;
-			xx[2] = 3;
-			SendData(xx, 3);
-			xx[0] = 255;
-			xx[1] = 251;
-			xx[2] = 1;
-			SendData(xx, 3);
-		}
-	}
 	_sntprintf(vname, 256, _T(""_Pfs_":%d"), m_host, m_port);
 	m_buffer->SetName(vname);
 	m_editor->UpdateInfoPanes(this);

@@ -8,7 +8,7 @@ BviewShell::BviewShell(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		Bshell(NULL, 24, 80, m_emulation),
 		m_destroying(false)
 {
-	m_buffer->SetName(_T("shell"));
+	//m_buffer->SetName(_T("shell"));
 }
 
 //**************************************************************************

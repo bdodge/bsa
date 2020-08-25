@@ -343,6 +343,31 @@ protected:
 	bool			m_zeroreaderr;
 };
 
+//**************************************************************************
+class BviewSSH : public BviewShell
+{
+public:
+	BviewSSH						(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel);
+	virtual ~BviewSSH				();
+
+public:
+	virtual void	Activate		(void);
+	virtual void	FitToPanel		(void);
+	virtual LPCTSTR	GetTypeName		(void)	{ return _T("SecureShell");	}
+	virtual int     GetPort			(void)  { return m_port; }
+	virtual LPCTSTR GetHost			(void)  { return m_host; }
+	static	int		SettingsDialog	(Bed* pEditor, BviewTerminal* pTerm, HWND hWndParent);
+
+protected:
+	virtual ERRCODE	ApplyPortSettings(void);
+	virtual ERRCODE	GetPortSettings	(void);
+
+protected:
+	bool			m_crnl, m_nobell, m_novt;
+	TCHAR			m_host[MAX_PATH+2];
+	int				m_port;
+};
+
 
 //**************************************************************************
 class BviewRS232 : public BviewStream
@@ -379,31 +404,6 @@ public:
 	virtual void	Activate		(void);
 	virtual void	FitToPanel		(void);
 	virtual LPCTSTR	GetTypeName		(void)	{ return _T("Telnet");	}
-	virtual int     GetPort			(void)  { return m_port; }
-	virtual LPCTSTR GetHost			(void)  { return m_host; }
-	static	int		SettingsDialog	(Bed* pEditor, BviewTerminal* pTerm, HWND hWndParent);
-
-protected:
-	virtual ERRCODE	ApplyPortSettings(void);
-	virtual ERRCODE	GetPortSettings	(void);
-
-protected:
-	bool			m_crnl, m_nobell, m_novt;
-	TCHAR			m_host[MAX_PATH+2];
-	int				m_port;
-};
-
-//**************************************************************************
-class BviewSSH : public BviewStream
-{
-public:
-	BviewSSH						(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel);
-	virtual ~BviewSSH				();
-
-public:
-	virtual void	Activate		(void);
-	virtual void	FitToPanel		(void);
-	virtual LPCTSTR	GetTypeName		(void)	{ return _T("SecureShell");	}
 	virtual int     GetPort			(void)  { return m_port; }
 	virtual LPCTSTR GetHost			(void)  { return m_host; }
 	static	int		SettingsDialog	(Bed* pEditor, BviewTerminal* pTerm, HWND hWndParent);
