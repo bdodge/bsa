@@ -166,6 +166,26 @@ ERRCODE BtlsStream::Connect(int to_secs, int to_usecs)
 	{
 		return errSOCKET_CONNECT_FAILURE;
 	}
+	// read any un-encrytped data
+	do
+	{
+		ret = BtcpStream::Pend(0, 100000);
+		if (ret > 0)
+		{
+			int count;
+			BYTE junk[32];
+			
+			count = sizeof(junk);
+			BtcpStream::Read(junk, count);
+			if (count <= 0)
+			{
+				break;
+			}
+			_tprintf(_T("Read %d junk bytes\n"), count);
+		}
+	}
+	while (ret > 0);
+	
 	ssl = SSL_new(s_ssl_ctx);
 	m_sslctx = ssl;
 	
