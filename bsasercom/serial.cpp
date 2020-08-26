@@ -228,6 +228,9 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 						unixParity(m_parity);
 	
 	termctl.c_cflag |= CREAD | CLOCAL;
+
+    cfsetospeed(&termctl, (speed_t)unixBaud(m_baud));
+    cfsetispeed(&termctl, (speed_t)unixBaud(m_baud));
 	
 	if(flow & 1)
 		termctl.c_cflag |= CRTSCTS;
@@ -461,8 +464,14 @@ ERRCODE BserialStream::Read(LPBYTE pBuf, int& cnt)
 	}
 	else
 	{
+		#if 0
 		//pBuf[nRead] = 0;
+		for (int i = 0; i < nRead; i++)
+		{
+			printf("r %02X  %c\n", pBuf[i], pBuf[i]);
+		}
 		//printf("Read %d=%s=\n", nRead, pBuf);
+		#endif
 	}
 #endif
 
