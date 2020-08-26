@@ -57,7 +57,14 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 
 	// form port name from port canonical number
 	//
-	m_port = GetIndexOfPort(pPort);
+	if (pPort[0] >= '0' && pPort[0] <= '9')
+	{
+		m_port = GetIndexOfPort(pPort);
+	}
+	else
+	{
+		m_port = BSASERCOM_USERPORT;
+	}
 	if(m_port != BSASERCOM_USERPORT)
 	{
 		_sntprintf(m_portname, 128, _T("COM%d"), m_port + 1);
@@ -167,7 +174,16 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	m_parity	= parity;
 	m_flow		= flow;
 	
-	m_port = GetIndexOfPort(pPort);
+	// form port name from port canonical number
+	//
+	if (pPort[0] >= '0' && pPort[0] <= '9')
+	{
+		m_port = GetIndexOfPort(pPort);
+	}
+	else
+	{
+		m_port = BSASERCOM_USERPORT;
+	}
 	if(m_port != BSASERCOM_USERPORT)		
 		GetActualPortName(m_port, m_portname, MAX_PATH);
 	else
@@ -569,7 +585,7 @@ LPCTSTR BserialStream::GetActualPortName(int port, LPTSTR portbuf, int npb)
 	{
 		_sntprintf(portbuf, npb, _T("COM%d:"), port);
 	}
-#elif defined(Linux)
+#elif defined(Linux) || defined(OSX)
 	if(port < 64)
 	{
 		_sntprintf(portbuf, npb, _T("/dev/ttyS%d"), port);

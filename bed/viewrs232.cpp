@@ -17,7 +17,17 @@ BviewRS232::BviewRS232(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 	
 	_tcscpy(m_port, pBuf->GetName());
 	
-	port = BserialStream::GetIndexOfPort(m_port);
+	// if port is a simple number, convert index to name
+	// else use name directly
+	//
+	if (m_port[0] >= '0' && m_port[0] <= '9')
+	{
+		port = BserialStream::GetIndexOfPort(m_port);
+	}
+	else
+	{
+		port = BSASERCOM_USERPORT;
+	}
 	if (port != BSASERCOM_USERPORT)
 	{
 		// sanitize port name
@@ -160,10 +170,16 @@ static void CheckPortButton(HWND hWnd, int port, LPCTSTR portname)
 	SetDlgItemText(hWnd, IDC_PORT5, (LPTSTR)BserialStream::GetActualPortName(65, pparm, 64));
 	SetDlgItemText(hWnd, IDC_PORTX, _T("Custom"));
 #endif
-
-	if (BserialStream::GetIndexOfPort(portname) != BSASERCOM_USERPORT)
+	if (portname[0] >= '0' && portname[0] <= '9')
 	{
-		SetDlgItemText(hWnd, IDC_PORTN, (LPTSTR)BserialStream::GetActualPortName(port, pparm, 64));
+		if (BserialStream::GetIndexOfPort(portname) != BSASERCOM_USERPORT)
+		{
+			SetDlgItemText(hWnd, IDC_PORTN, (LPTSTR)BserialStream::GetActualPortName(port, pparm, 64));
+		}
+		else
+		{
+			SetDlgItemText(hWnd, IDC_PORTN, portname);
+		}
 	}
 	else
 	{
