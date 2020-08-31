@@ -177,11 +177,11 @@ int _w_xclip_copy(BYTE* data, int datalen)
 		return 1;
 	}
 	memcpy(_zg_clipdata, data, datalen);
+	_zg_clipdatalen = datalen; 
 	_zg_clipdata[_zg_clipdatalen] = 0;
 	_zg_clipdata[_zg_clipdatalen + 1] = 0;
 	_zg_clipdata[_zg_clipdatalen + 2] = 0;
 	_zg_clipdata[_zg_clipdatalen + 3] = 0;
-	_zg_clipdatalen = datalen; 
 	return 0;
 }
 

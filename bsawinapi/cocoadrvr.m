@@ -2101,6 +2101,16 @@ void _w_clipSetClipboardData(char *data, int len, UINT format)
 	BYTE *xdata;
 	DWORD xlen;
 
+	if (! data)
+		return;
+	
+	if (format == CF_TEXT || format == CF_UNICODETEXT)
+	{
+		// limit text length to actual length
+		xlen = strlen(data);
+		if (xlen < len)
+			len = xlen;
+	}
 	// clip data is always stored in utf8 format
 	//
 	if(format == CF_UNICODETEXT)
