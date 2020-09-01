@@ -300,7 +300,7 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 
 					// set copied to the cut buffer
 					//
-					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, (nCopy + 2) * sizeof(char));
+					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, ((nCopy / 3) + 1) * sizeof(char));
 					LPSTR  pcp = (char*)GlobalLock(hMem);
 
 					EmptyClipboard();
