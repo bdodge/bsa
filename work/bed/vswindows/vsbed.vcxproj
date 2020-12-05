@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1CBCEE36-FC4B-443C-8207-4ABCAEDE3FF2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;Windows;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\incl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;Windows;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\..\incl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\bcalclib\barbnum.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bcalc.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bcalcx.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bdblnum.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bintnum.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bnumber.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bplot.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\bprog.cpp" />
+    <ClCompile Include="..\..\..\bcalclib\digit.cpp" />
+    <ClCompile Include="..\..\..\bed\bdbg.cpp" />
+    <ClCompile Include="..\..\..\bed\bed.cpp" />
+    <ClCompile Include="..\..\..\bed\bedrc.cpp" />
+    <ClCompile Include="..\..\..\bed\bedx.cpp" />
+    <ClCompile Include="..\..\..\bed\bsccs.cpp" />
+    <ClCompile Include="..\..\..\bed\buffer.cpp" />
+    <ClCompile Include="..\..\..\bed\buffile.cpp" />
+    <ClCompile Include="..\..\..\bed\bufftp.cpp" />
+    <ClCompile Include="..\..\..\bed\bufraw.cpp" />
+    <ClCompile Include="..\..\..\bed\colordial.cpp" />
+    <ClCompile Include="..\..\..\bed\dismember.cpp" />
+    <ClCompile Include="..\..\..\bed\dispatch.cpp" />
+    <ClCompile Include="..\..\..\bed\edit.cpp" />
+    <ClCompile Include="..\..\..\bed\fontdial.cpp" />
+    <ClCompile Include="..\..\..\bed\ftpauth.cpp" />
+    <ClCompile Include="..\..\..\bed\help.cpp" />
+    <ClCompile Include="..\..\..\bed\infobufs.cpp" />
+    <ClCompile Include="..\..\..\bed\infobuild.cpp" />
+    <ClCompile Include="..\..\..\bed\infodbg.cpp" />
+    <ClCompile Include="..\..\..\bed\infofile.cpp" />
+    <ClCompile Include="..\..\..\bed\infofunc.cpp" />
+    <ClCompile Include="..\..\..\bed\infogrep.cpp" />
+    <ClCompile Include="..\..\..\bed\infopane.cpp" />
+    <ClCompile Include="..\..\..\bed\inforesults.cpp" />
+    <ClCompile Include="..\..\..\bed\infosccs.cpp" />
+    <ClCompile Include="..\..\..\bed\infoshell.cpp" />
+    <ClCompile Include="..\..\..\bed\keybind.cpp" />
+    <ClCompile Include="..\..\..\bed\line.cpp" />
+    <ClCompile Include="..\..\..\bed\macro.cpp" />
+    <ClCompile Include="..\..\..\bed\openfiledial.cpp" />
+    <ClCompile Include="..\..\..\bed\parm.cpp" />
+    <ClCompile Include="..\..\..\bed\parsec.cpp" />
+    <ClCompile Include="..\..\..\bed\pdb.cpp" />
+    <ClCompile Include="..\..\..\bed\print.cpp" />
+    <ClCompile Include="..\..\..\bed\project.cpp" />
+    <ClCompile Include="..\..\..\bed\protwind.cpp" />
+    <ClCompile Include="..\..\..\bed\sandr.cpp" />
+    <ClCompile Include="..\..\..\bed\tclscript.cpp" />
+    <ClCompile Include="..\..\..\bed\token.cpp" />
+    <ClCompile Include="..\..\..\bed\view.cpp" />
+    <ClCompile Include="..\..\..\bed\viewasm.cpp" />
+    <ClCompile Include="..\..\..\bed\viewc.cpp" />
+    <ClCompile Include="..\..\..\bed\viewhex.cpp" />
+    <ClCompile Include="..\..\..\bed\viewhtml.cpp" />
+    <ClCompile Include="..\..\..\bed\viewjava.cpp" />
+    <ClCompile Include="..\..\..\bed\viewpython.cpp" />
+    <ClCompile Include="..\..\..\bed\viewrs232.cpp" />
+    <ClCompile Include="..\..\..\bed\viewshell.cpp" />
+    <ClCompile Include="..\..\..\bed\viewssh.cpp" />
+    <ClCompile Include="..\..\..\bed\viewstream.cpp" />
+    <ClCompile Include="..\..\..\bed\viewswift.cpp" />
+    <ClCompile Include="..\..\..\bed\viewtcl.cpp" />
+    <ClCompile Include="..\..\..\bed\viewtelnet.cpp" />
+    <ClCompile Include="..\..\..\bed\viewterm.cpp" />
+    <ClCompile Include="..\..\..\bsabs\bs.cpp" />
+    <ClCompile Include="..\..\..\bsabs\bsinit.cpp" />
+    <ClCompile Include="..\..\..\bsabs\bsx.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\bsacomp.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\bsaframe.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\bsapane.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\bsapanel.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\bsizer.cpp" />
+    <ClCompile Include="..\..\..\bsaframe\framex.cpp" />
+    <ClCompile Include="..\..\..\bsaftp\bftp.cpp" />
+    <ClCompile Include="..\..\..\bsaftp\bftpx.cpp" />
+    <ClCompile Include="..\..\..\bsaopenfile\offile.cpp" />
+    <ClCompile Include="..\..\..\bsaopenfile\ofres.cpp" />
+    <ClCompile Include="..\..\..\bsaopenfile\ofsym.cpp" />
+    <ClCompile Include="..\..\..\bsaopenfile\openfile.cpp" />
+    <ClCompile Include="..\..\..\bsaopenfile\openfilex.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\persist.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\persistx.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\perstini.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\perstrc.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\perstreg.cpp" />
+    <ClCompile Include="..\..\..\bsapersist\perstxml.cpp" />
+    <ClCompile Include="..\..\..\bsasercom\serial.cpp" />
+    <ClCompile Include="..\..\..\bsasercom\serialx.cpp" />
+    <ClCompile Include="..\..\..\bsashell\shell.cpp" />
+    <ClCompile Include="..\..\..\bsashell\shellx.cpp" />
+    <ClCompile Include="..\..\..\bsatelcom\telcom.cpp" />
+    <ClCompile Include="..\..\..\bsatelcom\telcomx.cpp" />
+    <ClCompile Include="..\..\..\bsautils\utils.cpp" />
+    <ClCompile Include="..\..\..\bsautils\utilsx.cpp" />
+    <ClCompile Include="..\..\..\bsawiz\blizard.cpp" />
+    <ClCompile Include="..\..\..\bsawiz\blizardx.cpp" />
+    <ClCompile Include="..\..\..\bsaxml\xml.cpp" />
+    <ClCompile Include="..\..\..\bsaxml\xmlx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\bcalclib\bcalcx.h" />
+    <ClInclude Include="..\..\..\bcalclib\bnumber.h" />
+    <ClInclude Include="..\..\..\bcalclib\bprog.h" />
+    <ClInclude Include="..\..\..\bed\bdbg.h" />
+    <ClInclude Include="..\..\..\bed\bed.h" />
+    <ClInclude Include="..\..\..\bed\bedx.h" />
+    <ClInclude Include="..\..\..\bed\bsccs.h" />
+    <ClInclude Include="..\..\..\bed\buffer.h" />
+    <ClInclude Include="..\..\..\bed\infodbg.h" />
+    <ClInclude Include="..\..\..\bed\infopane.h" />
+    <ClInclude Include="..\..\..\bed\keybind.h" />
+    <ClInclude Include="..\..\..\bed\line.h" />
+    <ClInclude Include="..\..\..\bed\parm.h" />
+    <ClInclude Include="..\..\..\bed\pdb.h" />
+    <ClInclude Include="..\..\..\bed\print.h" />
+    <ClInclude Include="..\..\..\bed\project.h" />
+    <ClInclude Include="..\..\..\bed\resource.h" />
+    <ClInclude Include="..\..\..\bed\tclscript.h" />
+    <ClInclude Include="..\..\..\bed\view.h" />
+    <ClInclude Include="..\..\..\bed\viewshell.h" />
+    <ClInclude Include="..\..\..\bsabs\bsx.h" />
+    <ClInclude Include="..\..\..\bsaframe\framex.h" />
+    <ClInclude Include="..\..\..\bsaftp\bftpx.h" />
+    <ClInclude Include="..\..\..\bsaopenfile\ofpriv.h" />
+    <ClInclude Include="..\..\..\bsaopenfile\openfilex.h" />
+    <ClInclude Include="..\..\..\bsapersist\persistx.h" />
+    <ClInclude Include="..\..\..\bsasercom\serialx.h" />
+    <ClInclude Include="..\..\..\bsashell\shellx.h" />
+    <ClInclude Include="..\..\..\bsatelcom\telcomx.h" />
+    <ClInclude Include="..\..\..\bsautils\utilsx.h" />
+    <ClInclude Include="..\..\..\bsawiz\blizardx.h" />
+    <ClInclude Include="..\..\..\bsaxml\xmlx.h" />
+    <ClInclude Include="..\..\..\incl\bcalc.h" />
+    <ClInclude Include="..\..\..\incl\bsabs.h" />
+    <ClInclude Include="..\..\..\incl\bsacrypt.h" />
+    <ClInclude Include="..\..\..\incl\bsadb.h" />
+    <ClInclude Include="..\..\..\incl\bsaframe.h" />
+    <ClInclude Include="..\..\..\incl\bsaftp.h" />
+    <ClInclude Include="..\..\..\incl\bsaopenfile.h" />
+    <ClInclude Include="..\..\..\incl\bsapane.h" />
+    <ClInclude Include="..\..\..\incl\bsapersist.h" />
+    <ClInclude Include="..\..\..\incl\bsasercom.h" />
+    <ClInclude Include="..\..\..\incl\bsashell.h" />
+    <ClInclude Include="..\..\..\incl\bsatelcom.h" />
+    <ClInclude Include="..\..\..\incl\bsautils.h" />
+    <ClInclude Include="..\..\..\incl\bsawinapi.h" />
+    <ClInclude Include="..\..\..\incl\bsawiz.h" />
+    <ClInclude Include="..\..\..\incl\bsaxml.h" />
+    <ClInclude Include="..\..\..\incl\genos.h" />
+    <ClInclude Include="..\..\..\incl\stdids.h" />
+    <ClInclude Include="..\..\..\incl\xkeycodes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\bed\bed128.bmp" />
+    <Image Include="..\..\..\bed\bed32.ico" />
+    <Image Include="..\..\..\bed\icons\bed32.ico" />
+    <Image Include="..\..\..\bed\icons\buf16.bmp" />
+    <Image Include="..\..\..\bed\icons\buf16.ico" />
+    <Image Include="..\..\..\bed\icons\buf16mod.bmp" />
+    <Image Include="..\..\..\bed\icons\buf16mod.ico" />
+    <Image Include="..\..\..\bed\icons\class.ico" />
+    <Image Include="..\..\..\bed\icons\data.ico" />
+    <Image Include="..\..\..\bed\icons\dir16.bmp" />
+    <Image Include="..\..\..\bed\icons\dir16.ico" />
+    <Image Include="..\..\..\bed\icons\dir16op.bmp" />
+    <Image Include="..\..\..\bed\icons\dir16op.ico" />
+    <Image Include="..\..\..\bed\icons\file16.bmp" />
+    <Image Include="..\..\..\bed\icons\file16.ico" />
+    <Image Include="..\..\..\bed\icons\file16ro.bmp" />
+    <Image Include="..\..\..\bed\icons\file16ro.ico" />
+    <Image Include="..\..\..\bed\icons\func.ico" />
+    <Image Include="..\..\..\bed\icons\icon1.ico" />
+    <Image Include="..\..\..\bed\wizimg.bmp" />
+    <Image Include="icons\buf16.ico" />
+    <Image Include="icons\buf16mod.ico" />
+    <Image Include="icons\dir16.ico" />
+    <Image Include="icons\dir16op.ico" />
+    <Image Include="icons\file16.ico" />
+    <Image Include="icons\file16ro.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\bed\bedres.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\bed\hsize.cur" />
+    <None Include="..\..\..\bed\vsize.cur" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

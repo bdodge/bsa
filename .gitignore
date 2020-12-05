@@ -6,6 +6,9 @@
 *.exe 
 work/bed/*/bed
 work/bed/*/depgen
+work/bed/vswindows/Debug
+work/bed/vswindows/*.user
+work/bed/vswindows/.vs
 work/bcalc/*/bcalc
 work/bcalc/*/depgen
 
