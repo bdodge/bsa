@@ -5,6 +5,9 @@ static long  unixBaud(long rate);
 static int	 unixBits(int bits);
 static int	 unixStopBits(int sbits);
 static int	 unixParity(int par);
+#ifdef SERCOM_USEPOLL
+#include <poll.h>
+#endif
 #endif // ndef Windows
 
 //***********************************************************************
@@ -72,7 +75,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	else
 	{
 		LPTSTR pc;
-		
+
 		_tcsncpy(m_portname, pPort, MAX_PATH);
 		pc = _tcsstr(m_portname, _T(":"));
 		if (pc)
@@ -121,7 +124,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	dev.StopBits		= m_stops - 1;
 	dev.fDsrSensitivity = 0;
 	dev.fAbortOnError	= 0;
-	
+
 	// setup h/w flow control
 	//
 	bSet = (flow & 1) != 0;
@@ -130,14 +133,14 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 		dev.fDtrControl = DTR_CONTROL_HANDSHAKE;
 	else
 		dev.fDtrControl = DTR_CONTROL_ENABLE;
-	
+
 	bSet = (flow & 1) != 0;; //(BYTE) ((FLOWCTRL( npTTYInfo) & FC_RTSCTS) != 0);
 	dev.fOutxCtsFlow = bSet;
 	if (bSet)
 		dev.fRtsControl = RTS_CONTROL_HANDSHAKE;
 	else
 		dev.fRtsControl = RTS_CONTROL_ENABLE;
-	
+
 	// setup s/w flow control
 	//
 	bSet = (flow & 2) != 0;
@@ -146,10 +149,10 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	dev.XoffChar	= 0x13;
 	dev.XonLim		= 100;
 	dev.XoffLim		= 100;
-	
+
 	// other various settings
 	dev.fBinary = TRUE;
-	
+
 	dev.DCBlength = sizeof(DCB);
 	rv = SetCommState(m_osport, &dev);
 	rv = GetLastError();
@@ -158,7 +161,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	rv = GetLastError();
 
     SetupComm(m_osport, 4096, 4096);
-	
+
 	// create event for overlapped I/O
 	//
 #else // Windows
@@ -173,7 +176,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	m_stops		= stops;
 	m_parity	= parity;
 	m_flow		= flow;
-	
+
 	// form port name from port canonical number
 	//
 	if (pPort[0] >= '0' && pPort[0] <= '9')
@@ -184,7 +187,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	{
 		m_port = BSASERCOM_USERPORT;
 	}
-	if(m_port != BSASERCOM_USERPORT)		
+	if(m_port != BSASERCOM_USERPORT)
 		GetActualPortName(m_port, m_portname, MAX_PATH);
 	else
 		_tcsncpy(m_portname, pPort, MAX_PATH);
@@ -211,9 +214,9 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	nbio = 1;
 	ioctl(m_osport, FIONBIO, &nbio);
 	m_bOpen = true;
-	
+
 	/*	fcntl(comm_port, F_SETFL, FNDELAY); */
-	
+
 	// get current port settings
 	//
 	rv = tcgetattr(m_osport, &termctl);
@@ -222,26 +225,26 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 	termctl.c_iflag = /*ICRNL |*/ IGNBRK | ((flow & 2) ? (IXON|IXOFF) : IXANY);
 	termctl.c_oflag = 0; /* ONLCR */;
 
-	termctl.c_cflag =	unixBaud(m_baud)		| 
+	termctl.c_cflag =	0 /*unixBaud(m_baud)*/	| /* use cfset[io]speeed instead of bits here */
 						unixBits(m_bits)		|
 						unixStopBits(m_stops)	|
 						unixParity(m_parity);
-	
-	termctl.c_cflag |= CREAD | CLOCAL;
+
+	termctl.c_cflag |= CREAD | CLOCAL | CS8;
 
     cfsetospeed(&termctl, (speed_t)unixBaud(m_baud));
     cfsetispeed(&termctl, (speed_t)unixBaud(m_baud));
-	
+
 	if(flow & 1)
 		termctl.c_cflag |= CRTSCTS;
-	
+
 	termctl.c_lflag = 0L;
 #if !defined(Darwin) && !defined(OSX)
 	termctl.c_line	= 0;
 #endif
-	termctl.c_cc[VMIN]	= 0;
-	termctl.c_cc[VTIME] = 1;
-	
+	termctl.c_cc[VMIN]	= 1;
+	termctl.c_cc[VTIME] = 0;
+
 	// set out settings back to port
 	rv = tcsetattr(m_osport, 0,  &termctl);
 	if(rv < 0)
@@ -274,7 +277,7 @@ ERRCODE BserialStream::Pend(int to_secs, int to_usecs)
 #else
 
 	int toms = to_usecs / 1000;
-	
+
 	mask = 0;
 	toms += to_secs * 1000;
 
@@ -321,6 +324,8 @@ ERRCODE BserialStream::Pend(int to_secs, int to_usecs)
 	return errOK;
 #else
 	int		sv;
+
+#ifndef SERCOM_USEPOLL
 	fd_set  rfds;
 
 	struct  timeval timeout;
@@ -334,15 +339,24 @@ ERRCODE BserialStream::Pend(int to_secs, int to_usecs)
 		//return errSTREAM_NOT_OPEN;
 		return errOK;
 	}
-			
+
 	FD_ZERO (&rfds);
 	FD_SET  (m_osport, &rfds);
 
 	timeout.tv_sec  = to_secs;
 	timeout.tv_usec = to_usecs;
 
-	sv = select(m_osport + 1, &rfds, NULL, NULL, to_secs >= 0 ? &timeout : NULL);
-	if (sv < 0) 
+	sv = select(m_osport + 1, &rfds, NULL, NULL, (to_secs >= 0 || to_usecs >= 0) ? &timeout : NULL);
+#else
+	struct pollfd fds;
+	int to = to_secs * 1000 + ((to_usecs + 999) / 1000);
+
+	fds.fd = m_osport;
+	fds.events = POLLIN;
+
+	sv = poll(&fds, 1, to);
+#endif
+	if (sv < 0)
 		if(errno == EINTR)
 			sv = 0;
 	if(sv < 0)
@@ -377,7 +391,7 @@ ERRCODE BserialStream::Read(LPBYTE pBuf, int& cnt)
 			if (! rv)
 			{
 				cnt = 0;
-				return errOK; 
+				return errOK;
 			}
 			if (rv < cnt)
 			{
@@ -441,7 +455,7 @@ ERRCODE BserialStream::Read(LPBYTE pBuf, int& cnt)
 #else // not Windows
 
 	int nRead;
-	
+
 	if (m_osport < 0)
 		return errSTREAM_NOT_OPEN;
 
@@ -542,7 +556,7 @@ ERRCODE BserialStream::Write(LPBYTE pBuf, int& cnt)
 	}
 #else
 	int wc;
-	
+
 	if (m_osport < 0)
 		return errSTREAM_NOT_OPEN;
 
@@ -683,7 +697,7 @@ int BserialStream::GetIndexOfPort(LPCTSTR portName)
 		return  _tcstol(portName + 9, NULL, 10);
 	if(! _tcsnicmp(portName, _T("/dev/ttyUSB"), 11))
 		return 64 + _tcstol(portName + 11, NULL, 10);
-	if(! _tcsnicmp(portName, _T("/dev/tty"), 8)) 
+	if(! _tcsnicmp(portName, _T("/dev/tty"), 8))
 	{
 		if (portName[7] >= 'a' && portName[7] <= 'z' && portName[8] == 0)
 			return portName[8] - 'a';

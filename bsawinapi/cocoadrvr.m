@@ -24,7 +24,7 @@ CGColorRef foreground = NULL, background = NULL;
 
 static NSAutoreleasePool *pool;
 static NSApplication *application;
-static CGContextRef *s_bitmapcontext;
+static CGContextRef s_bitmapcontext;
 
 @interface ZWindow : NSView {
 NSTrackingArea *trackingArea;
@@ -246,6 +246,47 @@ BOOL _cocoa_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 									false
 								);
 
+		if (textString == NULL)
+		{
+			LPTSTR lpCopy;
+			int i;
+			
+			// this happens when garbage unicode chars slip in, so sanitize it
+			//			
+			lpCopy = (LPTSTR)malloc(nText);
+			if (! lpCopy)
+			{
+				return FALSE;
+			}
+			for (i = 0; i < nText; i++)
+			{
+				if (lpText[i] > 32767)
+				{
+					lpCopy[i] = (TCHAR)'?';
+				}
+				else
+				{
+					lpCopy[i] = lpText[i];
+				}
+			}
+			textString = CFStringCreateWithBytes(
+												NULL,
+												(const UInt8*)lpCopy,
+										#ifdef UNICODE
+												nText * sizeof(WCHAR),
+												kCFStringEncodingUTF32LE,
+										#else
+												nText,
+												kCFStringEncodingUTF8,
+										#endif
+												false
+											);
+			free(lpCopy);
+			if (textString == NULL)
+			{
+				return FALSE;
+			}
+		}
 		// Create a mutable attributed string with a max length of 0.
 		// The max length is a hint as to how much internal storage to reserve.
 		// 0 means no hint.
@@ -325,6 +366,9 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 	if(! zGC->zDrvr)  return FALSE;
 	if(! lpText || (nText <= 0)) return FALSE;
 
+	*width = 10 * nText;
+	*height = 10;
+	
 	if(zFont)
 	{
 		if(zGC->hFONT)
@@ -345,8 +389,6 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 		}
 		if (! context)
 		{
-			*width = 10 * nText;
-			*height = 10;
 			return FALSE;
 		}
         CGContextSetFontSize(context, CTFontGetSize((CTFontRef)(zFont->font)));
@@ -367,6 +409,47 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 							#endif
 									false
 								);
+		if (textString == NULL)
+		{
+			LPTSTR lpCopy;
+			int i;
+			
+			// this happens when garbage unicode chars slip in, so sanitize it
+			//			
+			lpCopy = (LPTSTR)malloc(nText);
+			if (! lpCopy)
+			{
+				return FALSE;
+			}
+			for (i = 0; i < nText; i++)
+			{
+				if (lpText[i] > 32767)
+				{
+					lpCopy[i] = (TCHAR)'?';
+				}
+				else
+				{
+					lpCopy[i] = lpText[i];
+				}
+			}
+			textString = CFStringCreateWithBytes(
+												NULL,
+												(const UInt8*)lpCopy,
+										#ifdef UNICODE
+												nText * sizeof(WCHAR),
+												kCFStringEncodingUTF32LE,
+										#else
+												nText,
+												kCFStringEncodingUTF8,
+										#endif
+												false
+											);
+			free(lpCopy);
+			if (textString == NULL)
+			{
+				return FALSE;
+			}
+		}
 		#if 0
 		CFMutableAttributedStringRef attrString =
 		         CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
