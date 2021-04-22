@@ -1624,6 +1624,27 @@ ERRCODE Bbuffer::SetLineIsInfo(int line, BlineInfo info)
 	return errFAILURE;
 }
 
+ERRCODE Bbuffer::ClearLinesInfo(BlineInfo info)
+{
+	ERRCODE ec;
+	int		line = 1;
+
+	do
+	{
+		ec = GetNextLineInfo(line, info);
+		if(ec == errOK)
+		{
+			if(info & liCommentMask)
+				SetLineCommentInfo(line, GetLineCommentInfo(line) & ~(info & liCommentMask));
+			if(info & liIsMask)
+				SetLineIsInfo(line, GetLineCommentInfo(line) & ~(info & liIsMask));
+		}
+	}
+	while(ec == errOK);
+	
+	return errOK;
+}
+
 //**************************************************************************
 ERRCODE Bbuffer::GetNextLineInfo(int& line, BlineInfo info)
 {

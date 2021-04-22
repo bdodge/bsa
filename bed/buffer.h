@@ -152,6 +152,7 @@ public:
 	virtual BlineInfo
 					GetLineIsInfo	(int line);
 	virtual ERRCODE	SetLineIsInfo	(int line, BlineInfo info);
+	virtual ERRCODE	ClearLinesInfo	(BlineInfo info);
 	virtual ERRCODE GetNextLineInfo (int& line, BlineInfo info);
 
 	static BufType	SniffType		(LPCTSTR pFilename, TEXTENCODING& encoding);

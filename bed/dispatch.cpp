@@ -445,21 +445,7 @@ int Bview::GetLastModifiedCol(void)
 //**************************************************************************
 void Bview::ClearLineInfo(BlineInfo info)
 {
-	ERRCODE ec;
-	int		line = 1;
-
-	do
-	{
-		ec = m_buffer->GetNextLineInfo(line, info);
-		if(ec == errOK)
-		{
-			if(info & liCommentMask)
-				m_buffer->SetLineCommentInfo(line, m_buffer->GetLineCommentInfo(line) & ~(info & liCommentMask));
-			if(info & liIsMask)
-				m_buffer->SetLineIsInfo(line, m_buffer->GetLineCommentInfo(line) & ~(info & liIsMask));
-		}
-	}
-	while(ec == errOK);
+	m_buffer->ClearLinesInfo(info);
 }
 
 #define STATUS_LEN 256
@@ -865,6 +851,13 @@ ERRCODE Bview::Dispatch(EditCommand command)
 			}
 			if(m_searchlen <= 0)
 				m_searchstr[0] = _T('\0');
+
+			// clear any previously found marks in views
+			//
+			for(pEntry = m_editor->GetBuffers(); pEntry; pEntry = pEntry->GetNext(pEntry))
+			{
+				pEntry->GetValue()->ClearLinesInfo(liIsSearchTarget);
+			}
 
 			// use pane 2 if active, else pane 1
 			//

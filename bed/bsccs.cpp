@@ -900,7 +900,7 @@ ERRCODE Bsccs::RunCommand(LPCTSTR filename, LPCTSTR cmd)
 	_sntprintf(m_sccs, 1024, L"%ls %ls \"cd %ls %s %ls %ls\"\n",
 			m_sccsshell, m_sccsswitch, szDir, m_sccssep, cmd, szFile);
 #else
-	_snprintf(m_sccs, 1024, "%s %s \"cd %s %ls %s %s\"\n",
+	_snprintf(m_sccs, 1024, "%s %s \"cd %s %s %s %s\"\n",
 			m_sccsshell, m_sccsswitch, szDir, m_sccssep, cmd, szFile);
 #endif
 

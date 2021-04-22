@@ -1943,6 +1943,7 @@ int Bview::GetViewCols(HDC hdc)
 	GetViewClientRect(m_hwnd, &rcc);
 	fw = GetFontWidth(hdc);
 	if(fw < 1) fw = 1;
+	rcc.left += GetLeftMargin();
 	m_cacheCols = (rcc.right - rcc.left) / fw;
 	return m_cacheCols;
 }
@@ -2403,7 +2404,7 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 		/*
 		_tprintf(_T("rcu t=%d l=%d b=%d r=%d  tl=%d lc=%d\n"),
 			lprcUpdate->top, lprcUpdate->left,
-			lprcUpdate->bottom, lprcUpdate->right, m_topline,m_leftcol);
+			lprcUpdate->bottom, lprcUpdate->right, m_topline, m_leftcol);
 		*/
 	}
 	else
@@ -2480,6 +2481,36 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 					FillRect(hdc, &rcmarg, hbrBkg/*GetSysColorBrush(COLOR_3DLIGHT)*/);
 					//_tprintf(_T("rcml=%d r=%d\n"), rcmarg.left, rcmarg.right);
 
+					if (m_showLineNums && (type == dtDraw || type == dtPrint))
+					{
+						HBRUSH hbrLino;
+						TCHAR lino[32];
+						int linolen;
+
+						linolen = _sntprintf(lino, 32, _T("%d"), line);
+						GetTextExtentPoint32(hdc, lino, linolen, &tokenSize);
+
+						frgColor = m_view_colors[kwBuiltinType] & 0x00ffffff;
+						bkgColor = m_view_colors[kwLinoBackground] & 0x00ffffff;
+
+						if (frgColor != curFrgColor)
+							SetTextColor(hdc, frgColor);
+						curFrgColor = frgColor;
+
+						if (bkgColor != curBkgColor)
+							SetBkColor(hdc, bkgColor);
+						curBkgColor = bkgColor;
+
+						rcl.top		= y;
+						rcl.bottom	= y + yi;
+						rcl.left	= 0;
+						rcl.right	= GetLeftMargin();
+	
+						hbrLino = CreateSolidBrush(bkgColor);
+						FillRect(hdc, &rcl, hbrLino);
+						DeleteObject(hbrLino);
+						TextOut(hdc, GetLeftMargin() - VIEW_LINO_MARGIN - tokenSize.cx,  y, lino, linolen);
+					}
 					if(m_showCommentInfo)
 					{
 						TCHAR cx = ' ';
@@ -2512,36 +2543,6 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 							else							cx = m_view_colors[kwMacro] & 0x00ffffff;
 							DrawTypeMark(hdc, rcmarg.left, y, VIEW_LEFT_MARGIN, cx);
 						}
-					}
-					if (m_showLineNums && (type == dtDraw || type == dtPrint))
-					{
-						HBRUSH hbrLino;
-						TCHAR lino[32];
-						int linolen;
-
-						linolen = _sntprintf(lino, 32, _T("%d"), line);
-						GetTextExtentPoint32(hdc, lino, linolen, &tokenSize);
-
-						frgColor = m_view_colors[kwBuiltinType] & 0x00ffffff;
-						bkgColor = m_view_colors[kwLinoBackground] & 0x00ffffff;
-
-						if (frgColor != curFrgColor)
-							SetTextColor(hdc, frgColor);
-						curFrgColor = frgColor;
-
-						if (bkgColor != curBkgColor)
-							SetBkColor(hdc, bkgColor);
-						curBkgColor = bkgColor;
-
-						rcl.top		= y;
-						rcl.bottom	= y + yi;
-						rcl.left	= 0;
-						rcl.right	= GetLeftMargin();
-	
-						hbrLino = CreateSolidBrush(bkgColor);
-						FillRect(hdc, &rcl, hbrLino);
-						DeleteObject(hbrLino);
-						TextOut(hdc, GetLeftMargin() - VIEW_LINO_MARGIN - tokenSize.cx,  y, lino, linolen);
 					}
 				}
 			}
@@ -2983,7 +2984,7 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 			//	printf("mlcc=%d lc=%d oc=%d ic=%d\n", m_lastcaretcol, m_leftcol, outcol, incol);
 			if(
 					(m_lastcaretcol < m_leftcol)				// caret off the left
-				||	(m_lastcaretcol >= (m_leftcol + incol - (m_leftcol == 1 ? 1 : 2)))	// off the right
+				||	(m_lastcaretcol >= (m_leftcol + incol /*- (m_leftcol == 1 ? 1 : 2)*/))	// off the right
 			)
 			{
 				if(m_colscrollok)
