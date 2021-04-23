@@ -60,8 +60,37 @@ void BviewStream::Event(LPARAM lParam)
 //**************************************************************************
 ERRCODE BviewStream::SendData(LPBYTE data, int len)
 {
+	int chunk;
+	int attempts;
+	ERRCODE ec;
+
 	if(! m_io) return errSTREAM_WRITE;
-	return m_io->Write(data, len);
+	// send in blocks of 16 to not overflow serial fifo
+	while (len > 0)
+	{
+		chunk = 1;
+		if (chunk > len)
+		{
+			chunk = len;
+		}
+		// wait for no data pending before inserting
+		//
+		attempts = 0;
+		do
+		{
+			ec = m_io->Pend(0, 25000);
+		}
+		while (attempts++ < 1000 && (ec == errSTREAM_DATA_PENDING));
+
+		ec = m_io->Write(data, chunk);
+		if (ec)
+		{
+			return ec;
+		}
+		len -= chunk;
+		data += chunk;
+	}
+	return errOK;
 }
 
 //**************************************************************************
@@ -99,7 +128,7 @@ ERRCODE BviewStream::ShellThread()
 	m_cnt = 0;
 
 	if(! m_io) return errSTREAM_OPEN;
-	
+
 	timeouts = 0;
 	while(m_running && m_io)
 	{
@@ -118,17 +147,17 @@ ERRCODE BviewStream::ShellThread()
 			timeouts = 0;
 
 			if(m_cnt < m_size)
-			{									
+			{
 				if(m_head >= m_tail)
 					nRoom = m_size - m_head;
 				else
 					nRoom = m_tail - m_head;
-	
+
 				nRead = nRoom;
 				ec = m_io->Read((LPBYTE)(m_iobuf + m_head), nRead);
 
 				if(nRead > 0)
-				{	
+				{
 					qwait = 0;
 					m_bufex.Lock();
 					m_head += nRead;

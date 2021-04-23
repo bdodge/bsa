@@ -7,17 +7,17 @@ BviewTelnet::BviewTelnet(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		BviewStream(pBuf, pEditor, pPanel)
 {
 	BsocketStream::Init();
-	
+
 	m_host[0] = _T('\0');
 	m_port = 23;
-	
+
 	// if host name specified on command line, use it instead of
 	// remembered host
 	//
 	if(pBuf && pBuf->GetName() && _tcslen(pBuf->GetName()) > 0 && _tcscmp(pBuf->GetName(), _T("Remote")))
 	{
 		LPTSTR pp, pb;
-		
+
 		pb = (LPTSTR)pBuf->GetName();
 		pp = pb + _tcslen(pb) - 1;
 		for(;pp >= pb; pp--)
@@ -34,7 +34,7 @@ BviewTelnet::BviewTelnet(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		{
 			_tcsncpy(m_host, pp, MAX_PATH);
 			m_host[MAX_PATH - 1] = _T('\0');
-		
+
 			pBuf->SetName(pp);
 
 			// extract any port spec from hostname
@@ -89,7 +89,7 @@ void BviewTelnet::Activate()
 		GetEditor()->GetPersist()->SetNvBool(_T("Telnet/SetupValid"), true);
 	BviewTerminal::Activate();
 }
-	
+
 //**************************************************************************
 void BviewTelnet::FitToPanel()
 {
@@ -136,7 +136,7 @@ ERRCODE BviewTelnet::ApplyPortSettings()
 		m_io = new BtelnetStream();
 	}
 	m_iochanging = false;
-	
+
 	TCharToChar(ahost, m_host);
 	ec = ((BtelnetStream*)m_io)->Open(ahost, m_port);
 
@@ -147,7 +147,7 @@ ERRCODE BviewTelnet::ApplyPortSettings()
 	if(ec != errOK)
 	{
 		int l;
-	
+
 		l = _sntprintf(vname, 200, _T("Can't open: "_Pfs_":%d"), m_host, m_port);
 		MessageBox(NULL, vname, _T("BED 6.0 - Port Error"), MB_OK);
 	}
@@ -160,7 +160,7 @@ ERRCODE BviewTelnet::ApplyPortSettings()
 		fw = GetFontWidth();
 
 		GetClientRect(m_hwnd, &rc);
-		((BtelnetStream*)m_io)->TelnetSetWindowSize((rc.right - rc.left) / fw, (rc.bottom - rc.top) / fh);
+		((BtelnetStream*)m_io)->TelnetSetWindowSize(((rc.right - rc.left) * 15) / fw, (rc.bottom - rc.top) / fh);
 
 		// send willtells
 		if(0) {
@@ -199,13 +199,13 @@ static BOOL CALLBACK Telnetproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	HWND		hwndParent;
 	RECT		rc, rcme;
 	TCHAR		pparm[MAX_PATH + 256];
-	
+
 	int			port;
 	TCHAR		host[MAX_PATH];
 
 	ptp = (PTPPARM)GetWindowLong(hWnd, GWL_USERDATA);
 
-	switch(message) 
+	switch(message)
 	{
 	case WM_INITDIALOG:
 

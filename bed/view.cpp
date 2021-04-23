@@ -1922,13 +1922,14 @@ int Bview::GetFontWidth(HDC hdc)
 	hFont	 = m_view_fonts[0];
 	hOldFont = (HFONT)SelectObject(hdc, hFont);
 
-	GetTextExtentPoint32(hdc, _T("abcmABCM12"), 10, &sizeText);
+	GetTextExtentPoint32(hdc, _T("abcmxABCMX12+=_W"), 16, &sizeText);
 	if(sizeText.cx == 0) sizeText.cx = 80;
 
 	SelectObject(hdc, hOldFont);
 	if(gotdc)
 		ReleaseDC(m_hwnd, hdc);
-	m_cacheFontWidth = sizeText.cx / 10;
+	// store with as *16 to handle fractional widths better
+	m_cacheFontWidth = sizeText.cx;
 	return m_cacheFontWidth;
 }
 
@@ -1944,7 +1945,8 @@ int Bview::GetViewCols(HDC hdc)
 	fw = GetFontWidth(hdc);
 	if(fw < 1) fw = 1;
 	rcc.left += GetLeftMargin();
-	m_cacheCols = (rcc.right - rcc.left) / fw;
+	m_cacheCols = ((rcc.right - rcc.left) * 16) / fw;
+	//printf("VC=%d fw=%d lm=%d\n", m_cacheCols, fw, GetLeftMargin());
 	return m_cacheCols;
 }
 
@@ -2505,7 +2507,7 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 						rcl.bottom	= y + yi;
 						rcl.left	= 0;
 						rcl.right	= GetLeftMargin();
-	
+
 						hbrLino = CreateSolidBrush(bkgColor);
 						FillRect(hdc, &rcl, hbrLino);
 						DeleteObject(hbrLino);
