@@ -415,8 +415,15 @@ ERRCODE BgrepInfo::BuildFileList(LPCTSTR path)
 	LPCTSTR		lpName;
 	bool		isDir, isLink, isReadOnly;
 
+	if (m_recurse_level >= GREP_MAX_RECURSE)
+	{
+		return errOK;
+	}
+
 	if((ec = BfileInfo::ListDirectory(hDir, path)) != errOK)
 		return ec;
+
+	m_recurse_level++;
 
 	while((ec = BfileInfo::NextFile(hDir, lpName, isDir, isLink, isReadOnly)) == errOK)
 	{
@@ -441,8 +448,14 @@ ERRCODE BgrepInfo::BuildFileList(LPCTSTR path)
 		{
 			m_fileList = BgrepList::AddToList(new BgrepList(lpName, NULL), m_fileList);
 		}
-		if(IsDone()) return errFAILURE;
+
+		if(IsDone())
+		{
+			m_recurse_level--;
+			return errFAILURE;
+		}
 	}
+	m_recurse_level--;
 	return ec;
 }
 
@@ -591,6 +604,7 @@ ERRCODE BgrepInfo::Startup(
 	}
 	Clear();
 
+	m_recurse_level = 0;
 	m_fileCount = m_occurFiles = m_occurenceCount = 0;
 
 	// Get the starting directory

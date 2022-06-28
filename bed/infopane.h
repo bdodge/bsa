@@ -321,6 +321,8 @@ protected:
 KEY_ARRYVAL_LIST_TEMPLATE(BgrepList, LPTSTR, NO_API);
 KEY_ARRYVAL_LIST_TEMPLATE(BfpatList, LPTSTR, NO_API);
 
+#define GREP_MAX_RECURSE 64
+
 // GREP (Find-In-Files) view object
 //**************************************************************************
 class BgrepInfo : public BshellInfo
@@ -369,6 +371,7 @@ protected:
 	int				m_nPat;
 	bool			m_casesensi;
 	bool			m_recursive;
+	int				m_recurse_level;
 	bool			m_wholeword;
 	BgrepList*		m_fileList;
 	BgrepList*		m_curFile;

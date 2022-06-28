@@ -204,6 +204,7 @@ ERRCODE BserialStream::Open(LPCTSTR pPort, int baud, int bits, int stops, int pa
 		rv = fcntl(m_osport, F_GETFL, 0);
 		fcntl(m_osport, F_SETFL, rv & ~O_NDELAY);
 	}
+	//printf("open %s = %d  %d\n", portname, m_osport, errno);
 #else
 	m_osport = open(portname, O_RDWR | O_NOCTTY);
 #endif
@@ -462,6 +463,10 @@ ERRCODE BserialStream::Read(LPBYTE pBuf, int& cnt)
 	nRead = read(m_osport, (char*)pBuf, cnt);
 	if(nRead < 0)
 	{
+		if (m_bOpen)
+		{
+			Close();
+		}
 		cnt = 0;
 		return errSTREAM_READ;
 	}

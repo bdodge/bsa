@@ -250,10 +250,10 @@ BOOL _cocoa_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 		{
 			LPTSTR lpCopy;
 			int i;
-			
+
 			// this happens when garbage unicode chars slip in, so sanitize it
-			//			
-			lpCopy = (LPTSTR)malloc(nText);
+			//
+			lpCopy = (LPTSTR)malloc(nText * sizeof(TCHAR));
 			if (! lpCopy)
 			{
 				return FALSE;
@@ -368,7 +368,7 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 
 	*width = 10 * nText;
 	*height = 10;
-	
+
 	if(zFont)
 	{
 		if(zGC->hFONT)
@@ -413,10 +413,10 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 		{
 			LPTSTR lpCopy;
 			int i;
-			
+
 			// this happens when garbage unicode chars slip in, so sanitize it
-			//			
-			lpCopy = (LPTSTR)malloc(nText);
+			//
+			lpCopy = (LPTSTR)malloc(nText * sizeof(TCHAR));
 			if (! lpCopy)
 			{
 				return FALSE;
@@ -2186,7 +2186,7 @@ void _w_clipSetClipboardData(char *data, int len, UINT format)
 
 	if (! data)
 		return;
-	
+
 	// clip data is always stored in utf8 format
 	//
 	if(format == CF_UNICODETEXT)

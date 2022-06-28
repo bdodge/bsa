@@ -405,7 +405,7 @@ ERRCODE Bbuffer::SniffTabs(int& tabspace, int& indentspace, bool& spacetabs)
 
 		//  set indent based on line indent deltas only
 		//
-		line = 1;
+		line = lines / 2;
 		col = 1;
 
 		for(fl = prevsc = 0; fl < BED_TAB_SNIFF_CNT && line < lines; fl++)
@@ -429,6 +429,7 @@ ERRCODE Bbuffer::SniffTabs(int& tabspace, int& indentspace, bool& spacetabs)
 				if (delta < 0)
 					delta = -delta;
 
+				//_tprintf(_T("line %d sc = %d  delta=%d\n"), line, sc, delta);
 				if (delta < 9)
 				{
 					// add space count to histogram
@@ -443,6 +444,7 @@ ERRCODE Bbuffer::SniffTabs(int& tabspace, int& indentspace, bool& spacetabs)
 		//
 		for(fl = sc = maxl = 0; fl < 9; fl++)
 		{
+			//_tprintf(_T("sc[%d] = %d\n"), fl, sd[fl]);
 			if(sd[fl] > sc)
 			{
 				maxl = fl;
@@ -1641,7 +1643,7 @@ ERRCODE Bbuffer::ClearLinesInfo(BlineInfo info)
 		}
 	}
 	while(ec == errOK);
-	
+
 	return errOK;
 }
 

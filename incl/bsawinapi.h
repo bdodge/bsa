@@ -40,7 +40,7 @@ typedef void*	HGDIOBJ;
 // them 64 bits on machines with 64 bit addresses on
 // LONG has to agree with LPARAM for things like getwindowslong
 // but DWORD has to be 4 bytes still
-#if defined(__X86_64__) || _WIN64_ || __amd64__
+#if defined(__X86_64__) || _WIN64_ || __amd64__ || __arm64__
 typedef long long 	LPARAM, LRESULT, LONG;
 typedef unsigned long long 	WPARAM;
 #else
@@ -50,7 +50,11 @@ typedef unsigned int 	WPARAM;
 typedef unsigned int UINT;
 typedef int		INT, FAR *LPINT;
 #ifdef COCOA
+#ifdef __arm64__
+typedef bool BOOL;
+#else
 typedef signed char BOOL;
+#endif
 #else
 typedef int   	BOOL;
 #endif

@@ -70,7 +70,7 @@ void BshellInfo::Select(LPTVITEM pItem)
 
 		// if relative path, prepend directory in which the shell ran
 		//
-		if(fName && fName[0] != _PTC_ && fName[1] != _T(':'))
+		if(fName[0] != _PTC_ && fName[1] != _T(':'))
 		{
 			_tcscpy(path, GetPathPrefix());
 			plen = _tcslen(path);
@@ -424,15 +424,18 @@ ERRCODE BshellInfo::ReaderThread(void)
 
 bool IsPathChar(TCHAR c)
 {
-	return	(c == '.' || c == '/') 	||
-#ifdef Windows
-			(c == ':' || c == '\\') ||
-#endif
-			(c >= 'a' && c <= 'z')	||
-			(c >= 'A' && c <= 'Z')	||
-			(c == ' ' || c == '_')	||
-			(c == '-' || c == '~')	||
-			(c >= '0' && c <= '9');
+	if (c > (TCHAR)126)				return false;
+	if (c < (TCHAR)32)				return false;
+
+	if (c == _T(' '))				return false;
+	if (c == _T('\"'))				return false;
+	if (c == _T('*'))				return false;
+	if (c == _T('<'))				return false;
+	if (c == _T('>'))				return false;
+	if (c == _T('?'))				return false;
+	if (c == _T('|'))				return false;
+	
+	return true;
 }
 
 //**************************************************************************
