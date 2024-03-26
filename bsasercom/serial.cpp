@@ -14,7 +14,7 @@ static int	 unixParity(int par);
 BserialStream::BserialStream()
 			:
 			Bstream(),
-			m_baud(9600),
+			m_baud(115200),
 			m_bits(8),
 			m_stops(1),
 			m_parity(0)

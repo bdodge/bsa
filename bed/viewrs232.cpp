@@ -4,7 +4,7 @@
 //**************************************************************************
 BviewRS232::BviewRS232(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 		:
-		m_baud(9600),
+		m_baud(115200),
 		m_bits(8),
 		m_stops(1),
 		m_parity(0),
@@ -14,9 +14,9 @@ BviewRS232::BviewRS232(Bbuffer* pBuf, Bed* pEditor, BappPanel* pPanel)
 	Bpersist* pp;
 	int		  port;
 	pp = m_editor->GetPersist();
-	
+
 	_tcscpy(m_port, pBuf->GetName());
-	
+
 	// if port is a simple number, convert index to name
 	// else use name directly
 	//
@@ -94,7 +94,7 @@ ERRCODE BviewRS232::GetPortSettings()
 		_tcscpy(px, _T("Parity"));
 		pp->GetNvInt(pparm, m_parity, m_parity);
 		_tcscpy(px, _T("FlowControl"));
-		pp->GetNvInt(pparm, m_flow, m_flow);		
+		pp->GetNvInt(pparm, m_flow, m_flow);
 	}
 	return errOK;
 }
@@ -198,7 +198,7 @@ static BOOL CALLBACK RS232proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 	TCHAR		pparm[MAX_PATH + 256];
 	LPTSTR		px;
 	int			ppl;
-	
+
 	static int   port, baud, bits, stops, parity, flow;
 	static TCHAR portname[MAX_PATH];
 
@@ -235,7 +235,7 @@ static BOOL CALLBACK RS232proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 			MoveWindow(hWnd, x, y, w, h, FALSE);
 		}
-		baud = 9600;
+		baud = 115200;
 		bits = 8;
 		stops = 1;
 		parity = 0;
@@ -448,7 +448,7 @@ static BOOL CALLBACK RS232proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 				int			ec;
 
 				if (pTerm)
-				{ 
+				{
 					if ((ec = pTerm->PopParm(_T("Port Name"), ptString, pParm, nParm)) == errOK)
 					{
 						port = BserialStream::GetIndexOfPort(pParm);

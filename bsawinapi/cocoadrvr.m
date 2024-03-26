@@ -1096,6 +1096,10 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_RBUTTONUP, wParam, lParam);
 	}
+	else
+	{
+		_tprintf(_T("No widow for Rmouse UP\n"));
+	}
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
