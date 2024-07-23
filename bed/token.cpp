@@ -364,7 +364,7 @@ TokenRet Bview::GetToken(
 	
 	incol   = inc + 1;
 	
-	//_tprintf(_T("tok="_Pfs_"=%d\n"), lpToken, nToken);
+	//_tprintf(_T("tok=" _Pfs_ "=%d\n"), lpToken, nToken);
 	
 	return trOK;
 }

@@ -188,7 +188,7 @@ ERRCODE BfuncInfo::EnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int lin
 {
 	TVINSERTSTRUCT tvItem;
 
-	//_tprintf(_T("%d "_Pfs_" "_Pfs_"\n"), type, pName, pTypeName);
+	//_tprintf(_T("%d " _Pfs_ " " _Pfs_ "\n"), type, pName, pTypeName);
 	
 	switch(type)
 	{

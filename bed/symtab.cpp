@@ -509,7 +509,7 @@ void SYMTABprintSym(PSYM sym, int level)
 	{
 		_tprintf(_T("    "));
 	}
-	_tprintf(_T(""_Pfs_" "), sym->name);
+	_tprintf(_T("" _Pfs_ " "), sym->name);
 	if(sym->desc.isptr)
 	{
 		for(i = 0; i < (int)sym->desc.isptr; i++)
@@ -568,7 +568,7 @@ int SYMTABtypeString(PSYM sym, TCHAR* buf, int nbuf)
 			tlen += _sntprintf(buf + tlen, nbuf - tlen, _T("*"));
 		}
 	}
-	tlen += _sntprintf(buf + tlen, nbuf - tlen, _T(" "_Pfs_""), sym->name);
+	tlen += _sntprintf(buf + tlen, nbuf - tlen, _T(" " _Pfs_ ""), sym->name);
 
 	for(i = 0; i < (int)sym->desc.isdim; i++)
 	{

@@ -132,7 +132,7 @@ void Bview::ZoomProtoItem(int key)
 			{
 				cmp = -1;
 			}
-			_tprintf(_T("zoom "_Pfs_" to %s = %d\n"), lpa, lpb, cmp);
+			_tprintf(_T("zoom " _Pfs_ " to %s = %d\n"), lpa, lpb, cmp);
 			if(cmp == 0)
 			{
 				// zoom buffer matches this item
@@ -284,7 +284,7 @@ ERRCODE Bview::ProtoWindow(LPBSYM pSym, EnumFuncsType type)
 		{
 			TCHAR tt[256];
 
-			_sntprintf(tt, 256, _T("No members in type "_Pfs_""), pSym->f_name);
+			_sntprintf(tt, 256, _T("No members in type " _Pfs_ ""), pSym->f_name);
 			m_editor->SetStatus(tt);
 			return errOK;
 		}
@@ -418,7 +418,7 @@ ERRCODE Bview::ProtoWindow(LPBSYM pSym, EnumFuncsType type)
 
 						if(cmp > 0) 
 						{
-							_tprintf(_T(""_Pfs_" is > than "_Pfs_"\n"), lpa, lpb);
+							_tprintf(_T("" _Pfs_ " is > than " _Pfs_ "\n"), lpa, lpb);
 							if(hPrevItem == NULL)
 							{
 								tvItem.hInsertAfter = TVI_FIRST;
@@ -431,7 +431,7 @@ ERRCODE Bview::ProtoWindow(LPBSYM pSym, EnumFuncsType type)
 						}
 						else
 						{
-							_tprintf(_T(""_Pfs_" is < than "_Pfs_"\n"), lpa, lpb);
+							_tprintf(_T("" _Pfs_ " is < than " _Pfs_ "\n"), lpa, lpb);
 						}
 						hPrevItem = hItem;
 						hItem = TreeView_GetNextSibling(m_hWndProto, hItem);

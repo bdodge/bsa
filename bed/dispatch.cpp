@@ -112,7 +112,7 @@ ERRCODE Bview::CheckReadOnly()
 	if(pSC->GetRunning())
 		return errPERMISSION;
 
-	_sntprintf(msg, MAX_PATH + 64, _T("Check Out "_Pfs_" ?"), m_buffer->GetShortName());
+	_sntprintf(msg, MAX_PATH + 64, _T("Check Out " _Pfs_ " ?"), m_buffer->GetShortName());
 	rc = MessageBox(NULL, msg, m_editor->GetVersion(), MB_YESNOCANCEL);
 
 	if(rc != IDYES)
@@ -750,7 +750,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 		else
 		{
 			MoveAbs(svline, svcol);
-			_sntprintf(status, STATUS_LEN, _T("String "_Pfs_" not found"), m_searchstr);
+			_sntprintf(status, STATUS_LEN, _T("String " _Pfs_ " not found"), m_searchstr);
 			m_editor->SetStatus(status);
 			ec = errOBJECT_NOT_FOUND;
 		}
@@ -909,7 +909,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 						break;
 					}
 					// open file at line
-					//_tprintf(_T("open file "_Pfs_" at line %d\n"), pSym->f_file->f_name, pSym->f_line);
+					//_tprintf(_T("open file " _Pfs_ " at line %d\n"), pSym->f_file->f_name, pSym->f_line);
 
 					ec = m_editor->EditBuffer(pSym->f_file->f_name, true, btAny, (TEXTENCODING)-1, pSym->f_line);
 				}
@@ -1597,7 +1597,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 		{
 			int rc;
 
-			_sntprintf(status, MAX_PATH + 64, _T("Could not write "_Pfs_", Write to Alternate ?"), m_buffer->GetName());
+			_sntprintf(status, MAX_PATH + 64, _T("Could not write " _Pfs_ ", Write to Alternate ?"), m_buffer->GetName());
 			rc = MessageBox(NULL, status, m_editor->GetVersion(), MB_OKCANCEL);
 			if(rc == IDCANCEL) break;
 			return Dispatch(SaveAs);
@@ -1652,7 +1652,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 
 								if(! m_buffer->GetIsFTP() && BUtil::FileExists(pParm) == errOK)
 								{
-									_sntprintf(status, MAX_PATH + 64, _T("Overwrite Existing "_Pfs_""), pParm);
+									_sntprintf(status, MAX_PATH + 64, _T("Overwrite Existing " _Pfs_ ""), pParm);
 									rc = MessageBox(NULL, status, m_editor->GetVersion(), MB_OKCANCEL);
 								}
 								else
@@ -1674,10 +1674,10 @@ ERRCODE Bview::Dispatch(EditCommand command)
 									{
 										if(m_buffer->GetHasCR())
 											_sntprintf(status, MAX_PATH + 64,
-												_T("Change CR-LF endings to LF for "_Pfs_" ?"), newpath);
+												_T("Change CR-LF endings to LF for " _Pfs_ " ?"), newpath);
 										else
 											_sntprintf(status, MAX_PATH + 64,
-												_T("Change LF endings to CR-LF for "_Pfs_" ?"), newpath);
+												_T("Change LF endings to CR-LF for " _Pfs_ " ?"), newpath);
 
 										rc = MessageBox(NULL, status, m_editor->GetVersion(), MB_OKCANCEL);
 
@@ -1704,7 +1704,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 
 									if(ec != errOK)
 									{
-										_sntprintf(status, MAX_PATH + 64, _T("Could not write "_Pfs_", Reenter Name ?"), newpath);
+										_sntprintf(status, MAX_PATH + 64, _T("Could not write " _Pfs_ ", Reenter Name ?"), newpath);
 										rc = MessageBox(NULL, status, m_editor->GetVersion(), MB_OKCANCEL);
 										if(rc == IDCANCEL) break;
 										respecify = true;
@@ -1753,7 +1753,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 					ec = pNext->Write();
 					if(ec != errOK)
 					{
-						_sntprintf(status, 256, _T("Couldn't Write Buffer "_Pfs_"\n"), pNext->GetName());
+						_sntprintf(status, 256, _T("Couldn't Write Buffer " _Pfs_ "\n"), pNext->GetName());
 						m_editor->SetStatus(status);
 					}
 				}
@@ -2581,7 +2581,7 @@ ERRCODE Bview::Dispatch(EditCommand command)
 				break;
 			}
 		}
-		_sntprintf(status, 256, _T("Unknown Command: "_Pfs_""), pParm);
+		_sntprintf(status, 256, _T("Unknown Command: " _Pfs_ ""), pParm);
 		m_editor->SetStatus(status);
 		ec = errFAILURE;
 		break;
@@ -2892,8 +2892,8 @@ ERRCODE Bview::Dispatch(EditCommand command)
 						status,
 						MAX_PATH*2,
 						(command == CheckIn ?
-							_T("SCCS: Include current modifications to "_Pfs_" ?") :
-							_T("SCCS: Save current modifications to "_Pfs_" in another file ?")
+							_T("SCCS: Include current modifications to " _Pfs_ " ?") :
+							_T("SCCS: Save current modifications to " _Pfs_ " in another file ?")
 						),
 						m_buffer->GetShortName()
 					  );
@@ -2911,16 +2911,16 @@ ERRCODE Bview::Dispatch(EditCommand command)
 				{
 				case CheckIn:
 					ec = m_editor->GetSCCS()->CheckIn(m_buffer->GetName(), GetEditWindow());
-					_sntprintf(status, STATUS_LEN, _T(""_Pfs_" Checked In"), m_buffer->GetShortName());
+					_sntprintf(status, STATUS_LEN, _T("" _Pfs_ " Checked In"), m_buffer->GetShortName());
 					break;
 				case CheckOut:
 					ec = m_editor->GetSCCS()->CheckOut(m_buffer->GetName(), GetEditWindow());
-					_sntprintf(status, STATUS_LEN, _T(""_Pfs_" Checked Out"), m_buffer->GetShortName());
+					_sntprintf(status, STATUS_LEN, _T("" _Pfs_ " Checked Out"), m_buffer->GetShortName());
 					needvu = multiLine = true;
 					break;
 				case Revert:
 					ec = m_editor->GetSCCS()->Revert(m_buffer->GetName(), GetEditWindow());
-					_sntprintf(status, STATUS_LEN, _T(""_Pfs_" Reverted"), m_buffer->GetShortName());
+					_sntprintf(status, STATUS_LEN, _T("" _Pfs_ " Reverted"), m_buffer->GetShortName());
 					needvu = multiLine = true;
 					break;
 				default:
@@ -3232,19 +3232,19 @@ ERRCODE Bview::Dispatch(EditCommand command)
 
 				lpKeywordName = view_keyword_names[kw];
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Face"), lpKeywordName);
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Face"), lpKeywordName);
 				ec = pPersist->SetNvStr(szParmName, pf->face);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Height"), lpKeywordName);
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Height"), lpKeywordName);
 				ec = pPersist->SetNvInt(szParmName, pf->height);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Bold"), lpKeywordName);
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Bold"), lpKeywordName);
 				ec = pPersist->SetNvBool(szParmName, pf->bold);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Italic"), lpKeywordName);
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Italic"), lpKeywordName);
 				ec = pPersist->SetNvBool(szParmName, pf->italic);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/AntiAlias"), lpKeywordName);
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/AntiAlias"), lpKeywordName);
 				ec = pPersist->SetNvBool(szParmName, pf->antialias);
 			}
 		}

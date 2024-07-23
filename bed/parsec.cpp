@@ -134,7 +134,7 @@ ERRCODE BviewC::ParseStatement(BefState* state, LPCTSTR pFirst, bool& popscope)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Statement tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Statement tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -221,7 +221,7 @@ ERRCODE BviewC::ParsePreProc(BefState* state, LPCTSTR pDirective)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs PreProc  tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs PreProc  tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -232,7 +232,7 @@ ERRCODE BviewC::ParsePreProc(BefState* state, LPCTSTR pDirective)
 					//
 					if(! _tcscmp(pDirective + 1, _T("include")) || ! _tcscmp(pDirective + 1, _T("import")))
 					{
-						if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Include File="_Pfs_"\n"), target);
+						if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Include File=" _Pfs_ "\n"), target);
 						ec = state->m_pCallback(state->m_cookie, target, NULL, 0, state->m_tokLine, efInclude);
 						if(ec != errOK) return ec;
 					}
@@ -297,7 +297,7 @@ ERRCODE BviewC::ParseInitializer(BefState* state, int inbrace, LPTSTR pEndChar)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Initializer tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Initializer tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -357,7 +357,7 @@ ERRCODE BviewC::ParseDimension(BefState* state)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Dimension tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Dimension tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -404,14 +404,14 @@ ERRCODE BviewC::ParseVarDecl(BefState* state, LPCTSTR pType, bool allowFuncDecls
 	AddTypeMod(state, type, pType, MAX_C_TOKEN*4);
 	ptrTo = 0;
 
-	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Var Decl type="_Pfs_" allow=%d\n"), pType, allowFuncDecls);
+	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Var Decl type=" _Pfs_ " allow=%d\n"), pType, allowFuncDecls);
 
 	do
 	{
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Var Decl tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Var Decl tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -454,7 +454,7 @@ ERRCODE BviewC::ParseVarDecl(BefState* state, LPCTSTR pType, bool allowFuncDecls
 
 					// complete type, end of statement
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add "_Pfs_" of type "_Pfs_"\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add " _Pfs_ " of type " _Pfs_ "\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, state->m_typedefPending ? efTypeName : efVar);
 					state->m_typedefPending = false;
 					return ec;
@@ -468,7 +468,7 @@ ERRCODE BviewC::ParseVarDecl(BefState* state, LPCTSTR pType, bool allowFuncDecls
 					}
 					// complete type, and more to follow
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add "_Pfs_" of type "_Pfs_"\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add " _Pfs_ " of type " _Pfs_ "\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, state->m_typedefPending ? efTypeName : efVar);
 					prevtok[0] = _T('\0');
 					ptrTo      = 0;
@@ -480,7 +480,7 @@ ERRCODE BviewC::ParseVarDecl(BefState* state, LPCTSTR pType, bool allowFuncDecls
 
 					// complete type, and initializer to follow
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add "_Pfs_" of type "_Pfs_" with initializer\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add " _Pfs_ " of type " _Pfs_ " with initializer\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, state->m_typedefPending ? efTypeName : efVar);
 					prevtok[0] = _T('\0');
 					ptrTo      = 0;
@@ -586,7 +586,7 @@ ERRCODE BviewC::ParseFunctionArgs(BefState* state)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs FuncArgs tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs FuncArgs tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -594,7 +594,7 @@ ERRCODE BviewC::ParseFunctionArgs(BefState* state)
 				if(token[0] == _T(')'))
 				{
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add last arg "_Pfs_" of type "_Pfs_"\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add last arg " _Pfs_ " of type " _Pfs_ "\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, efArgument);
 					return ec;
 				}
@@ -602,7 +602,7 @@ ERRCODE BviewC::ParseFunctionArgs(BefState* state)
 				{
 					// complete arg, and more to follow
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add arg "_Pfs_" of type "_Pfs_"\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add arg " _Pfs_ " of type " _Pfs_ "\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, efArgument);
 					prevtok[0] = _T('\0');
 					type[0]    = _T('\0');
@@ -612,7 +612,7 @@ ERRCODE BviewC::ParseFunctionArgs(BefState* state)
 				{
 					// complete arg, and initializer to follow
 					if(state->m_log)
-						state->m_log->Log(logDebug, 4, _T("prs add arg "_Pfs_" of type "_Pfs_" with initializer\n"), prevtok, type);
+						state->m_log->Log(logDebug, 4, _T("prs add arg " _Pfs_ " of type " _Pfs_ " with initializer\n"), prevtok, type);
 					ec = state->m_pCallback(state->m_cookie, prevtok, type, ptrTo, state->m_tokLine, efArgument);
 					prevtok[0] = _T('\0');
 					type[0]    = _T('\0');
@@ -629,7 +629,7 @@ ERRCODE BviewC::ParseFunctionArgs(BefState* state)
 				else
 				{
 					if(state->m_log)
-						state->m_log->Log(logDebug, 6, _T("prs unexpected operator "_Pfs_" in func arglist\n"), token);
+						state->m_log->Log(logDebug, 6, _T("prs unexpected operator " _Pfs_ " in func arglist\n"), token);
 				}
 				break;
 			case kwPlain:
@@ -667,7 +667,7 @@ ERRCODE BviewC::ParseParentClass(BefState* state)
 	{
 		ec = NextToken(state, type, MAX_C_TOKEN, kw);
 		if(ec != errOK) return ec;
-		if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Parent Access/Name 1 tok="_Pfs_"\n"), type);
+		if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Parent Access/Name 1 tok=" _Pfs_ "\n"), type);
 	}
 	while(kw != kwBuiltinType && kw != kwPlain);
 
@@ -677,7 +677,7 @@ ERRCODE BviewC::ParseParentClass(BefState* state)
 		{
 			ec = NextToken(state, token, MAX_C_TOKEN, kw);
 			if(ec != errOK) return ec;
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Parent Name 2 tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Parent Name 2 tok=" _Pfs_ "\n"), token);
 		}
 		while(kw != kwPlain);
 	}
@@ -687,7 +687,7 @@ ERRCODE BviewC::ParseParentClass(BefState* state)
 		_tcscpy(token, type);
 		_tcscpy(type, _T("public"));
 	}
-	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Add Parent "_Pfs_" "_Pfs_"\n"), type, token);
+	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Add Parent " _Pfs_ " " _Pfs_ "\n"), type, token);
 
 	return ec;
 }
@@ -699,13 +699,13 @@ ERRCODE BviewC::ParseAccess(BefState* state, LPCTSTR pAccess)
 	BkwType kw;
 	ERRCODE ec;
 
-	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Set Access "_Pfs_"\n"), pAccess);
+	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Set Access " _Pfs_ "\n"), pAccess);
 
 	do
 	{
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec != errOK) return ec;
-		if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Access tok="_Pfs_"\n"), token);
+		if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Access tok=" _Pfs_ "\n"), token);
 		
 		// if nested classes are ok, this could be a class decl (c#)
 		if (state->m_nestedclassok)
@@ -751,14 +751,14 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 	
 	ptrTo = 0;
 
-	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Add Class/Struct "_Pfs_"\n"), token);
+	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Add Class/Struct " _Pfs_ "\n"), token);
 
 	do
 	{
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs ClassDecl tok="_Pfs_" inclass=%d\n"),
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs ClassDecl tok=" _Pfs_ " inclass=%d\n"),
 					token, postScope);
 
 			switch(kw)
@@ -813,7 +813,7 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 						if(postScope)
 						{
 							if(state->m_log)
-								state->m_log->Log(logDebug, 4, _T("prs typename "_Pfs_" of type "_Pfs_"\n"), prevtok, identifier);
+								state->m_log->Log(logDebug, 4, _T("prs typename " _Pfs_ " of type " _Pfs_ "\n"), prevtok, identifier);
 							ec = state->m_pCallback(state->m_cookie, prevtok, identifier, ptrTo, state->m_tokLine, state->m_typedefPending ? efTypeName : efVar);
 							if(ec != errOK) break;
 						}
@@ -847,10 +847,10 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 						
 								ec = state->m_pCallback(state->m_cookie, prevtok, NULL, ptrTo, state->m_tokLine, efTypeName);
 								if(state->m_log)
-									state->m_log->Log(logDebug, 4, _T("prs typename "_Pfs_" of type "_Pfs_"\n"), prevtok, identifier);
+									state->m_log->Log(logDebug, 4, _T("prs typename " _Pfs_ " of type " _Pfs_ "\n"), prevtok, identifier);
 							}
 							if(state->m_log)
-								state->m_log->Log(logDebug, 4, _T("prs var "_Pfs_" of type "_Pfs_"\n"), prevtok, identifier);
+								state->m_log->Log(logDebug, 4, _T("prs var " _Pfs_ " of type " _Pfs_ "\n"), prevtok, identifier);
 							ec = state->m_pCallback(state->m_cookie, prevtok, identifier, ptrTo, state->m_tokLine, state->m_typedefPending ? efTypeName : efVar);
 							prevtok[0] = _T('\0');
 						}
@@ -869,12 +869,12 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 							{
 								_tcscpy(identifier, prevtok);
 								if(state->m_log)
-									state->m_log->Log(logDebug, 4, _T("prs typename "_Pfs_" of type "_Pfs_" with initializer\n"), prevtok, identifier);
+									state->m_log->Log(logDebug, 4, _T("prs typename " _Pfs_ " of type " _Pfs_ " with initializer\n"), prevtok, identifier);
 								ec = state->m_pCallback(state->m_cookie, prevtok, identifier, ptrTo, state->m_tokLine, efTypeName);
 								if(ec != errOK) break;
 							}
 							if(state->m_log)
-								state->m_log->Log(logDebug, 4, _T("prs var "_Pfs_" of type "_Pfs_"\n"), prevtok, identifier);
+								state->m_log->Log(logDebug, 4, _T("prs var " _Pfs_ " of type " _Pfs_ "\n"), prevtok, identifier);
 							ec = state->m_pCallback(state->m_cookie, prevtok, identifier, ptrTo, state->m_tokLine, efVar);
 						}
 						prevtok[0] = _T('\0');
@@ -901,7 +901,7 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 				else
 				{
 					if(state->m_log)
-						state->m_log->Log(logDebug, 6, _T("prs unexpected operator "_Pfs_" in class decl\n"), token);
+						state->m_log->Log(logDebug, 6, _T("prs unexpected operator " _Pfs_ " in class decl\n"), token);
 				}
 				break;
 			case kwPlain:
@@ -955,7 +955,7 @@ ERRCODE BviewC::ParseFunctionDecl(BefState* state, LPCTSTR pType, int ptrTo, LPC
 		pType = _T("void");
 	}
 
-	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Function "_Pfs_" [%d] "_Pfs_"\n"), pType, ptrTo, name);
+	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Function " _Pfs_ " [%d] " _Pfs_ "\n"), pType, ptrTo, name);
 
 	ec = state->m_pCallback(state->m_cookie, name, pType, ptrTo, state->m_tokLine, efFunction);
 	if(ec != errOK) return ec;
@@ -968,7 +968,7 @@ ERRCODE BviewC::ParseFunctionDecl(BefState* state, LPCTSTR pType, int ptrTo, LPC
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec == errOK)
 		{
-			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs FuncDecl tok="_Pfs_"\n"), token);
+			if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs FuncDecl tok=" _Pfs_ "\n"), token);
 
 			switch(kw)
 			{
@@ -984,7 +984,7 @@ ERRCODE BviewC::ParseFunctionDecl(BefState* state, LPCTSTR pType, int ptrTo, LPC
 				else
 				{
 					if(state->m_log)
-						state->m_log->Log(logDebug, 6, _T("prs illegal operator "_Pfs_" int func decl\n"), token);
+						state->m_log->Log(logDebug, 6, _T("prs illegal operator " _Pfs_ " int func decl\n"), token);
 				}
 				break;
 			case kwBuiltinType:
@@ -1026,7 +1026,7 @@ ERRCODE BviewC::ParseScope(BefState* state, bool allowFuncDecls)
 		if(ec == errOK)
 		{
 			if(state->m_log)
-				state->m_log->Log(logDebug, 4, _T("prs Scope %2d tok="_Pfs_"= a=%d\n"), state->m_scope, token, allowFuncDecls);
+				state->m_log->Log(logDebug, 4, _T("prs Scope %2d tok=" _Pfs_ "= a=%d\n"), state->m_scope, token, allowFuncDecls);
 
 			switch(kw)
 			{

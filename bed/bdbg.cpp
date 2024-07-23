@@ -956,7 +956,7 @@ bool Bdbg::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var, LPT
 				//
 				if(errOK != BUtil::FileExists(shell))
 				{
-					_sntprintf(msg, MAX_PATH*2, _T("Program "_Pfs_" not found.  Use full path to program"), shell);
+					_sntprintf(msg, MAX_PATH*2, _T("Program " _Pfs_ " not found.  Use full path to program"), shell);
 					MessageBox(NULL, msg, _T("BED - Debug Setup"), MB_OK);
 					*step = 7;
 					return true;

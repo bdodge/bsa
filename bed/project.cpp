@@ -99,13 +99,13 @@ BOOL CALLBACK ProjectDialog(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				GetDlgItemText(hWnd, IDC_SRCDIR, tmp, sizeof(tmp)/sizeof(TCHAR));
 				if(tmp[0])
 					if(BUtil::DirectoryExists(tmp) != errOK)
-						_sntprintf(emsg, MAX_PATH*2, _T("Source Directory "_Pfs_" doesn't exist"), tmp);
+						_sntprintf(emsg, MAX_PATH*2, _T("Source Directory " _Pfs_ " doesn't exist"), tmp);
 			
 				GetDlgItemText(hWnd, IDC_BLDDIR, tmp, sizeof(tmp)/sizeof(TCHAR));
 				if(! tmp[0])
 					_sntprintf(emsg, MAX_PATH*2, _T("Build Directory must be specified"));
 				else if(BUtil::DirectoryExists(tmp) != errOK)
-					_sntprintf(emsg, MAX_PATH*2, _T("Build Directory "_Pfs_" doesn't exist"), tmp);
+					_sntprintf(emsg, MAX_PATH*2, _T("Build Directory " _Pfs_ " doesn't exist"), tmp);
 
 				GetDlgItemText(hWnd, IDC_BLDCMD, tmp, sizeof(tmp)/sizeof(TCHAR));
 				if(! tmp[0])
@@ -115,7 +115,7 @@ BOOL CALLBACK ProjectDialog(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				if(! tmp[0])
 					_sntprintf(emsg, MAX_PATH*2, _T("Build Shell program must be specified"));
 				else if(BUtil::FileExists(tmp) != errOK)
-					_sntprintf(emsg, MAX_PATH*2, _T("Build Shell "_Pfs_" not found, use FULL path"), tmp);
+					_sntprintf(emsg, MAX_PATH*2, _T("Build Shell " _Pfs_ " not found, use FULL path"), tmp);
 
 				if(emsg[0])
 				{
@@ -465,7 +465,7 @@ LPCTSTR Bproject::PlatformStr(LPCTSTR src)
 #else
 	platform = _T("Unix/");
 #endif
-	_sntprintf(m_platbuf, MAX_PATH + 128, _T(""_Pfs_""_Pfs_""), platform, src);
+	_sntprintf(m_platbuf, MAX_PATH + 128, _T("" _Pfs_ "" _Pfs_ ""), platform, src);
 	return m_platbuf;
 }
 
@@ -801,7 +801,7 @@ ERRCODE Bproject::OpenDefaultProject(LPCTSTR pPath, Bed* pEditor, bool restoreIt
 		TCHAR msg[MAX_PATH*2];
 		int   rc;
 
-		_sntprintf(msg, MAX_PATH*2, _T("No default project \""_Pfs_"\", Create ?"), basicdefname);
+		_sntprintf(msg, MAX_PATH*2, _T("No default project \"" _Pfs_ "\", Create ?"), basicdefname);
 		rc = MessageBox(NULL, msg, pEditor->GetVersion(), MB_OKCANCEL);
 		if(rc == IDCANCEL) return errFAILURE;
 
@@ -1087,7 +1087,7 @@ bool Bproject::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var,
 				{
 					int rc;
 
-					_sntprintf(msg, MAX_PATH*2, _T("Modify existing project "_Pfs_" ?"), fullPath);
+					_sntprintf(msg, MAX_PATH*2, _T("Modify existing project " _Pfs_ " ?"), fullPath);
 					rc = MessageBox(NULL, msg, _T("BED - Project Setup"), MB_OKCANCEL);
 
 					if(rc == IDOK)
@@ -1121,7 +1121,7 @@ bool Bproject::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var,
 			
 			if(errOK != BUtil::DirectoryExists(fullPath))
 			{
-				_sntprintf(msg, MAX_PATH*2, _T("Directory "_Pfs_" doesn't exist"), fullPath);
+				_sntprintf(msg, MAX_PATH*2, _T("Directory " _Pfs_ " doesn't exist"), fullPath);
 				MessageBox(NULL, msg, _T("BED - Project Setup"), MB_OK);
 				*step = 4;
 				return true;
@@ -1146,7 +1146,7 @@ bool Bproject::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var,
 				//
 				if(errOK != BUtil::FileExists(m_bldshell))
 				{
-					_sntprintf(msg, MAX_PATH*2, _T("Program "_Pfs_" not found.  Use full path to program"), m_bldshell);
+					_sntprintf(msg, MAX_PATH*2, _T("Program " _Pfs_ " not found.  Use full path to program"), m_bldshell);
 					MessageBox(NULL, msg, _T("BED - Project Setup"), MB_OK);
 					*step = 5;
 					return true;

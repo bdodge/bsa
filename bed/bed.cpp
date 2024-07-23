@@ -328,7 +328,10 @@ void Bed::GetStatusTextSize(int& x, int& y, int& w, int& h, LPRECT rc)
 
 		for(pp = pl->GetPanes(); pp; pp = pp->GetNext())
 		{
-			lw = max(lw, pp->m_tabrc.right);
+			if(pp->m_tabrc.right > lw)
+			{
+				lw = pp->m_tabrc.right;
+			}
 		}
 		x = lx + lw + STATBAR_TEXTMARG;
 	}
@@ -1149,15 +1152,15 @@ ERRCODE Bed::DepersistPanel(LPCTSTR pPanelName, RECT& rc, BAF_EDGE& e, bool& doc
 	w = rc.right - rc.left;
 	h = rc.bottom - rc.top;
 
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/X"), pPanelName);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/X"), pPanelName);
 	ec = m_persist->GetNvInt(key, x, x);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/Y"), pPanelName);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/Y"), pPanelName);
 	ec = m_persist->GetNvInt(key, y, y);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/W"), pPanelName);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/W"), pPanelName);
 	ec = m_persist->GetNvInt(key, w, w);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/H"), pPanelName);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/H"), pPanelName);
 	ec = m_persist->GetNvInt(key, h, h);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/E"), pPanelName);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/E"), pPanelName);
 	ec = m_persist->GetNvInt(key, (int&)e, e);
 
 	rc.left		= x;
@@ -1187,15 +1190,15 @@ ERRCODE Bed::PersistPanel(BappPanel* pPanel)
 
 	LPCTSTR pn = pPanel->GetName();
 
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/X"), pn);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/X"), pn);
 	ec = m_persist->SetNvInt(key, x);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/Y"), pn);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/Y"), pn);
 	ec = m_persist->SetNvInt(key, y);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/W"), pn);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/W"), pn);
 	ec = m_persist->SetNvInt(key, w);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/H"), pn);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_"/H"), pn);
 	ec = m_persist->SetNvInt(key, h);
-	_sntprintf(key, 256, _T("View/Windows/"_Pfs_"/E"), pn);
+	_sntprintf(key, 256, _T("View/Windows/" _Pfs_ "/E"), pn);
 	ec = m_persist->SetNvInt(key, pPanel->GetEdge());
 
 	// recursive persistance of sub panels
@@ -1914,7 +1917,7 @@ ERRCODE Bed::CloseProject()
 			TCHAR pname[MAX_PATH + 64];
 			int   rc;
 
-			_sntprintf(pname, MAX_PATH + 64, _T("Save Changes to "_Pfs_" ?"), m_project->GetName());
+			_sntprintf(pname, MAX_PATH + 64, _T("Save Changes to " _Pfs_ " ?"), m_project->GetName());
 			rc = MessageBox(NULL, pname, GetVersion(), MB_OKCANCEL);
 			if(rc == IDCANCEL)
 				return errFAILURE;
@@ -2085,7 +2088,7 @@ void Bed::SetTitle(Bbuffer* pBuf)
 //**************************************************************************
 LPCTSTR Bed::GetVersion()
 {
-	_sntprintf(m_title, MAX_PATH, _T(""_Pfs_" %d.%d"),
+	_sntprintf(m_title, MAX_PATH, _T("" _Pfs_ " %d.%d"),
 		g_appname, g_vermaj, g_vermin);
 	return m_title;
 }
@@ -2208,7 +2211,6 @@ ERRCODE Bed::Dispatch(
 
 	return ec;
 }
-
 
 //***********************************************************************
 LRESULT CALLBACK BedStatbarProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

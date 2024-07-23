@@ -83,7 +83,7 @@ ERRCODE BviewRS232::GetPortSettings()
 	pp = m_editor->GetPersist();
 	if(pp)
 	{
-		ppl = _sntprintf(pparm, MAX_PATH+250, _T(""_Pfs_"/Port"_Pfs_"/Settings/"), GetTypeName(), m_port);
+		ppl = _sntprintf(pparm, MAX_PATH+250, _T("" _Pfs_ "/Port" _Pfs_ "/Settings/"), GetTypeName(), m_port);
 		px = pparm + ppl;
 		_tcscpy(px, _T("Baud"));
 		pp->GetNvInt(pparm, m_baud, m_baud);
@@ -119,14 +119,14 @@ ERRCODE BviewRS232::ApplyPortSettings()
 
 	if(ec != errOK)
 	{
-		_sntprintf(vname, MAX_PATH + 128, _T("Can't open: "_Pfs_", check permissions"), m_port);
+		_sntprintf(vname, MAX_PATH + 128, _T("Can't open: " _Pfs_ ", check permissions"), m_port);
 		delete m_io;
 		m_io = NULL;
 		MessageBox(NULL, vname, _T("BED 6.0 - Port Error"), MB_OK);
 	}
 	else
 	{
-		_sntprintf(vname, MAX_PATH, _T("RS232 - "_Pfs_""), m_port);
+		_sntprintf(vname, MAX_PATH, _T("RS232 - " _Pfs_ ""), m_port);
 		len = _tcslen(vname);
 		_sntprintf(vname + len, MAX_PATH-len, _T(":%d,%d,%d"), m_baud, m_bits, m_stops);
 		m_buffer->SetName(vname);
@@ -243,9 +243,9 @@ static BOOL CALLBACK RS232proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		pp = pTerm->GetEditor()->GetPersist();
 		if (pp)
 		{
-			_sntprintf(pparm, 128, _T(""_Pfs_"/CurrentPort"), pTerm->GetTypeName());
+			_sntprintf(pparm, 128, _T("" _Pfs_ "/CurrentPort"), pTerm->GetTypeName());
 
-			ppl = _sntprintf(pparm, 128, _T(""_Pfs_"/Port"_Pfs_"/Settings/"), pTerm->GetTypeName(), portname);
+			ppl = _sntprintf(pparm, 128, _T("" _Pfs_ "/Port" _Pfs_ "/Settings/"), pTerm->GetTypeName(), portname);
 			px = pparm + ppl;
 			_tcscpy(px, _T("Baud"));
 			pp->GetNvInt(pparm, baud, baud);
@@ -396,9 +396,9 @@ static BOOL CALLBACK RS232proc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			pp = pTerm->GetEditor()->GetPersist();
 			if(pp)
 			{
-				_sntprintf(pparm, 128, _T(""_Pfs_"/CurrentPort"), pTerm->GetTypeName());
+				_sntprintf(pparm, 128, _T("" _Pfs_ "/CurrentPort"), pTerm->GetTypeName());
 				pp->SetNvStr(pparm, portname);
-				ppl = _sntprintf(pparm, MAX_PATH + 32, _T(""_Pfs_"/Port"_Pfs_"/Settings/"), pTerm->GetTypeName(), portname);
+				ppl = _sntprintf(pparm, MAX_PATH + 32, _T("" _Pfs_ "/Port" _Pfs_ "/Settings/"), pTerm->GetTypeName(), portname);
 				px = pparm + ppl;
 				_tcscpy(px, _T("Baud"));
 				pp->SetNvInt(pparm, baud);

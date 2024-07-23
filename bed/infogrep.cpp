@@ -235,7 +235,7 @@ ERRCODE BgrepInfo::ShellThread()
 	{
 		TCHAR grepLine[256];
 
-		_sntprintf(grepLine, 256, _T("Search "_Pfs_" "_Pfs_" for: "_Pfs_" in "_Pfs_""),
+		_sntprintf(grepLine, 256, _T("Search " _Pfs_ " " _Pfs_ " for: " _Pfs_ " in " _Pfs_ ""),
 				m_wholeword ? _T("whole-word") : _T(""),
 				m_recursive ? _T("recursive") : _T(""),
 				m_grepPat, m_grepDir);
@@ -274,7 +274,7 @@ ERRCODE BgrepInfo::ShellThread()
 
 					pRem = BUtil::SimplePatternMatch(pfp, pFilePat->GetName());
 
-					//_tprintf(_T("compare="_Pfs_" pat "_Pfs_"= res=%d\n"),
+					//_tprintf(_T("compare=" _Pfs_ " pat " _Pfs_ "= res=%d\n"),
 					//		m_curFile->GetName(), pFilePat->GetName(), pRem ? 1 : 0);
 
 					if(pRem && ! *pRem)
@@ -543,7 +543,7 @@ ERRCODE BgrepInfo::CheckFile(LPCTSTR name)
 					{
 						m_occurenceCount++;
 
-						tlen = _sntprintf(tempText, 512, _T(""_Pfs_" (%d) "), name, line);
+						tlen = _sntprintf(tempText, 512, _T("" _Pfs_ " (%d) "), name, line);
 						room = 510 - tlen;
 						if(nText > 128)
 							nText = 128;

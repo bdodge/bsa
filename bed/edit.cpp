@@ -711,7 +711,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						if(ec != errOK || fileName[0] == _T('\0'))
 							break;
 						GetFullPathName(fileName, MAX_PATH, shortName, &pName);
-						_sntprintf(menuName, MAX_PATH + 8,  _T("&%d "_Pfs_""), i, pName);
+						_sntprintf(menuName, MAX_PATH + 8,  _T("&%d " _Pfs_ ""), i, pName);
 						AppendMenu(hRecent, MF_STRING, ID_RCNT_FILES + i, menuName);
 
 					}
@@ -730,7 +730,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						if(ec != errOK || fileName[0] == _T('\0'))
 							break;
 						pName = fileName;
-						_sntprintf(menuName, MAX_PATH + 8,  _T("&%d "_Pfs_""), i, pName);
+						_sntprintf(menuName, MAX_PATH + 8,  _T("&%d " _Pfs_ ""), i, pName);
 						AppendMenu(hRecent, MF_STRING, ID_RCNT_PROJECTS + i, menuName);
 					}
 				}
@@ -1305,7 +1305,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							{
 								TCHAR msgtext[MAX_PATH + 128];
 
-								_sntprintf(msgtext, MAX_PATH+128, _T("Port "_Pfs_" already open\n"), port);
+								_sntprintf(msgtext, MAX_PATH+128, _T("Port " _Pfs_ " already open\n"), port);
 								MessageBox(NULL, msgtext, _T("BED 6.0 - Terminal"), MB_OK);
 								return 0;
 							}

@@ -144,7 +144,7 @@ ERRCODE BrawBuffer::GetLineText(int line, LPCTSTR& lpText, int& nText)
 		offset = 0;
 		
 	lpText += offset;
-	nText  = min(m_columns, (nText - offset));
+	nText  = (m_columns < (nText - offset)) ? m_columns : (nText - offset);
 
 	return errOK;
 }

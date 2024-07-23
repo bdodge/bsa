@@ -19,6 +19,16 @@
 	#define UTILS_API
 #endif
 
+#ifndef min
+#define min(a,b) (((a)<(b))?(a):(b))
+#endif
+#ifndef max
+#define max(a,b) (((a)<(b))?(a):(b))
+#endif
+#ifndef GWL_USERDATA
+#define GWL_USERDATA GWLP_USERDATA
+#endif
+
 
 //-----------------------------------------------------------------------
 // utility classes to wrap OS native mutex/event/threads

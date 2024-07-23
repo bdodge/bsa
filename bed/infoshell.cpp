@@ -331,7 +331,7 @@ void BshellInfo::Event(LPARAM lParam)
 			)
 			{
 				m_token[m_toklen] = 0;
-				//_tprintf(_T("tok="_Pfs_"\n"), m_token);
+				//_tprintf(_T("tok=" _Pfs_ "\n"), m_token);
 				AppendItem(m_token);
 				m_toklen = 0;
 			}

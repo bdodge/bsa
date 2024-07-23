@@ -448,7 +448,7 @@ ifndef CDEPFLAGS
 endif
 ifndef CDEPPP
 	ifndef DEPGEN
-		export DEPGEN	= $(CURDIR)/depgen
+		export DEPGEN	= $(CURDIR)/depgen$(HOST_EXEEXT)
 	endif
 	CDEPPP		= $(DEPGEN)
 endif
@@ -458,7 +458,7 @@ ifndef ADEPFLAGS
 endif
 ifndef ADEPPP
 	ifndef DEPGEN
-		export DEPGEN	= $(CURDIR)/depgen
+		export DEPGEN	= $(CURDIR)/depgen$(HOST_EXEEXT)
 	endif
 	ADEPPP		= $(DEPGEN)
 endif

@@ -90,7 +90,7 @@ void BviewSSH::Activate()
 	{
 		// init shell
 		//
-		_sntprintf(commandLine, 256, _T("/usr/bin/ssh " _Pfs_ " -p %u"),
+		_sntprintf(commandLine, 256, _T("/usr/bin/ssh "  _Pfs_  " -p %u"),
 				m_host, (unsigned)(unsigned short)m_port);
 		Init(commandLine);
 	}
@@ -138,7 +138,7 @@ ERRCODE BviewSSH::ApplyPortSettings()
 	
 	TCharToChar(ahost, m_host);
 	
-	_sntprintf(vname, 256, _T(""_Pfs_":%d"), m_host, m_port);
+	_sntprintf(vname, 256, _T("" _Pfs_ ":%d"), m_host, m_port);
 	m_buffer->SetName(vname);
 	m_editor->UpdateInfoPanes(this);
 	return ec;

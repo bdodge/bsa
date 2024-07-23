@@ -291,12 +291,12 @@ ERRCODE Bpdb::AddSourceTree(LPCTSTR lpRoot, LPCTSTR pExtensions)
 				pRem = BUtil::SimplePatternMatch(lpName, pat);
 
 				/*
-				_tprintf(_T("compare="_Pfs_" pat "_Pfs_"= res=%d\n"),
+				_tprintf(_T("compare=" _Pfs_ " pat " _Pfs_ "= res=%d\n"),
 						lpName, pat, pRem ? 1 : 0);
 				*/
 				if(pRem && ! *pRem)
 				{
-					//_tprintf(_T("Add "_Pfs_" cause "_Pfs_"\n"), lpName, pat);
+					//_tprintf(_T("Add " _Pfs_ " cause " _Pfs_ "\n"), lpName, pat);
 					AddFile(lpName);
 				}
 			}
@@ -317,7 +317,7 @@ ERRCODE Bpdb::AddFile(LPCTSTR lpFilename, bool suppressCheck)
 	BpdbTodo* pTodo;
 	Block	  lock(&m_todex);
 
-	PDBLOG(logDebug, 4, _T("PDB Adding File TODO: "_Pfs_"\n"), lpFilename);
+	PDBLOG(logDebug, 4, _T("PDB Adding File TODO: " _Pfs_ "\n"), lpFilename);
 
 	pTodo = new BpdbTodo(lpFilename, NULL);
 	if(! suppressCheck)
@@ -337,7 +337,7 @@ ERRCODE Bpdb::AddFile(Bbuffer* pBuf)
 	BpdbBufs* pTodo;
 	Block	  lock(&m_todex);
 
-	PDBLOG(logDebug, 4, _T("PDB Adding Buffer TODO: "_Pfs_"\n"), pBuf->GetName());
+	PDBLOG(logDebug, 4, _T("PDB Adding Buffer TODO: " _Pfs_ "\n"), pBuf->GetName());
 
 	// add name to list of files seen
 	AddSym(new Bsym(pBuf->GetName(), NULL, 0), m_files);
@@ -352,7 +352,7 @@ ERRCODE Bpdb::AddIncludePath(LPCTSTR pInclPath)
 {
 	BpdbIncls* pIncl;
 
-	PDBLOG(logDebug, 6, _T("PDB Adding Incl Path: "_Pfs_"\n"), pInclPath);
+	PDBLOG(logDebug, 6, _T("PDB Adding Incl Path: " _Pfs_ "\n"), pInclPath);
 
 	pIncl = new BpdbIncls(pInclPath, NULL);
 	m_inclPaths = BpdbIncls::AddToList(pIncl, m_inclPaths);
@@ -427,7 +427,7 @@ ERRCODE Bpdb::Explore(LPCTSTR pFilename, bool checkDone)
 		//
 		if((pSym = FindSym(pFilename, m_files)) != NULL)
 		{
-			PDBLOG(logDebug, 8, _T("PDB Already Explored "_Pfs_"\n"), pSym->f_name);
+			PDBLOG(logDebug, 8, _T("PDB Already Explored " _Pfs_ "\n"), pSym->f_name);
 			return errOK;
 		}
 	}
@@ -435,7 +435,7 @@ ERRCODE Bpdb::Explore(LPCTSTR pFilename, bool checkDone)
 	//
 	pSym = AddSym(new Bsym(pFilename, NULL, 0), m_files);
 
-	PDBLOG(logDebug, 7, _T("PDB Exploring  File: "_Pfs_"\n"), pFilename);
+	PDBLOG(logDebug, 7, _T("PDB Exploring  File: " _Pfs_ "\n"), pFilename);
 
 	// open a private buffer on this file, read it, and explore the buffer
 	//
@@ -467,7 +467,7 @@ ERRCODE Bpdb::Explore(Bbuffer* pBuf, LPBSYM pFileSym)
 
 	if(! m_running) return errFAILURE;
 
-	PDBLOG(logDebug, 4, _T("PDB Exploring: "_Pfs_" (%d deep)\n"), pBuf->GetName(), m_level);
+	PDBLOG(logDebug, 4, _T("PDB Exploring: " _Pfs_ " (%d deep)\n"), pBuf->GetName(), m_level);
 
 	// create a view on the buffer of the appropriate type
 	//
@@ -614,13 +614,13 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 				m_pClass->f_name = new TCHAR [ _tcslen(pName) + 2 ];
 				_tcscpy(m_pClass->f_name, pName);
 				m_pClass = AddSym(m_pClass, m_types);
-				PDBLOG(logDebug, 6, _T("PDB   Identify current class as "_Pfs_"\n"), pName);
+				PDBLOG(logDebug, 6, _T("PDB   Identify current class as " _Pfs_ "\n"), pName);
 			}
 			else
 			{
 				pType = AddSym(new Bsym(pName, m_filesym, line), m_types);
 				pType->SetType(m_pClass);
-				PDBLOG(logDebug, 6, _T("PDB   Point type "_Pfs_" to existing class "_Pfs_"\n"), pName, m_pClass->f_name);
+				PDBLOG(logDebug, 6, _T("PDB   Point type " _Pfs_ " to existing class " _Pfs_ "\n"), pName, m_pClass->f_name);
 			}
 		}
 		else if(pTypeName)
@@ -630,16 +630,16 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			{
 				pType = AddSym(new Bsym(pName, m_filesym, line), m_types);
 				pType->SetType(pDefType);
-				PDBLOG(logDebug, 6, _T("PDB   Point type "_Pfs_" to existing type "_Pfs_"\n"), pName, pDefType->f_name);
+				PDBLOG(logDebug, 6, _T("PDB   Point type " _Pfs_ " to existing type " _Pfs_ "\n"), pName, pDefType->f_name);
 			}
 			else
 			{
-				PDBLOG(logDebug, 6, _T("PDB   type "_Pfs_" is baseless since "_Pfs_" missing\n"), pName, pTypeName);
+				PDBLOG(logDebug, 6, _T("PDB   type " _Pfs_ " is baseless since " _Pfs_ " missing\n"), pName, pTypeName);
 			}
 		}
 		else
 		{
-			PDBLOG(logDebug, 6, _T("PDB   type "_Pfs_" is baseless\n"), pName);
+			PDBLOG(logDebug, 6, _T("PDB   type " _Pfs_ " is baseless\n"), pName);
 		}
 		break;
 
@@ -669,7 +669,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 		pType = FindSym(pTypeName, m_types);
 		if(pType)
 		{
-			PDBLOG(logDebug, 6, _T("PDB   Defining "_Pfs_" using existing type "_Pfs_"\n"),	pName, pType->f_name);
+			PDBLOG(logDebug, 6, _T("PDB   Defining " _Pfs_ " using existing type " _Pfs_ "\n"),	pName, pType->f_name);
 
 			// yes, this is a new var based on an existing
 			// type, so setup type ptr to it
@@ -678,7 +678,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 		}
 		else
 		{
-			PDBLOG(logDebug, 6, _T("PDB   Defining Forward Type "_Pfs_"\n"), pTypeName);
+			PDBLOG(logDebug, 6, _T("PDB   Defining Forward Type " _Pfs_ "\n"), pTypeName);
 
 			// this is a new type based on an unknown type
 			// perhaps a forward reference?
@@ -690,7 +690,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			// The var is in a class, so it is a member var
 			//
 			m_pClass->AddMember(pName, m_filesym, line, pType);
-			PDBLOG(logDebug, 8, _T("PDB   Add Member "_Pfs_" of type "_Pfs_"\n"), pName, pType ? pType->f_name : _T("??"));
+			PDBLOG(logDebug, 8, _T("PDB   Add Member " _Pfs_ " of type " _Pfs_ "\n"), pName, pType ? pType->f_name : _T("??"));
 		}
 		else
 		{
@@ -700,7 +700,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			pType->f_isptr = isPtr != 0;
 			if(pDefType)
 				pType->SetType(pDefType);
-			PDBLOG(logDebug, 6, _T("PDB   Add var "_Pfs_" based on "_Pfs_"\n"), pName, (pDefType ? pDefType->f_name : _T("<nil>")));
+			PDBLOG(logDebug, 6, _T("PDB   Add var " _Pfs_ " based on " _Pfs_ "\n"), pName, (pDefType ? pDefType->f_name : _T("<nil>")));
 		}
 		break;
 
@@ -716,7 +716,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			TCHAR mangledName[MAX_PATH*2];
 
 			// mangle the name
-			_sntprintf(mangledName, MAX_PATH*2, _T(""_Pfs_"::"_Pfs_""),
+			_sntprintf(mangledName, MAX_PATH*2, _T("" _Pfs_ "::" _Pfs_ ""),
 				m_pClass->f_name, pName);
 			mangledName[MAX_PATH*2 - 1] = _T('\0');
 			// add name mangled func to sym tab
@@ -736,7 +736,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			m_pClass->AddMember(pName, m_filesym, line, m_pSym);
 
 #ifdef PDB_LOG
-		PDBLOG(logDebug, 6, _T("PDB Add "_Pfs_"Function "_Pfs_" returning "_Pfs_"\n"),
+		PDBLOG(logDebug, 6, _T("PDB Add " _Pfs_ "Function " _Pfs_ " returning " _Pfs_ "\n"),
 				(m_pClass ? _T("member ") : _T("")),
 				m_pSym->f_name,
 				(pType ? pType->f_name : _T("??")));
@@ -765,7 +765,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			pType = FindSym(pTypeName, m_types);
 			if(pType)
 			{
-				PDBLOG(logDebug, 6, _T("PDB   Arg "_Pfs_" declared with existing type "_Pfs_"\n"),	pName, pType->f_name);
+				PDBLOG(logDebug, 6, _T("PDB   Arg " _Pfs_ " declared with existing type " _Pfs_ "\n"),	pName, pType->f_name);
 
 				// yes, this is a new var based on an existing
 				// type, so setup type ptr to it
@@ -774,7 +774,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 			}
 			else if(pTypeName[0])
 			{
-				PDBLOG(logDebug, 6, _T("PDB   "_Pfs_" is not a type, adding since used for arg "_Pfs_"\n"), pTypeName, pName);
+				PDBLOG(logDebug, 6, _T("PDB   " _Pfs_ " is not a type, adding since used for arg " _Pfs_ "\n"), pTypeName, pName);
 
 				// this is a new type based on an unknown type
 				// perhaps a forward reference?
@@ -785,7 +785,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 		if(m_pSym)
 		{
 			m_pSym->AddMember(pName, m_filesym, line, pDefType);
-			PDBLOG(logDebug, 8, _T("PDB   Add Function Arg "_Pfs_"\n"), pName);
+			PDBLOG(logDebug, 8, _T("PDB   Add Function Arg " _Pfs_ "\n"), pName);
 		}
 		break;
 
@@ -802,7 +802,7 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 		{
 			isForward = false;
 		}
-		PDBLOG(logDebug, 8, _T("PDB -- Add Class "_Pfs_"\n"), pName);
+		PDBLOG(logDebug, 8, _T("PDB -- Add Class " _Pfs_ "\n"), pName);
 		m_pClass = new Bsym(pName, m_filesym, line);
 		if(! isForward)
 			m_pClass = AddSym(m_pClass, m_types);
@@ -825,12 +825,12 @@ ERRCODE Bpdb::OnEnumFunc(LPCTSTR pName, LPCTSTR pTypeName, int isPtr, int line, 
 		}
 		pType = FindSym(pName, m_types);
 		if (pType) {
-			PDBLOG(logDebug, 8, _T("PDB -- Reset current class to "_Pfs_"\n"), pName);
+			PDBLOG(logDebug, 8, _T("PDB -- Reset current class to " _Pfs_ "\n"), pName);
 			m_pClass = pType;
 		}
 		else
 		{
-			PDBLOG(logDebug, 8, _T("PDB -- Can not reset current Class "_Pfs_"\n"), pName);
+			PDBLOG(logDebug, 8, _T("PDB -- Can not reset current Class " _Pfs_ "\n"), pName);
 		}
 		break;
 

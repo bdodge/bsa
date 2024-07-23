@@ -502,7 +502,7 @@ ERRCODE Bview::PopParm(LPCTSTR pPrompt, ParmType type, LPCTSTR& pParm, int& nPar
 			return errUNDERFLOW;
 
 		_tcsncpy(versbuffer, m_buffer->GetEditor()->GetVersion(), sizeof(versbuffer)/sizeof(TCHAR));
-		_sntprintf(titleBuffer, 128, _T(""_Pfs_" - "_Pfs_""), versbuffer, pPrompt);
+		_sntprintf(titleBuffer, 128, _T("" _Pfs_ " - " _Pfs_ ""), versbuffer, pPrompt);
 
 		parm.lpTitle	= titleBuffer;
 		parm.lpPrompt	= pPrompt;

@@ -151,7 +151,7 @@ ERRCODE BviewPython::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, B
 
 				lpToken[nToken] = 0;
 			/*
-				_tprintf(_T("tok="_Pfs_" len=%d type=%d f=%d ci=%d,tc=%d state = %d[%d]\n"),
+				_tprintf(_T("tok=" _Pfs_ " len=%d type=%d f=%d ci=%d,tc=%d state = %d[%d]\n"),
 						lpToken, nToken, kw, firsttok, curindent, tokcol, parseState[level], level);
 			*/
 				// the first non-blank token on the line's outcol is the line's

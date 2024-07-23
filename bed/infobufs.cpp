@@ -78,7 +78,7 @@ void BpickInfo::SetView(Bview* pView)
 		tvItem.item.lParam  = index;
 		tvItem.item.iImage	= 0;
 
-		//_tprintf(_T("buf="_Pfs_"\n"), pBuf->GetName());
+		//_tprintf(_T("buf=" _Pfs_ "\n"), pBuf->GetName());
 		hItem = TreeView_InsertItem(hwndNewTree, &tvItem);
 
 		if(pBuf == pCurBuf) 

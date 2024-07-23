@@ -148,7 +148,7 @@ ERRCODE BviewTelnet::ApplyPortSettings()
 	{
 		int l;
 
-		l = _sntprintf(vname, 200, _T("Can't open: "_Pfs_":%d"), m_host, m_port);
+		l = _sntprintf(vname, 200, _T("Can't open: " _Pfs_ ":%d"), m_host, m_port);
 		MessageBox(NULL, vname, _T("BED 6.0 - Port Error"), MB_OK);
 	}
 	else
@@ -176,7 +176,7 @@ ERRCODE BviewTelnet::ApplyPortSettings()
 			SendData(xx, 3);
 		}
 	}
-	_sntprintf(vname, 256, _T(""_Pfs_":%d"), m_host, m_port);
+	_sntprintf(vname, 256, _T("" _Pfs_ ":%d"), m_host, m_port);
 	m_buffer->SetName(vname);
 	m_editor->UpdateInfoPanes(this);
 	return ec;

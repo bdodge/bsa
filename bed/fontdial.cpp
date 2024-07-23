@@ -207,7 +207,7 @@ static BOOL CALLBACK FontProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 		case IDOK:
 
-			_sntprintf(pParm->lpString, pParm->nString, _T(""_Pfs_":%d:%d:%d:%d"),
+			_sntprintf(pParm->lpString, pParm->nString, _T("" _Pfs_ ":%d:%d:%d:%d"),
 					szFace, height, bold, italic, antialias);
 			EndDialog(hWnd, IDOK);
 			break;

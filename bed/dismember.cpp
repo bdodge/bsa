@@ -674,7 +674,7 @@ ERRCODE Bview::GetTypeOf(
 						if(pPDB->GetBaseType(pTypename) != NULL)
 						{
 							/*
-							_tprintf(_T("Var decl of "_Pfs_" at %d, type "_Pfs_"\n"),
+							_tprintf(_T("Var decl of " _Pfs_ " at %d, type " _Pfs_ "\n"),
 									pVarname, declLine, pTypename);
 							*/
 							return ec;
@@ -995,7 +995,7 @@ ERRCODE Bview::GetTypeOfTokenAtPoint(int& line, int& col, LPBSYM& pSym, Bpdb* pP
 		}
 		if(! pSym)
 		{
-			_sntprintf(msg, 512, _T("function "_Pfs_" not found"), varName);
+			_sntprintf(msg, 512, _T("function " _Pfs_ " not found"), varName);
 			m_editor->SetStatus(msg);
 			return errOK;
 		}
@@ -1060,7 +1060,7 @@ ERRCODE Bview::GetTypeOfTokenAtPoint(int& line, int& col, LPBSYM& pSym, Bpdb* pP
 			}
 			if(! pSym)
 			{
-				_sntprintf(msg, 512, _T("type for function "_Pfs_" not found"), varName);
+				_sntprintf(msg, 512, _T("type for function " _Pfs_ " not found"), varName);
 				m_editor->SetStatus(msg);
 				return errOK;
 			}
@@ -1127,7 +1127,7 @@ ERRCODE Bview::GetTypeOfTokenAtPoint(int& line, int& col, LPBSYM& pSym, Bpdb* pP
 			{
 				// can't find type for this var, so indicate in status
 				//
-				_sntprintf(msg, 512, _T("No type for "_Pfs_" "_Pfs_""), varName, typeName);
+				_sntprintf(msg, 512, _T("No type for " _Pfs_ " " _Pfs_ ""), varName, typeName);
 				m_editor->SetStatus(msg);
 				return errOK;
 			}
@@ -1142,7 +1142,7 @@ ERRCODE Bview::GetTypeOfTokenAtPoint(int& line, int& col, LPBSYM& pSym, Bpdb* pP
 		//
 		if((pSym = pPDB->GetBaseType(typeName)) == NULL)
 		{
-			_sntprintf(msg, 512, _T("Type "_Pfs_" not found"), typeName);
+			_sntprintf(msg, 512, _T("Type " _Pfs_ " not found"), typeName);
 			m_editor->SetStatus(msg);
 		}
 	}
@@ -1169,7 +1169,7 @@ ERRCODE Bview::GetDefinitionOfTokenAtPoint(int& line, int& col, LPBSYM& pSym, Bp
 	ec = GetVarname(line, col, varName, nVar, delim, leftdelim, leftdelcol, isFunc);
 	if(ec != errOK) return ec;			// cant get varname
 
-	//_tprintf(_T("Looking for def of "_Pfs_"\n"), varName);
+	//_tprintf(_T("Looking for def of " _Pfs_ "\n"), varName);
 	{
 		className[0] = _T('\0');
 		nType = 256;

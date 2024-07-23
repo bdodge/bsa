@@ -730,7 +730,7 @@ ERRCODE Bbuffer::CheckSandboxSize(int size)
 		}
 		if(m_prevbox && m_prevalloc)
 		{
-			memcpy(m_sandbox, m_prevbox, sizeof(TCHAR)*min(m_prevalloc, m_sandalloc));
+			memcpy(m_sandbox, m_prevbox, sizeof(TCHAR)* ((m_prevalloc < m_sandalloc) ? m_prevalloc : m_sandalloc));
 			delete [] m_prevbox;
 		}
 	}
@@ -1833,7 +1833,7 @@ ERRCODE Bbuffer::GetUntitledName(BufType type, LPCTSTR extension, LPTSTR pName, 
 		extension = dext;
 
 	_sntprintf(un, 32, _T("%d"), m_nextuntitled);
-	_sntprintf(pName, nName, _T(""_Pfs_""_Pfs_""_Pfs_""_Pfs_""),
+	_sntprintf(pName, nName, _T("" _Pfs_ "" _Pfs_ "" _Pfs_ "" _Pfs_ ""),
 			tn,
 			m_nextuntitled ? un : _T(""),
 			(extension && extension[0]) ? _T(".") : _T(""),

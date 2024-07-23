@@ -24,7 +24,7 @@ ERRCODE Bbuffer::ReadFromFile(LPCTSTR lpFilename)
 		delete pLine;
 	}
 	m_pcurline = NULL;
-    m_curline  = 1;
+	m_curline  = 1;
 	m_curcol   = 1;
 	m_lines    = 0;
 	
@@ -286,7 +286,7 @@ ERRCODE Bbuffer::WriteToFile(LPCTSTR lpFilename, TEXTENCODING encoding)
 	{
 		// copy byte-by-byte original file to backup copy
 		//
-		_sntprintf(backupName, MAX_PATH, _T(""_Pfs_".bak"), m_name);
+		_sntprintf(backupName, MAX_PATH, _T("" _Pfs_ ".bak"), m_name);
 		ec = bfs.Open(backupName, _T("w"));
 		
 		if(ec == errOK)

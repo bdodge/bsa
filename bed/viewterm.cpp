@@ -107,7 +107,7 @@ void BviewTerminal::Activate()
 		if((pp = GetEditor()->GetPersist()) != NULL)
 		{
 			// get emulation settings
-			ppl = _sntprintf(pparm, 128, _T(""_Pfs_"/Emulation/Settings/"), GetTypeName());
+			ppl = _sntprintf(pparm, 128, _T("" _Pfs_ "/Emulation/Settings/"), GetTypeName());
 			px = pparm + ppl;
 			_tcscpy(px, _T("Echo"));
 			pp->GetNvBool(pparm, echo, (m_vtmode & vtmdECHO) != 0);
@@ -1480,7 +1480,7 @@ void BviewTerminal::InsertToken(bool insert)
 	m_prevvtcol = min(m_prevvtcol, m_vtcol);
 
 	#ifdef LOG_VT
-	m_log->Log(logDebug, 5, _T("insert %d,%d ="_Pfs_"=\n"), m_vtrow, m_vtcol, m_intok);
+	m_log->Log(logDebug, 5, _T("insert %d,%d =" _Pfs_ "=\n"), m_vtrow, m_vtcol, m_intok);
 	#endif
 	// make sure insertion point is actual vt pos, not curline/curcol, since
 	// that is the actual caret pos, which user could move, but only if the curlin/col
@@ -1656,7 +1656,7 @@ void BviewTerminal::InsertToken(bool insert)
 			}
 		}
 #ifdef LOG_VT
-		m_log->Log(logDebug, 5, _T("insert tok ="_Pfs_"= at buffer %d,%d\n"), m_intok, m_vtrow, curcol);
+		m_log->Log(logDebug, 5, _T("insert tok =" _Pfs_ "= at buffer %d,%d\n"), m_intok, m_vtrow, curcol);
 #endif
 		m_buffer->Insert(m_vtrow, curcol, token, tokcnt);
 #ifdef LOG_VT
@@ -2165,7 +2165,7 @@ void BviewTerminal::Event(LPARAM lParam)
 					{
 #ifdef LOG_VT
 						m_intok[m_tokcnt] = 0;
-						m_log->Log(logDebug, 5, _T("vtnone = nw=%d nwd=%d  %d,%d ="_Pfs_"=\n"),
+						m_log->Log(logDebug, 5, _T("vtnone = nw=%d nwd=%d  %d,%d =" _Pfs_ "=\n"),
 								nonwhite, nonwhitedelim, m_vtrow, m_vtcol, m_intok);
 #endif
 						// got a token, insert into buffer
@@ -3215,7 +3215,7 @@ static BOOL CALLBACK VTtermproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		pp = pem->f_peditor->GetPersist();
 		if(pp)
 		{
-			ppl = _sntprintf(pparm, 128, _T(""_Pfs_"/Emulation/Settings/"), pem->f_typename);
+			ppl = _sntprintf(pparm, 128, _T("" _Pfs_ "/Emulation/Settings/"), pem->f_typename);
 			px = pparm + ppl;
 
 			_tcscpy(px, _T("Emulation"));
@@ -3279,7 +3279,7 @@ static BOOL CALLBACK VTtermproc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 			pp = pem->f_peditor->GetPersist();
 			if(pp)
 			{
-				ppl = _sntprintf(pparm, 128, _T(""_Pfs_"/Emulation/Settings/"), pem->f_typename);
+				ppl = _sntprintf(pparm, 128, _T("" _Pfs_ "/Emulation/Settings/"), pem->f_typename);
 				px = pparm + ppl;
 
 				_tcscpy(px, _T("Emulation"));

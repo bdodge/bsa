@@ -187,7 +187,7 @@ ERRCODE Bed::GetFTPAuthorization(bool hadfailed)
 
 	if(m_perstPass && m_ftpPassword[0] == _T('\0') && m_ftpUser[0] != _T('\0'))
 	{
-		_sntprintf(key, MAX_PATH, _T("FTP/Users/"_Pfs_"/Password"), m_ftpUser);
+		_sntprintf(key, MAX_PATH, _T("FTP/Users/" _Pfs_ "/Password"), m_ftpUser);
 		m_persist->GetNvStr(key, pwd, 64, _T(""));
 		Decrypt(m_ftpPassword, 128, pwd, _tcslen(pwd), FTP_CRYPT_KEY);
 	}
@@ -206,7 +206,7 @@ ERRCODE Bed::GetFTPAuthorization(bool hadfailed)
 			TCHAR pwd[64];
 
 			Encrypt(pwd, 64, m_ftpPassword, _tcslen(m_ftpPassword), FTP_CRYPT_KEY);
-			_sntprintf(key, MAX_PATH, _T("FTP/Users/"_Pfs_"/Password"), m_ftpUser);
+			_sntprintf(key, MAX_PATH, _T("FTP/Users/" _Pfs_ "/Password"), m_ftpUser);
 			m_persist->SetNvStr(key, pwd);
 		}
 		m_persist->SetNvBool(_T("FTP/AnonymousLogin"), m_ftpAnonymous);

@@ -991,7 +991,7 @@ ERRCODE Bsccs::CheckOut(LPCTSTR filename, HWND hWnd)
 
 	if(! IsReadonly(filename))
 	{
-		_sntprintf(emsg, MAX_PATH*2, _T(""_Pfs_" is already writeable"), filename);
+		_sntprintf(emsg, MAX_PATH*2, _T("" _Pfs_ " is already writeable"), filename);
 		MessageBox(hWnd, emsg, _T("BED SCCS Check-Out"), MB_OK);
 		return errFAILURE;
 	}
@@ -1023,7 +1023,7 @@ ERRCODE Bsccs::CheckIn(LPCTSTR filename, HWND hWnd)
 
 	if(IsReadonly(filename))
 	{
-		_sntprintf(emsg, MAX_PATH*2, _T(""_Pfs_" is not writeable"), filename);
+		_sntprintf(emsg, MAX_PATH*2, _T("" _Pfs_ " is not writeable"), filename);
 		MessageBox(hWnd, emsg, _T("BED SCCS Check-In"), MB_OK);
 		return errFAILURE;
 	}
@@ -1057,7 +1057,7 @@ ERRCODE Bsccs::Revert(LPCTSTR filename, HWND hWnd)
 
 	if(IsReadonly(filename))
 	{
-		_sntprintf(emsg, MAX_PATH*2, _T(""_Pfs_" is not writeable"), filename);
+		_sntprintf(emsg, MAX_PATH*2, _T("" _Pfs_ " is not writeable"), filename);
 		MessageBox(hWnd, emsg, _T("BED SCCS Check-In"), MB_OK);
 		return errFAILURE;
 	}
@@ -1268,7 +1268,7 @@ bool Bsccs::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var, LP
 				//
 				if(errOK != BUtil::FileExists(shell))
 				{
-					_sntprintf(msg, MAX_PATH*2, _T("Program "_Pfs_" not found.  Use full path to program"), shell);
+					_sntprintf(msg, MAX_PATH*2, _T("Program " _Pfs_ " not found.  Use full path to program"), shell);
 					MessageBox(NULL, msg, _T("BED - SCCS Setup"), MB_OK);
 					*step = 7;
 					return true;

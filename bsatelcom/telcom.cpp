@@ -286,7 +286,7 @@ ERRCODE BtelnetStream::TelnetReply(BYTE otype, BYTE ecode)
 		{
 			if(m_opts[ecode] == tnWill || m_opts[ecode] == tnWont)
 			{
-				LOG(logDebug, 3, _T("->SKIPPING "_Pfs_" "_Pfs_" (sent already)\n"), telcodes[otype - LOW_TEL_OPT],
+				LOG(logDebug, 3, _T("->SKIPPING " _Pfs_ " " _Pfs_ " (sent already)\n"), telcodes[otype - LOW_TEL_OPT],
 						teloptions[ecode]);
 				return errOK;
 			}
@@ -299,14 +299,14 @@ ERRCODE BtelnetStream::TelnetReply(BYTE otype, BYTE ecode)
 		{
 			if(m_opts[ecode] == tnDo || m_opts[ecode] == tnDont)
 			{
-				LOG(logDebug, 3, _T("->SKIPPING "_Pfs_" "_Pfs_" (sent already)\n"), telcodes[otype - LOW_TEL_OPT],
+				LOG(logDebug, 3, _T("->SKIPPING " _Pfs_ " " _Pfs_ " (sent already)\n"), telcodes[otype - LOW_TEL_OPT],
 						teloptions[ecode]);
 				return errOK;
 			}
 			m_opts[ecode] = otype == WILLTEL ? tnWill : tnWont;
 		}
 	}
-	LOG(logDebug, 3, _T("->"_Pfs_" "_Pfs_"\n"), telcodes[otype - LOW_TEL_OPT], teloptions[ecode]);
+	LOG(logDebug, 3, _T("->" _Pfs_ " " _Pfs_ "\n"), telcodes[otype - LOW_TEL_OPT], teloptions[ecode]);
 
 	rep[0] = IAC;
 	rep[1] = otype;
@@ -321,7 +321,7 @@ ERRCODE BtelnetStream::TelnetReply(BYTE otype, BYTE ecode)
 //***********************************************************************
 TelParseState BtelnetStream::TelnetEscape(BYTE ecode, BYTE* otype)
 {
-	LOG(logDebug, 3, _T("<-"_Pfs_" \n"), telcodes[ecode - LOW_TEL_OPT]);
+	LOG(logDebug, 3, _T("<-" _Pfs_ " \n"), telcodes[ecode - LOW_TEL_OPT]);
 
 	*otype = ecode;
 
@@ -353,7 +353,7 @@ TelParseState BtelnetStream::TelnetEscape(BYTE ecode, BYTE* otype)
 //***********************************************************************
 TelParseState BtelnetStream::TelnetOption(BYTE otype, BYTE ecode)
 {
-	LOG(logDebug, 4, _T(""_Pfs_"\n"), teloptions[ecode]);
+	LOG(logDebug, 4, _T("" _Pfs_ "\n"), teloptions[ecode]);
 
 	/*
 	 * WILL - side wants to self-enable option
@@ -554,7 +554,7 @@ TelParseState BtelnetStream::TelnetSubnegTermType(BYTE ecode)
 //***********************************************************************
 TelParseState BtelnetStream::TelnetSubnegotiate(BYTE ecode)
 {
-	LOG(logDebug, 5, _T(" subneg "_Pfs_"\n"), teloptions[ecode]);
+	LOG(logDebug, 5, _T(" subneg " _Pfs_ "\n"), teloptions[ecode]);
 
 	switch(ecode)
 	{

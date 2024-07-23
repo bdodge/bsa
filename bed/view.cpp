@@ -543,19 +543,19 @@ void Bview::InitializeViews(Bpersist* pPersist, HWND hwndParent)
 		pdf = &view_init_fonts[i];
 		pf  = &m_def_fonts[i];
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Face"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Face"), lpKeywordName);
 		ec = pPersist->GetNvStr(szParmName, pf->face, 256, pdf->face);
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Height"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Height"), lpKeywordName);
 		ec = pPersist->GetNvInt(szParmName, pf->height, pdf->height);
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Bold"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Bold"), lpKeywordName);
 		ec = pPersist->GetNvBool(szParmName, pf->bold, pdf->bold);
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/Italic"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/Italic"), lpKeywordName);
 		ec = pPersist->GetNvBool(szParmName, pf->italic, pdf->italic);
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Font/AntiAlias"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Font/AntiAlias"), lpKeywordName);
 		ec = pPersist->GetNvBool(szParmName, pf->antialias, pdf->antialias);
 	}
 	for(i = 0; i < NUM_VIEW_COLORS; i++)
@@ -567,13 +567,13 @@ void Bview::InitializeViews(Bpersist* pPersist, HWND hwndParent)
 		b = (view_init_colors[i] >> 16) & 0xff;
 		a = (view_init_colors[i] >> 24) & 0xff;
 
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Color/Red"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Color/Red"), lpKeywordName);
 		ec = pPersist->GetNvInt(szParmName, r, r);
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Color/Green"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Color/Green"), lpKeywordName);
 		ec = pPersist->GetNvInt(szParmName, g, g);
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Color/Blue"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Color/Blue"), lpKeywordName);
 		ec = pPersist->GetNvInt(szParmName, b, b);
-		_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/Display/Color/Alpha"), lpKeywordName);
+		_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/Display/Color/Alpha"), lpKeywordName);
 		ec = pPersist->GetNvInt(szParmName, a, a);
 
 		m_def_colors[i] = KWOPAQUE | RGB(r,g,b);
@@ -639,7 +639,7 @@ LPCTSTR Bview::GetKeywordFont(BkwType type, LPTSTR pszSpec, int nSpec)
 
 	pSpec = &m_view_fspec[type];
 
-	_sntprintf(pszSpec, nSpec, _T(""_Pfs_":%d:%d:%d:%d"),
+	_sntprintf(pszSpec, nSpec, _T("" _Pfs_ ":%d:%d:%d:%d"),
 				pSpec->face,
 				pSpec->height,
 				pSpec->bold,
@@ -889,15 +889,15 @@ ERRCODE Bview::PersistSettings()
 			}
 			// form buffer-type specific name for tab/indent space defaults
 			//
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/AutoTabs"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/AutoTabs"), GetTypeName());
 			pPersist->SetNvBool(szParmName, m_autotabs);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/TabsSpace"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/TabsSpace"), GetTypeName());
 			pPersist->SetNvInt(szParmName, m_tabspace);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/IndentSpace"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/IndentSpace"), GetTypeName());
 			pPersist->SetNvInt(szParmName, m_indentspace);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/TabsAsSpaces"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/TabsAsSpaces"), GetTypeName());
 			pPersist->SetNvBool(szParmName, m_autotabs ? m_initabsasspaces : m_tabsasspaces);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/ShowLineNumbers"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/ShowLineNumbers"), GetTypeName());
 			pPersist->SetNvBool(szParmName, m_showLineNums);
 
 			for(i = 0; i < NUM_VIEW_FONTS; i++)
@@ -906,19 +906,19 @@ ERRCODE Bview::PersistSettings()
 
 				pf = &m_view_fspec[i];
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Face"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Face"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvStr(szParmName, pf->face);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Height"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Height"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvInt(szParmName, pf->height);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Bold"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Bold"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvBool(szParmName, pf->bold);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Italic"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Italic"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvBool(szParmName, pf->italic);
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/AntiAlias"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/AntiAlias"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvBool(szParmName, pf->antialias);
 			}
 			for(i = 0; i < NUM_VIEW_COLORS; i++)
@@ -930,13 +930,13 @@ ERRCODE Bview::PersistSettings()
 				b = (m_view_colors[i] >> 16) & 0xff;
 				a = (m_view_colors[i] >> 24) & 0xff;
 
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Red"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Red"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvInt(szParmName, r);
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Green"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Green"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvInt(szParmName, g);
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Blue"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Blue"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvInt(szParmName, b);
-				_sntprintf(szParmName, 64, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Alpha"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 64, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Alpha"), lpKeywordName, GetTypeName());
 				ec = pPersist->SetNvInt(szParmName, a);
 			}
 			// write settings now, so they appear for other instances of app
@@ -994,15 +994,15 @@ ERRCODE Bview::DepersistParms()
 
 			// form buffer-type specific name for tab/indent space
 			//
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/AutoTabs"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/AutoTabs"), GetTypeName());
 			pPersist->GetNvBool(szParmName, m_autotabs, m_autotabs);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/TabsSpace"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/TabsSpace"), GetTypeName());
 			pPersist->GetNvInt(szParmName, m_tabspace, m_tabspace);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/IndentSpace"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/IndentSpace"), GetTypeName());
 			pPersist->GetNvInt(szParmName, m_indentspace, m_indentspace);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/TabsAsSpaces"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/TabsAsSpaces"), GetTypeName());
 			pPersist->GetNvBool(szParmName, m_tabsasspaces, m_tabsasspaces);
-			_sntprintf(szParmName, 256, _T("Text/Edit/"_Pfs_"/ShowLineNumbers"), GetTypeName());
+			_sntprintf(szParmName, 256, _T("Text/Edit/" _Pfs_ "/ShowLineNumbers"), GetTypeName());
 			pPersist->GetNvBool(szParmName, m_showLineNums, m_showLineNums);
 
 			for(i = 0; i < NUM_VIEW_FONTS; i++)
@@ -1012,19 +1012,19 @@ ERRCODE Bview::DepersistParms()
 				pf  = &m_view_fspec[i];
 				pdf = &m_def_fonts[i];
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Face"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Face"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvStr(szParmName, pf->face, 63, pdf->face);
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Height"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Height"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvInt(szParmName, pf->height, pdf->height);
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Bold"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Bold"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvBool(szParmName, pf->bold, pdf->bold);
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/Italic"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/Italic"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvBool(szParmName, pf->italic, pdf->italic);
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Font/AntiAlias"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Font/AntiAlias"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvBool(szParmName, pf->antialias, pdf->antialias);
 
 				m_view_fonts[i] = NULL;
@@ -1046,13 +1046,13 @@ ERRCODE Bview::DepersistParms()
 				b = (m_def_colors[i] >> 16) & 0xff;
 				a = (m_def_colors[i] >> 24) & 0xff;
 
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Red"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Red"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvInt(szParmName, r, r);
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Green"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Green"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvInt(szParmName, g, g);
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Blue"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Blue"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvInt(szParmName, b, b);
-				_sntprintf(szParmName, 256, _T("Keyword/"_Pfs_"/"_Pfs_"/Display/Color/Alpha"), lpKeywordName, GetTypeName());
+				_sntprintf(szParmName, 256, _T("Keyword/" _Pfs_ "/" _Pfs_ "/Display/Color/Alpha"), lpKeywordName, GetTypeName());
 				ec = pPersist->GetNvInt(szParmName, a, a);
 
 				_sntprintf(szParmName, 256, _T("%d:%d:%d:%d"), r, g, b, a);
@@ -1175,7 +1175,7 @@ BOOL Bview::CheckModified(bool cangoon)
 	if(! m_buffer) return TRUE;
 	if(! m_buffer->GetModified()) return TRUE;
 
-	_sntprintf(szMessage, MAX_PATH * 2, _T("Save Changes to "_Pfs_" ?"), m_buffer->GetName());
+	_sntprintf(szMessage, MAX_PATH * 2, _T("Save Changes to " _Pfs_ " ?"), m_buffer->GetName());
 	rc = MessageBox(NULL, szMessage, m_buffer->GetEditor()->GetTitle(m_buffer), cangoon?MB_YESNOCANCEL:MB_YESNO);
 
 	if(rc == IDCANCEL)
@@ -1203,7 +1203,7 @@ BOOL Bview::CheckExternallyModified()
 
 		mod = m_buffer->GetModified();
 
-		_sntprintf(szMessage, MAX_PATH * 2, _T(""_Pfs_" has been modified outside the editor, Re-read file "_Pfs_"?"),
+		_sntprintf(szMessage, MAX_PATH * 2, _T("" _Pfs_ " has been modified outside the editor, Re-read file " _Pfs_ "?"),
 			m_buffer->GetName(), (mod ? _T(" (and loose current changes) ") : _T("")));
 		rc = MessageBox(NULL, szMessage, m_buffer->GetEditor()->GetTitle(m_buffer), MB_YESNO);
 
@@ -2810,7 +2810,7 @@ void Bview::Draw(HDC hdc, HWND hWnd, LPRECT lprcUpdate, DrawType type)
 					}
 					if((type == dtDraw || type == dtPrint) && nPending > 0 && (y + yi) >= lprcUpdate->top && y < lprcUpdate->bottom)
 					{
-						//_tprintf(_T("eot to="_Pfs_"=%d,%d\n"), lpToken + nParsed - nPending, nPending, nParsed);
+						//_tprintf(_T("eot to=" _Pfs_ "=%d,%d\n"), lpToken + nParsed - nPending, nPending, nParsed);
 						TextOut(hdc, x, (type == dtDraw ? y : -y), lpToken + nParsed - nPending, nPending);
 					}
 					x += pwidth;

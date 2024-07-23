@@ -55,7 +55,7 @@ ERRCODE Bftp::CheckResponse(int* code, int& rcode)
 	TCHAR szResp[1024];
 	CharToTChar(szResp, (LPSTR)m_response);
 #ifdef FTP_LOG
-	Log(logDebug, 4, _T("FTP: Response:"_Pfs_"\n"), szResp);
+	Log(logDebug, 4, _T("FTP: Response:" _Pfs_ "\n"), szResp);
 #endif
 
 	rcode = atoi((char*)m_response);
@@ -107,7 +107,7 @@ ERRCODE Bftp::Login(LPCTSTR hostname, LPCTSTR username, LPCTSTR password)
 	do
 	{
 #ifdef FTP_LOG
-		Log(logDebug, 2, _T("FTP: Opening "_Pfs_"\n"), hostname);
+		Log(logDebug, 2, _T("FTP: Opening " _Pfs_ "\n"), hostname);
 #endif
 		ec = m_ctrl->Open(ahost, FTP_CTRL_PORT);
 		if(ec != errOK) break;
@@ -116,7 +116,7 @@ ERRCODE Bftp::Login(LPCTSTR hostname, LPCTSTR username, LPCTSTR password)
 		if(ec != errOK) break;
 
 #ifdef FTP_LOG
-		Log(logDebug, 2, _T("FTP: Connected to "_Pfs_"\n"), hostname);
+		Log(logDebug, 2, _T("FTP: Connected to " _Pfs_ "\n"), hostname);
 #endif
 
 		// connected on ftp ctrl channel, read welcome msg
@@ -173,7 +173,7 @@ ERRCODE Bftp::Login(LPCTSTR hostname, LPCTSTR username, LPCTSTR password)
 			break;
 		}
 #ifdef FTP_LOG
-		Log(logDebug, 2, _T("FTP: "_Pfs_" logged in\n"), username);
+		Log(logDebug, 2, _T("FTP: " _Pfs_ " logged in\n"), username);
 #endif
 	}
 	while(0);
@@ -344,7 +344,7 @@ ERRCODE Bftp::FileXfer(
 	if(! lf)
 	{
 #ifdef FTP_LOG
-		Log(logDebug, 1, _T("FTP: Can't open local file "_Pfs_"\n"), lpLocalName);
+		Log(logDebug, 1, _T("FTP: Can't open local file " _Pfs_ "\n"), lpLocalName);
 #endif
 		return errBAD_PARAMETER;
 	}
