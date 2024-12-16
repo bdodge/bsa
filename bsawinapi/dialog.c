@@ -39,12 +39,12 @@ HWND WINAPI CreateDialogParam(
 {
 	LPBYTE  res;
 	DWORD	cbdata;
-	
+
 	// find dialog in resource file
 	//
 	res = (LPBYTE)__FindResource(RT_Dialog, lpTemplateName, _zg_resources, _cb_zg_resources);
-	
-	if(! res) 
+
+	if(! res)
 	{
 		SetLastError(ERROR_RESOURCE_DATA_NOT_FOUND);
 		return NULL;
@@ -55,7 +55,7 @@ HWND WINAPI CreateDialogParam(
 	cbdata = RESDWORD(res);			// hdr size
 	res -= 8;
 	res += ((cbdata + 3) & ~3);
-	
+
 	return CreateDialogIndirectParam(
 								hInstance,
 								(LPDLGTEMPLATE)res,
@@ -82,10 +82,10 @@ HWND WINAPI CreateDialogIndirectParam(
 	int				i, len;
 	BOOL			rv;
 	DWORD			isEx;
-	
+
 	DLGTEMPLATE 	dlgHdr;
 	DLGITEMTEMPLATE itmHdr;
-	
+
 	LPTSTR			lpszClass;
 	LPTSTR			lpszTitle;
 	LPTSTR			lpszMenu;
@@ -93,7 +93,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	LPBYTE			lpCreate;
 	WORD			idMenu, idClass, idTitle;
 	WORD			wv, pointsize;
-	
+
 	TCHAR			classBuff[MAX_PATH];
 	TCHAR			titleBuff[MAX_PATH];
 	TCHAR			menuBuff[MAX_PATH];
@@ -145,7 +145,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	else if(wv != 0)
 	{
 		lpszMenu = menuBuff;
-		
+
 		lpszMenu[0] = wv;
 		for(len = 1; len < MAX_PATH - 1; len++)
 		{
@@ -166,7 +166,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	else if(wv != 0)
 	{
 		lpszClass = classBuff;
-		
+
 		lpszClass[0] = (TCHAR)wv;
 		for(len = 1; len < MAX_PATH - 1; len++)
 		{
@@ -183,7 +183,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	{
 		lpszTitle = titleBuff;
 
-		lpszTitle[0] = (TCHAR)wv;		
+		lpszTitle[0] = (TCHAR)wv;
 		for(len = 1; len < MAX_PATH - 1; len++)
 		{
 			lpszTitle[len] = RESWORD(res);
@@ -196,7 +196,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	if(dlgHdr.style & DS_SETFONT)
 	{
 		DWORD fontweight, fontital, fontcharset;
-		
+
 		pointsize = RESWORD(res);
 		if(isEx)
 		{
@@ -237,7 +237,7 @@ HWND WINAPI CreateDialogIndirectParam(
 	}
 	SetWindowLong(hDlg, DWL_DLGPROC, (LONG)lpDialogFunc);
 	zWndParent = Zwindow(hDlg);
-	
+
 	// create all the dialog controls
 	//
 	for(i = 0; i < dlgHdr.cdit; i++)
@@ -246,7 +246,7 @@ HWND WINAPI CreateDialogIndirectParam(
 		llres += 3;
 		llres &= ~3;
 		res = (LPBYTE)llres;
-		
+
 		lpCreate = NULL;
 
 		if(isEx)
@@ -273,7 +273,7 @@ HWND WINAPI CreateDialogIndirectParam(
 			itmHdr.id	= RESWORD(res);
 		}
 		// control class
-		wv = RESWORD(res);		
+		wv = RESWORD(res);
 		if(wv  == 0xffff)
 		{
 			wv = RESWORD(res);
@@ -292,7 +292,7 @@ HWND WINAPI CreateDialogIndirectParam(
 		//	case 0x0085:
 		//		lpszClass = _T("Combobox"); break;
 			default:
-				//_tprintf(_T("uc=%d\n"),wv); 
+				//_tprintf(_T("uc=%d\n"),wv);
 			case 0x0082:
 				if(itmHdr.style & WS_BORDER)
 				{
@@ -319,13 +319,13 @@ HWND WINAPI CreateDialogIndirectParam(
 					break;
 			}
 			lpszClass[len] = 0;
-			
+
 			if(! _tcsicmp(lpszClass, _T("SysTreeView32")))
 			{
 				// give treeview windows vertical scrollbars by default
 				// until auto-vscrolling works
 				itmHdr.style |= WS_VSCROLL;
-				
+
 				if(itmHdr.style & WS_BORDER)
 				{
 					// I *think* this is what win32 does
@@ -346,15 +346,15 @@ HWND WINAPI CreateDialogIndirectParam(
 		if(wv == 0xffff)
 		{
 			idTitle = RESWORD(res);
-			
+
 			// hmmm, the title is an ID, not a string, figure
 			// out what kind of weird control this is
-			//			
+			//
 			if(! _tcsicmp(lpszClass, _T("Static")))
 			{
 				HICON   hIcon;
 				HBITMAP hBitmap;
-				
+
 				if((hIcon = LoadIcon((HINSTANCE)0xbeef, MAKEINTRESOURCE((long)idTitle))) != NULL)
 				{
 					lpszClass = _T("StaticIcon");
@@ -370,7 +370,7 @@ HWND WINAPI CreateDialogIndirectParam(
 		else if(wv != 0)
 		{
 			lpszTitle = titleBuff;
-			
+
 			lpszTitle[0] = wv;
 			for(len = 1; len < MAX_PATH - 1; len++)
 			{
@@ -412,9 +412,9 @@ HWND WINAPI CreateDialogIndirectParam(
 		    if(zWndParent)
 		    {
 		        LPZWND zCtrl;
-		        
+
 				zWnd = (LPZWND)hWnd;
-				
+
 		        if(zWndParent->cnext)
 		        {
 		            for(zCtrl = zWndParent->cnext; zCtrl->cnext;)
@@ -432,7 +432,7 @@ HWND WINAPI CreateDialogIndirectParam(
 			SetWindowLong(hWnd, GWL_ID, itmHdr.id);
 		}
 	}
-	zWnd = Zwindow(hDlg); 
+	zWnd = Zwindow(hDlg);
 
 	// set current ctrl to first in tab order
 	while(zWnd->cnext)
@@ -440,7 +440,7 @@ HWND WINAPI CreateDialogIndirectParam(
 		if((GetWindowLong(zWnd->cnext, GWL_STYLE) & WS_TABSTOP))
 		{
 			int idCurrent = GetWindowLong(zWnd->cnext, GWL_ID);
-			
+
 			SetWindowLong(hDlg, GWL_ID, idCurrent);
 			_zg_dialogCtrl = zWnd->cnext;
 			break;
@@ -450,8 +450,8 @@ HWND WINAPI CreateDialogIndirectParam(
 
 	// send the init message
 	rv = SendMessage(hDlg, WM_INITDIALOG, 0, (LPARAM)dwInitParam);
-			
-	// if initdialog returns false, proc has set focus by hand, 
+
+	// if initdialog returns false, proc has set focus by hand,
 	// if true, then we set focus to first control
 	//
 	if(rv)
@@ -476,12 +476,12 @@ int WINAPI DialogBoxParam(
 {
 	LPBYTE  res;
 	DWORD	cbdata;
-	
+
 	// find dialog in resource file
 	//
 	res = (LPBYTE)__FindResource(RT_Dialog, lpTemplateName, _zg_resources, _cb_zg_resources);
-	
-	if(! res) 
+
+	if(! res)
 	{
 		SetLastError(ERROR_RESOURCE_DATA_NOT_FOUND);
 		return -1;
@@ -492,7 +492,7 @@ int WINAPI DialogBoxParam(
 	cbdata = RESDWORD(res);			// hdr size
 	res -= 8;
 	res += ((cbdata + 3) & ~3);
-	
+
 	return DialogBoxIndirectParam(
 								hInstance,
 								(LPDLGTEMPLATE)res,
@@ -515,7 +515,7 @@ int WINAPI DialogBoxIndirectParam(
 	HWND			hDlg;
 	int				rc;
 	HWND			lastFocus = GetFocus();
-	
+
 	hDlg = CreateDialogIndirectParam(
 									hInstance,
 									pDialogTemplate,
@@ -523,7 +523,7 @@ int WINAPI DialogBoxIndirectParam(
 									lpDialogFunc,
 									dwInitParam
 									);
-		
+
 	if(! hDlg)
 	{
 		SetLastError(ERROR_INVALID_PARAMETER);
@@ -533,9 +533,9 @@ int WINAPI DialogBoxIndirectParam(
 
 	// push dialog on the dialog stack
 	_zg_dialogWnd[++_zg_dialogTop] = hDlg;
-			
+
 	// modal wait
-	while(GetMessage(&msg, NULL, 0, 0)) 
+	while(GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		rc = DispatchMessage(&msg);
@@ -577,9 +577,9 @@ BOOL WINAPI EndDialog(HWND hDlg, int nResult)
 HWND WINAPI GetDlgItem(HWND hDlg, int nIDDlgItem)
 {
 	LPZWND zDlg;
-	
+
 	if(! (zDlg = Zwindow(hDlg)))	return NULL;
-	
+
 	for(zDlg = zDlg->cnext; zDlg; zDlg = zDlg->cnext)
 	{
 		if(GetWindowLong(zDlg, GWL_ID) == nIDDlgItem)
@@ -600,7 +600,7 @@ HWND WINAPI GetDlgItem(HWND hDlg, int nIDDlgItem)
 int WINAPI GetDlgItemText(HWND hDlg, int nIDDlgItem, LPTSTR text, int nText)
 {
 	LPZWND zDlg = GetDlgItem(hDlg, nIDDlgItem);
-	
+
 	if(zDlg) return GetWindowText(zDlg, text, nText);
 	else     return 0;
 }
@@ -609,7 +609,7 @@ int WINAPI GetDlgItemText(HWND hDlg, int nIDDlgItem, LPTSTR text, int nText)
 int WINAPI IsDlgButtonChecked(HWND hDlg, int nIDButton)
 {
 	LPZWND zWnd = GetDlgItem(hDlg, nIDButton);
-	
+
 	if(zWnd) return (SendMessage(zWnd, BM_GETCHECK, 0, 0) & BST_CHECKED) ? TRUE : FALSE;
 	else     return 0;
 }
@@ -618,7 +618,7 @@ int WINAPI IsDlgButtonChecked(HWND hDlg, int nIDButton)
 int WINAPI SetDlgItemText(HWND hDlg, int nIDDlgItem, LPCTSTR text)
 {
 	LPZWND zDlg = GetDlgItem(hDlg, nIDDlgItem);
-	
+
 	if(zDlg) return SetWindowText(zDlg, text);
 	else     return 0;
 }
@@ -627,7 +627,7 @@ int WINAPI SetDlgItemText(HWND hDlg, int nIDDlgItem, LPCTSTR text)
 int WINAPI CheckDlgButton(HWND hDlg, int nIDButton, UINT check)
 {
 	LPZWND zWnd = GetDlgItem(hDlg, nIDButton);
-	
+
 	if(zWnd) return SendMessage(zWnd, BM_SETCHECK, ((check & BST_CHECKED) ? TRUE : FALSE), 0);
 	else     return 0;
 }
@@ -645,21 +645,22 @@ LRESULT WINAPI DefDlgProc(
 	PAINTSTRUCT ps;
 	HDC         hdc;
 	LPZWND		zWnd;
+	LPZWND		zChild;
 	DLGPROC		proc;
 	DWORD		style;
 	int			idCurrent;
 	DWORD		code;
-	
+
 	if(! (zWnd = Zwindow(hDlg))) return -1;
-	
+
 	proc 	  = (DLGPROC)GetWindowLong(hDlg, DWL_DLGPROC);
 	idCurrent = GetWindowLong(hDlg, GWL_ID);
-	
+
 	switch(Msg)
 	{
 	/*
 	case WM_INITDIALOG:
-		
+
 		// set focus on current id
 		zWnd = Zwindow(GetDlgItem(hDlg, idCurrent));
 		if(zWnd)
@@ -668,12 +669,12 @@ LRESULT WINAPI DefDlgProc(
 	*/
 	case WM_INITDIALOG:
 		// do smart focusing in WM_SETFOCUS
-		if(proc) 
+		if(proc)
 			return proc(hDlg, Msg, wParam, lParam);
 		return TRUE;
 
 	case WM_CREATE:
-		
+
 		// [TODO - figure out how win32 decides to show dots around buttons
 		// _zg_keynav = FALSE;
 		break;
@@ -682,13 +683,13 @@ LRESULT WINAPI DefDlgProc(
 
 		EndDialog(hDlg, IDCANCEL);
 		break;
-		
+
 	case WM_PAINT:
 
 		hdc = BeginPaint(hDlg, &ps);
-		
+
 		// draw a box around the "current" control
-		// if it is a push button		
+		// if it is a push button
 		if((zWnd = Zwindow(GetDlgItem(hDlg, idCurrent))) != NULL)
 		{
 			if((GetWindowLong(zWnd, GWL_STYLE) & 0xf) <= 1)
@@ -697,15 +698,15 @@ LRESULT WINAPI DefDlgProc(
 				HPEN hPen;
 				HPEN hOld;
 				RECT rcParent;
-				
+
 				GetWindowRect(zWnd, &rcCtrl);
 				GetWindowRect(GetParent(zWnd), &rcParent);
-				
+
 				rcCtrl.left 	-= rcParent.left;
 				rcCtrl.right 	-= rcParent.left;
 				rcCtrl.top 		-= rcParent.top;
 				rcCtrl.bottom	-= rcParent.top;
-				
+
 				hPen = GetStockObject(BLACK_PEN);
 				hOld = SelectObject(hdc, hPen);
 				MoveToEx(hdc, rcCtrl.left - 1, rcCtrl.top - 1, NULL);
@@ -738,45 +739,84 @@ LRESULT WINAPI DefDlgProc(
 		break;
 
 	case WM_SETFOCUS:
-		
-		// give focus to first tabstop in tab order
+
+		// give focus to first tabstop in tab order unless last focus already on a child
+		// of us, in which case leave focus to child
 		//
-		zWnd = Zwindow(hDlg); 
-
-		while(zWnd && zWnd->cnext)
-		{			
-			zWnd = zWnd->cnext;
-
-			style = GetWindowLong(zWnd, GWL_STYLE);
-			if(style & WS_TABSTOP && ! (style & WS_DISABLED))
-			{
-				if(zWnd->class && ! _tcscmp(zWnd->class->name, _T("Edit")))
-				{
-					SetFocus(zWnd);
-					break;
-				}
-			}
-		}
-		if(! zWnd)
+		zChild = zWnd;
+#if 0
+		while(zChild)
 		{
-			zWnd = Zwindow(hDlg); 
-			
-			while(zWnd && zWnd->cnext)
+			zChild = zChild->cnext;
+			if (zChild)
 			{
-				zWnd = zWnd->cnext;
-				
-				style = GetWindowLong(zWnd, GWL_STYLE);
-				if(style & WS_TABSTOP && ! (style & WS_DISABLED))
+				if (GetParent(zChild) == zWnd)
 				{
-					SetFocus(zWnd);
-					break;
+					style = GetWindowLong(zChild, GWL_STYLE);
+					if(style & WS_TABSTOP && ! (style & WS_DISABLED))
+					{
+						if(zChild->class && ! _tcscmp(zChild->class->name, _T("Edit")))
+						{
+							//_tprintf(_T("prevc\n"));
+							if (zChild == GetFocus()) {
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
-		if(! zWnd)
+#else
+		zChild = NULL;
+#endif
+		if (!zChild)
+		{
+			zChild = zWnd;
+
+			while(zChild)
+			{
+				zChild = zChild->cnext;
+
+				if(zChild)
+				{
+					style = GetWindowLong(zChild, GWL_STYLE);
+					if(style & WS_TABSTOP && ! (style & WS_DISABLED))
+					{
+						if(zChild->class && ! _tcscmp(zChild->class->name, _T("Edit")))
+						{
+							//_tprintf(_T("fc %p\n"), zChild);
+							SetFocus(zChild);
+							break;
+						}
+					}
+				}
+			}
+		}
+		if(! zChild)
+		{
+			zChild = zWnd;
+
+			while(zChild)
+			{
+				zChild = zChild->cnext;
+
+				if (zChild)
+				{
+					style = GetWindowLong(zChild, GWL_STYLE);
+					if(style & WS_TABSTOP && ! (style & WS_DISABLED))
+					{
+						SetFocus(zChild);
+						break;
+					}
+				}
+			}
+		}
+		if(! zChild)
+		{
 			SetFocus(hDlg);
+		}
 		break;
-		
+
 	case WM_KEYDOWN:
 
 		zWnd = GetDlgItem(hDlg, idCurrent);
@@ -792,7 +832,7 @@ LRESULT WINAPI DefDlgProc(
 				&& ! (code & (DLGC_WANTALLKEYS | DLGC_WANTARROWS))
 				)
 		)
-		{	
+		{
 			if((wParam == VK_UP) || (wParam == VK_LEFT))
 			{
 				// move to prev tabstop in dialog, wrapping around
@@ -800,7 +840,7 @@ LRESULT WINAPI DefDlgProc(
 				//
 				zWnd = Zwindow(GetDlgItem(hDlg, idCurrent));
 				if(zWnd) zWnd = zWnd->cprev;
-				
+
 				while(zWnd)
 				{
 					if(zWnd && (GetWindowLong(zWnd, GWL_STYLE) & WS_TABSTOP))
@@ -826,7 +866,7 @@ LRESULT WINAPI DefDlgProc(
 				//
 				zWnd = Zwindow(GetDlgItem(hDlg, idCurrent));
 				if(zWnd) zWnd = zWnd->cnext;
-				
+
 				while(zWnd)
 				{
 					if(zWnd && (GetWindowLong(zWnd, GWL_STYLE) & WS_TABSTOP))
@@ -853,6 +893,10 @@ LRESULT WINAPI DefDlgProc(
 				if(zWnd->class && ((void*)zWnd->class->proc == (void*)& __wproc_Edit))
 				{
 					SetFocus(zWnd);
+
+					// for edit-boxes, select all text when tabbed-to
+					SendMessage(zWnd, EM_SETSEL, 0, MAKELONG(0, 1000));
+
 				}
 				SetWindowLong(hDlg, GWL_ID, GetWindowLong(zWnd, GWL_ID));
 				InvalidateRect(hDlg, NULL, FALSE);
@@ -886,7 +930,7 @@ LRESULT WINAPI DefDlgProc(
 			else
 			{
 				EndDialog(hDlg, IDOK);
-			}			
+			}
 		}
 		else if(wParam == VK_ESCAPE)
 		{
@@ -897,9 +941,9 @@ LRESULT WINAPI DefDlgProc(
 			if(proc) return proc(hDlg, Msg, wParam, lParam);
 		}
 		break;
-	
+
 	default:
-		
+
 		if(proc) return proc(hDlg, Msg, wParam, lParam);
 	}
 	return 0;

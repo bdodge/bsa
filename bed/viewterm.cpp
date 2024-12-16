@@ -298,9 +298,10 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 				{
 					OpenClipboard(m_hwnd);
 
-					// set copied to the cut buffer
+					// set copied to the cut buffer (alloc a bunch more than needed since
+					// newlines dont have attributes and better to not count lines)
 					//
-					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, ((nCopy / 3) + 1) * sizeof(char));
+					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, ((nCopy / 2) + 1) * sizeof(char));
 					LPSTR  pcp = (char*)GlobalLock(hMem);
 
 					EmptyClipboard();

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 //
 // File: bsautils.h
-// Desc: 
+// Desc:
 // Auth: Brian Dodge
 //
 // (C)opyright 2003  - BSA and Brian Dodge
@@ -25,9 +25,9 @@
 #ifndef max
 #define max(a,b) (((a)<(b))?(a):(b))
 #endif
-#ifndef GWL_USERDATA
-#define GWL_USERDATA GWLP_USERDATA
-#endif
+//#ifndef GWL_USERDATA
+//#define GWL_USERDATA GWLP_USERDATA
+//#endif
 
 
 //-----------------------------------------------------------------------
@@ -39,7 +39,7 @@ class UTILS_API Bmutex
 public:
 	Bmutex();
     ~Bmutex();
-    
+
     void				Lock		();
     void				Unlock		();
 
@@ -48,7 +48,7 @@ private:
     CRITICAL_SECTION	cs;
 #elif defined(PTHREADS)
 public:
-    operator			pthread_mutex_t*() { return &cs; }    
+    operator			pthread_mutex_t*() { return &cs; }
 private:
     pthread_mutex_t		cs;
 #endif
@@ -73,7 +73,7 @@ public:
 #if defined(Windows)
     Bevent(LPTSTR pName = NULL)		{ m_hEvent = CreateEvent(NULL, false, false, pName); }
     ~Bevent()						{ CloseHandle(m_hEvent);							 }
-    
+
     ERRCODE				Wait		(DWORD dwTimeout)
 						{
 							if(WaitForSingleObject(m_hEvent, dwTimeout) == WAIT_TIMEOUT)
@@ -88,25 +88,25 @@ public:
 						{
 							SetEvent(m_hEvent);
 						}
-    
+
 private:
     HANDLE				m_hEvent;
 #elif defined(PTHREADS)
     Bevent(LPTSTR pName = NULL)		{ pthread_cond_init(&m_cond, NULL);	}
     ~Bevent()						{ pthread_cond_destroy(&m_cond);	}
-    
+
     ERRCODE				Wait		(DWORD dwTimeout)
     					{
     						Block lock(&m_mutex);
     						struct timespec timer;
-  						
+
 							pthread_cond_init(&m_cond, NULL);
-   
+
 							if(dwTimeout != (DWORD)-1L)
 							{
 #if 0
     							struct timeb    mtime;
-								
+
 								ftime(&mtime);
   	    						mtime.millitm += dwTimeout;
 	    						while(mtime.millitm > 1000)
@@ -114,12 +114,12 @@ private:
 	    							mtime.millitm -= 1000;
 	    							mtime.time += 1;
 	    						}
-	    						
+
 	    						timer.tv_sec = mtime.time;
 	    						timer.tv_nsec = mtime.millitm * 1000000;
 #else
 								struct timespec walltime;
-								
+
 								clock_gettime(CLOCK_REALTIME, &walltime);
 	    						timer.tv_sec = walltime.tv_sec;
 	    						timer.tv_nsec = walltime.tv_nsec;
@@ -134,12 +134,12 @@ private:
 								return errOK;
 							}
     					}
-    void				Signal		()	
-						{ 
+    void				Signal		()
+						{
 				   			Block lock(&m_mutex);
 				   			pthread_cond_signal(&m_cond);
 						}
-    
+
 private:
 	pthread_cond_t		m_cond;
     Bmutex				m_mutex;
@@ -158,12 +158,12 @@ public:
     Bthread(LPTSTR pName = NULL) : m_hThread(NULL), m_threadID(0), m_running(false)
 									{ }
     virtual ~Bthread()				{ if(m_running) Stop(); if(m_hThread) CloseHandle(m_hThread); }
-    
+
 	virtual ERRCODE		Start		(LPTHREAD_FUNC pThreadFunc, void* thisparm, bool createThread = true);
 	virtual ERRCODE		Stop		(void);
 	virtual bool		GetRunning	(void)		{ return m_running; }
 	static  ERRCODE		Sleep		(int ms)	{ ::Sleep(ms); return errOK; }
-    
+
 protected:
     HANDLE				m_hThread;
 	DWORD				m_threadID;
@@ -172,12 +172,12 @@ protected:
     Bthread(LPTSTR pName = NULL) : m_hThread(0), m_running(false)
 									{ }
 	virtual ~Bthread() 				{ if(m_running) Stop(); }
-    
+
 	virtual ERRCODE		Start		(LPTHREAD_FUNC pThreadFunc, void* thisparm, bool createThread = true);
 	virtual ERRCODE		Stop		(void);
 	virtual bool		GetRunning	(void)		{ return m_running; }
 	static ERRCODE		Sleep		(int ms) { usleep(1000 * ms); return errOK; }
-    
+
 protected:
     pthread_t			m_hThread;
 	bool				m_running;
@@ -235,7 +235,7 @@ protected:
 };
 
 //***********************************************************************
-// linked list of generic name->value(value) 
+// linked list of generic name->value(value)
 //
 class UTILS_API BlistElement
 {
@@ -335,7 +335,7 @@ KEY_VAL_LIST_TEMPLATE(BkeyVal, LPTSTR, UTILS_API);
 
 
 //**************************************************************************
-class UTILS_API Bmsg 
+class UTILS_API Bmsg
 {
 public:
 	Bmsg(int initSize = 1024);
@@ -367,10 +367,10 @@ protected:
 	int						m_ioCnt;
 	int						m_msgSize;
 };
- 
+
 
 //-----------------------------------------------------------------------
-// class to just hold all the global helper functions for 
+// class to just hold all the global helper functions for
 #if !defined(Windows)&&defined(UNICODE)
 #define MAX_BSA_LFCVT 2048
 #define MAX_BSA_LFX	  4 /* reentrancy max */
@@ -422,7 +422,7 @@ protected:
 
 //-----------------------------------------------------------------------
 //
-// unicode/string defs 
+// unicode/string defs
 //
 #ifdef UNICODE
 	#define TCharToChar(a, b) 	BUtil::WCharToChar(a, b)

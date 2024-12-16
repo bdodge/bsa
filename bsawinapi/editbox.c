@@ -44,8 +44,8 @@ _w_editbox;
 //**************************************************************************
 static void  _w_edit_textout(
 						HDC 	hdc,
-						HWND 	hWnd,		
-						int		type,				
+						HWND 	hWnd,
+						int		type,
 						_w_editbox* pBox
 						)
 {
@@ -72,16 +72,16 @@ static void  _w_edit_textout(
 	int			nPending;
 	int			pwidth, lwidth;
 	SIZE		sizeChar;
-	
+
 	TCHAR		pwText[BSA_MAX_EB_TEXT];
 	LPTSTR		pText;
-	
+
 	if(! hdc || ! hWnd) return;
 	if(! (zWnd = Zwindow(hWnd))) return;
-	
+
 	GetClientRect(hWnd, &rcc);
 	lprcUpdate = &rcc;
-	
+
 	GetTextMetrics(hdc, &tm);
 	yi = tm.tmHeight;
 
@@ -107,7 +107,7 @@ static void  _w_edit_textout(
 		if(sizeChar.cx < 1)
 			sizeChar.cx = 1;
 		lines = 1;
-	
+
 		if((pBox->curcol < pBox->leftcol) || (sizeChar.cx >= (rcc.right - rcc.left)))
 		{
 			GetTextExtentPoint32(hdc, _T("m"), 1, &sizeChar);
@@ -120,14 +120,15 @@ static void  _w_edit_textout(
 			InvalidateRect(hWnd, NULL, FALSE);
 		}
 	}
-	
+
 	yo = (rcc.bottom - rcc.top - yi) / 2;
 	if(yo < 0) yo = 0;
 	yo += pBox->tpad;
-	
+
 	caretX = caretY = -1;
 	setline = setcol = -1;
 
+	//_tprintf(_T("xqla %d,%d  xqlb %d,%d\n"), pBox->qla, pBox->qca, pBox->qlb, pBox->qcb);
 	if(pBox->qla <= pBox->qlb)
 	{
 		qla = pBox->qla;
@@ -150,15 +151,17 @@ static void  _w_edit_textout(
 		qca = pBox->qcb;
 		qcb = pBox->qca;
 	}
+	//_tprintf(_T("qla %d,%d  qlb %d,%d\n"), qla, qca, qlb, qcb);
+
 	curFrgColor = _z_rgb_colorofbrush(zWnd->frg);
 	if(GetWindowLong(hWnd, GWL_STYLE) & WS_DISABLED)
 		curBkgColor = _z_rgb_colorofbrush(GetSysColorBrush(COLOR_BTNFACE));
 	else
 		curBkgColor = _z_rgb_colorofbrush(zWnd->bkg);
-	
+
 	bkgColor = curBkgColor;
 	frgColor = curFrgColor;
-	
+
 	SetTextColor(hdc, curFrgColor);
 	SetBkColor(hdc, curBkgColor);
 
@@ -169,10 +172,10 @@ static void  _w_edit_textout(
 	lpBase	= lpText;
 
 	x = rcc.left + pBox->lpad;
-	
+
 	caretLine = pBox->topline == pBox->curline;
 	if(caretLine) caretY = rcc.top + yo;
-	
+
 	for(y = rcc.top + yo, line = pBox->topline; y < rcc.bottom && incol < nText; y += yi, line++)
 	{
 		caretLine = (line == pBox->curline);
@@ -183,7 +186,7 @@ static void  _w_edit_textout(
 		mca		= 0;
 		mcb		= 0;
 		x 		= rcc.left + pBox->lpad;
-		
+
 		if(pBox->qla > 0 && pBox->qlb > 0)
 		{
 			if(line == qla)
@@ -196,7 +199,7 @@ static void  _w_edit_textout(
 				mcb = 0x7fffffff;
 		}
 		nPending = 0;
-		
+
 		while(incol < nText)
 		{
 			if(incol >= mca && incol < mcb)
@@ -234,12 +237,12 @@ static void  _w_edit_textout(
 				caretX = x + pwidth;
 				caretH = sizeChar.cy;
 			}
-			
+
 			GetTextExtentPoint32(hdc, lpText, incol, &sizeChar);
-			
+
 			if(type == dtSetPosToMouse && y <= pBox->mousey && (y + yi) > pBox->mousey)
 			{
-				if((x + pwidth) <= pBox->mousex && (x + pwidth + sizeChar.cx) > pBox->mousex)
+				if((x + pwidth) <= pBox->mousex && (x + (pwidth - lwidth) + sizeChar.cx) > pBox->mousex)
 				{
 					setline = line;
 					setcol  = incol;
@@ -251,7 +254,7 @@ static void  _w_edit_textout(
 				pwidth += sizeChar.cx - lwidth;
 				nPending++;
 			}
-			else 
+			else
 			{
 				lpBase = lpText + incol;
 			}
@@ -265,7 +268,7 @@ static void  _w_edit_textout(
 				break;
 		}
 		// end of line
-		
+
 		if(nPending > 0 && type == dtDraw && y >= lprcUpdate->top && y < lprcUpdate->bottom)
 		{
 			TextOut(hdc, x, y, lpBase, nPending);
@@ -293,7 +296,7 @@ static void  _w_edit_textout(
 		if(type == dtDraw && y >= lprcUpdate->top && y < lprcUpdate->bottom)
 		{
 			HBRUSH hbrBkg = CreateSolidBrush(bkgColor);
-			
+
 			rcl.top		= y;
 			rcl.bottom	= y + yi;
 			rcl.left	= x;
@@ -310,7 +313,7 @@ static void  _w_edit_textout(
 		lpBase = lpText + incol - 1;
 	}
 	// end of all lines
-	
+
 	if(type == dtSetCaret && caretLine)
 	{
 		if(caretY < 0)
@@ -334,6 +337,7 @@ static void  _w_edit_textout(
 		if(setcol < 1)  setcol  = 1;
 		pBox->curline = setline;
 		pBox->curcol  = setcol;
+		//_tprintf(_T("s2m %d,%d\n"), setline, setcol);
 	}
 	if(type == dtSetCaret)
 	{
@@ -342,7 +346,7 @@ static void  _w_edit_textout(
 		//
 		SetCaretPos(caretX, caretY);
 	}
-		
+
 }
 
 //**************************************************************************
@@ -358,6 +362,7 @@ void _w_edit_gettext(HWND hWnd, _w_editbox* pBox)
 	{
 		if(pBox->qca > pBox->curcol)
 		{
+			//_tprintf(_T("reset selection\n"));
 			pBox->qca = pBox->qcb = -1;
 			pBox->qla = pBox->qlb = -1;
 		}
@@ -378,11 +383,11 @@ void _w_edit_settext(HWND hWnd, _w_editbox* pBox)
 void _w_edit_setcaret(HWND hWnd, _w_editbox* pBox)
 {
 	HDC	hdc = GetDC(hWnd);
-		
+
 	_w_edit_textout(hdc, hWnd, dtSetCaret, pBox);
 	ReleaseDC(hdc, hWnd);
 }
-		
+
 //**************************************************************************
 void _w_ebchecksel(HWND hWnd, _w_editbox* pBox)
 {
@@ -391,10 +396,10 @@ void _w_ebchecksel(HWND hWnd, _w_editbox* pBox)
 	if(! pBox) return;
 	if(pBox->qla <= 0 || pBox->qlb <= 0)
 		return;
-	
+
 	// delete chars from a to b
 	pBox->curcol = pBox->qca;
-	
+
 	len = pBox->qcb - pBox->qca;
 	pBox->nText-= len;
 	pe  = pBox->text + pBox->qca - 1;
@@ -402,7 +407,7 @@ void _w_ebchecksel(HWND hWnd, _w_editbox* pBox)
 	while(len-- > 0) *pe++ = *pt++;
 	pBox->qla = pBox->qlb = -1;
 	pBox->qca = pBox->qcb = -1;
-	InvalidateRect(hWnd, NULL, FALSE);	
+	InvalidateRect(hWnd, NULL, FALSE);
 }
 
 //**************************************************************************
@@ -411,14 +416,14 @@ static LRESULT _w_edit_copy(_w_editbox *pBox, LPTSTR lpCopied, int nCopy)
 	HANDLE hMem;
 	LPSTR  pcp;
 	int i;
-	
+
 	// set copied to the cut buffer
 	//
 	hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, (nCopy + 2) * sizeof(char));
 	pcp = (char*)GlobalLock(hMem);
-		
+
 	EmptyClipboard();
-	
+
 	for(i = 0; i < nCopy; i++)
 	{
 		pcp[i] = (char)lpCopied[i];
@@ -437,13 +442,13 @@ static LRESULT _w_edit_paste(HWND hWnd, _w_editbox *pBox)
 	{
 		HANDLE hMem = GetClipboardData(CF_TEXT);
 		LPSTR  pcp;
-	
+
 		if(hMem)
 		{
 			if((pcp = (LPSTR)GlobalLock(hMem)) != NULL)
 			{
 				int cblen = strlen(pcp);
-			
+
 				if(cblen > 0)
 				{
 					LPTSTR pe, pt;
@@ -505,7 +510,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 	switch(message)
 	{
 	case WM_CREATE:
-		
+
 		// for sunken edits, increase window area slightly
 		//
 		pBox = (_w_editbox*)malloc(sizeof(_w_editbox));
@@ -523,7 +528,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		pBox->qca = pBox->qcb = -1;
 		pBox->style 	= style;
 		pBox->exstyle 	= exstyle;
-		
+
 		if(exstyle & WS_EX_CLIENTEDGE)
 		{
 			pBox->lpad = pBox->rpad = 4;
@@ -545,7 +550,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		SetWindowLong(hWnd, GWL_PRIVDATA, (LPARAM)pBox);
 		SetWindowText(hWnd, _T(""));
 		break;
-		
+
 	case WM_PAINT:
 
 		hdc = BeginPaint(hWnd, &ps);
@@ -565,18 +570,21 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		pBox->mousey = HIWORD(lParam);
 		{
 			hdc  = GetDC(hWnd);
-			
+
 			SetCapture(hWnd);
 			_w_edit_textout(hdc, hWnd, dtSetPosToMouse, pBox);
-			// already some selected, kill that and restart here
 			pBox->qla = pBox->curline;
 			pBox->qca = pBox->curcol;
-			pBox->qlb = pBox->qcb = 0;
+			pBox->qlb = pBox->qla;
+			pBox->qcb = pBox->qca;
 			_w_edit_textout(hdc, hWnd, dtSetCaret, pBox);
 			ReleaseDC(hWnd, hdc);
 		}
-		if(GetFocus() != hWnd)
+		//if(GetFocus() != hWnd)
+		{
+			//_tprintf(_T("lbd sf %p  foc=%p\n"), hWnd,GetFocus());
 			SetFocus(hWnd);
+		}
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 
@@ -599,16 +607,13 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		if(GetCapture() == hWnd)
 		{
 			HDC hdc  = GetDC(hWnd);
-			
-		//	int xqlb = pBox->qlb;
-		//	int xqcb = pBox->qcb;
-			
+
 			_w_edit_textout(hdc, hWnd, dtSetPosToMouse, pBox);
 
 			pBox->qlb = pBox->curline;
 			pBox->qcb = pBox->curcol;
-			if(pBox->curline == pBox->qla && pBox->curcol == pBox->qca)
-				pBox->qlb = pBox->qcb = 0;
+			//if(pBox->curline == pBox->qla && pBox->curcol == pBox->qca)
+			//	pBox->qlb = pBox->qcb = 0;
 			//_w_edit_textout(hdc, hWnd, dtDraw, pBox);
 			ReleaseDC(hWnd, hdc);
 			InvalidateRect(hWnd, NULL, FALSE);
@@ -633,31 +638,30 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		}
 		break;
 
-	case WM_PASTE:		
+	case WM_PASTE:
 		_w_ebchecksel(hWnd, pBox);
 		_w_edit_paste(hWnd, pBox);
 		_w_edit_settext(hWnd, pBox);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
-		
+
 	case WM_CLEAR:
 		_w_ebchecksel(hWnd, pBox);
 		_w_edit_settext(hWnd, pBox);
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
-	
+
 	case WM_SETFOCUS:
 		{
-			TEXTMETRIC  tm;			
+			TEXTMETRIC  tm;
 			HDC  		hdc = GetDC(hWnd);
-		
+
 			GetTextMetrics(hdc, &tm);
-			
 			CreateCaret(hWnd, NULL, 2, tm.tmHeight);
 			ShowCaret(hWnd);
 
 			_w_edit_gettext(hWnd, pBox);
-			if(1 && (pBox->nText > 1))
+			if(0 && (pBox->nText > 1))
 			{
 				// this selects all text in box on focus
 				pBox->qla = pBox->qlb = pBox->curline;
@@ -680,28 +684,28 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		HideCaret(hWnd);
 		DestroyCaret();
 		break;
-		
+
 	case WM_KEYDOWN:
-		
+
 		_w_edit_gettext(hWnd, pBox);
 		switch(wParam)
 		{
-		case VK_LEFT:	
+		case VK_LEFT:
 			if(pBox->curcol > 1) pBox->curcol--;
 			break;
-			
-		case VK_RIGHT:	
+
+		case VK_RIGHT:
 			if(pBox->curcol < pBox->nText) pBox->curcol++;
 			break;
-			
-		case VK_HOME:	
+
+		case VK_HOME:
 			pBox->curcol = 1;
 			break;
-			
-		case VK_END:	
+
+		case VK_END:
 			pBox->curcol = pBox->nText;
 			break;
-			
+
 		case VK_BACK:
 			if(pBox->qla > 0 && pBox->qlb > 0)
 				_w_ebchecksel(hWnd, pBox);
@@ -720,11 +724,11 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 				InvalidateRect(hWnd, NULL, FALSE);
 			}
 			break;
-			
+
 		case VK_DELETE:
 			if(pBox->qla > 0 && pBox->qlb > 0)
 			{
-				if(pBox->shift) 
+				if(pBox->shift)
 					SendMessage(hWnd, WM_CUT, 0, 0);
 				else if(pBox->ctrl)
 					SendMessage(hWnd, WM_CLEAR, 0, 0);
@@ -745,7 +749,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 				InvalidateRect(hWnd, NULL, FALSE);
 			}
 			break;
-			
+
 		case VK_RETURN:
 		case VK_TAB:
 		case VK_ESCAPE:
@@ -767,7 +771,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			}
 			// note return here!
 			return 0;
-			
+
 		case VK_SHIFT:
 			pBox->shift = 1;
 			break;
@@ -777,7 +781,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			break;
 
 		case VK_INSERT:
-			if(pBox->shift) 
+			if(pBox->shift)
 				SendMessage(hWnd, WM_PASTE, 0, 0);
 			else if(pBox->ctrl)
 				SendMessage(hWnd, WM_COPY, 0, 0);
@@ -785,14 +789,14 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 
 		default:
 			break;
-			
+
 		}
 		_w_edit_settext(hWnd, pBox);
 		_w_edit_setcaret(hWnd, pBox);
 		break;
-		
+
 	case WM_KEYUP:
-		
+
 		_w_edit_gettext(hWnd, pBox);
 		switch(wParam)
 		{
@@ -803,17 +807,17 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		case VK_CONTROL:
 			pBox->ctrl = 0;
 			break;
-			
+
 		default:
 			break;
 		}
 		break;
 
 	case WM_CHAR:
-		
+
 		if(style & WS_DISABLED)
 			break;
-		
+
 		_w_edit_gettext(hWnd, pBox);
 		switch(wParam)
 		{
@@ -823,7 +827,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 		case 13:
 		case 27:
 			return 0;
-		
+
 		case 3: // ^C copy
 			SendMessage(hWnd, WM_COPY, 0, 0);
 			break;
@@ -862,7 +866,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			free(pBox);
 		}
 		break;
-		
+
 	case EM_GETSEL:
 		if(pBox->qla > 0 && pBox->qla <= pBox->qlb)
 		{
@@ -875,7 +879,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			if(lParam) *(LPDWORD)lParam = 0;
 		}
 		break;
-		
+
 	case EM_SETSEL:
 		_w_edit_gettext(hWnd, pBox);
 		if(wParam <= lParam)
@@ -896,11 +900,11 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			pBox->qca = pBox->qcb = -1;
 			pBox->qla = pBox->qlb = -1;
 		}
-		//_tprintf(_T("setsel %d,%d, %d,%d\n"), pBox->qla, pBox->qlb, pBox->qca, pBox->qcb);		
+		//_tprintf(_T("setsel %d,%d, %d,%d\n"), pBox->qla, pBox->qlb, pBox->qca, pBox->qcb);
 		InvalidateRect(hWnd, NULL, TRUE);
 		_w_edit_setcaret(hWnd, pBox);
 		break;
-		
+
 	case EM_LINELENGTH:
 		_w_edit_gettext(hWnd, pBox);
 		return pBox->nText;
@@ -925,7 +929,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 			((LPSTR)lParam)[len] = 0;
 		}
 		return pBox->nText;
-		
+
 	case EM_UNDO:
 	case EM_GETRECT:
 	case EM_SETRECT:
@@ -939,7 +943,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 	case EM_LINEINDEX:
 	case EM_SETHANDLE:
 	case EM_GETHANDLE:
-	case EM_GETTHUMB:		
+	case EM_GETTHUMB:
 	case EM_REPLACESEL:
 	case EM_LIMITTEXT:
 	case EM_FMTLINES:
@@ -950,7 +954,7 @@ LRESULT WINAPI __wproc_Edit(HWND hWnd, UINT message, WPARAM wParam, LONG lParam)
 	case EM_GETFIRSTVISIBLELINE:
 	case EM_SETREADONLY:
 		return 0;
-		
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

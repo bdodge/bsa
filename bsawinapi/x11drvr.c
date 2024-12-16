@@ -700,6 +700,7 @@ void _w_drawCaret(HDC hdc, LPZWND zWnd, LPRECT lprc, int onoff)
 int _w_setFocus(Window nw)
 {
 	XSetInputFocus(_zg_display, nw, RevertToParent, CurrentTime);
+	XSync(_zg_display, False);
 	return 0;
 }
 
@@ -896,7 +897,7 @@ int _w_clientRect(Window nw, LPRECT lprcc)
 	unsigned int	myWidth, myHeight, myBorderWidth, myDepth;
 	Window 			myMommy /*, myRoot, *myKids */ ;
 	Status			status;
-	
+
 	status = XGetGeometry(
 				_zg_display,
 				nw,
@@ -907,7 +908,7 @@ int _w_clientRect(Window nw, LPRECT lprcc)
 				&myDepth
 				);
 
-	if (! status) 
+	if (! status)
 	{
 		myWidth = myHeight = 0;
 		myBorderWidth = 0;
@@ -970,6 +971,7 @@ int _w_showWindow(Window nw, int show)
 int _w_moveWindow(Window nw, int x, int y, int w, int h)
 {
 	XMoveResizeWindow(_zg_display, nw, x, y, w, h);
+	XSync(_zg_display, False);
 	return 0;
 }
 
@@ -978,7 +980,7 @@ int _w_destroyWindow(Window nw)
 {
 	XUnmapWindow(_zg_display, nw);
 	XDestroyWindow(_zg_display, nw);
-	XFlush(_zg_display);
+	XSync(_zg_display, False);
 	return 0;
 }
 
@@ -1593,7 +1595,7 @@ int _w_runSlice(int toms)
 	case FocusIn:
 
 		if(
-			    xEvent.xfocus.detail == NotifyInferior
+				xEvent.xfocus.detail == NotifyInferior
             ||  xEvent.xfocus.detail == NotifyAncestor
             ||  xEvent.xfocus.detail == NotifyNonlinear
 		)
@@ -1601,6 +1603,17 @@ int _w_runSlice(int toms)
 			zWnd = ZXwindow(xEvent.xfocus.window);
 			if(zWnd)
 			{
+				#if 0
+				const TCHAR *fie = _T("");
+				if(xEvent.xfocus.detail == NotifyInferior)
+					fie = _T("ninferior");
+				else if(xEvent.xfocus.detail == NotifyAncestor)
+					fie = _T("nancestor");
+				else if(xEvent.xfocus.detail == NotifyNonlinear)
+					fie = _T("nnonlinear");
+				_tprintf(_T("xfIN %p %ls %ls\n"), zWnd, fie, zWnd->class->name);
+				#endif
+
 				// if there is a modal dialog, only send message if
 				// window is, or is a child of top dialog, else reshow dialog
 				//
