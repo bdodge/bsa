@@ -244,6 +244,10 @@ public:
                                         int&    braces,
                                         int&    colons
                                     );
+	virtual ERRCODE GetIsLabel(
+										int		line,
+										bool	&label
+									);
     virtual ERRCODE GetStatement
                                     (
                                         int         line,

@@ -50,7 +50,7 @@ ERRCODE BviewC::NextToken(BefState* state, LPTSTR pToken, int ccToken, BkwType& 
 							nToken,
 							kwType
 					);
-			if(tr == trOK || tr == trEOLLINE) 
+			if(tr == trOK || tr == trEOLLINE)
 			{
 				if(nToken < ccToken && state->m_tokState != tsSpanningComment && kwType != kwComment)
 				{
@@ -128,7 +128,7 @@ ERRCODE BviewC::ParseStatement(BefState* state, LPCTSTR pFirst, bool& popscope)
 
 	if (pFirst && pFirst[0] == '[')
 		brackCnt = 1;
-	
+
 	do
 	{
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
@@ -706,12 +706,12 @@ ERRCODE BviewC::ParseAccess(BefState* state, LPCTSTR pAccess)
 		ec = NextToken(state, token, MAX_C_TOKEN, kw);
 		if(ec != errOK) return ec;
 		if(state->m_log) state->m_log->Log(logDebug, 4, _T("prs Access tok=" _Pfs_ "\n"), token);
-		
+
 		// if nested classes are ok, this could be a class decl (c#)
 		if (state->m_nestedclassok)
 		{
 			bool popscope;
-			
+
 			if(
 					! _tcscmp(token, _T("class"))
 				||	! _tcscmp(token, _T("struct"))
@@ -748,7 +748,7 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 	identifier[0]	= _T('\0');
 	popscope		= false;
 	postScope		= false;
-	
+
 	ptrTo = 0;
 
 	if(state->m_log) state->m_log->Log(logDebug, 3, _T("prs Add Class/Struct " _Pfs_ "\n"), token);
@@ -844,7 +844,7 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 							if(! identifier[0])
 							{
 								_tcscpy(identifier, prevtok);
-						
+
 								ec = state->m_pCallback(state->m_cookie, prevtok, NULL, ptrTo, state->m_tokLine, efTypeName);
 								if(state->m_log)
 									state->m_log->Log(logDebug, 4, _T("prs typename " _Pfs_ " of type " _Pfs_ "\n"), prevtok, identifier);
@@ -898,6 +898,10 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 				{
 					ec = ParseDimension(state);
 				}
+				else if(token[0] == _T('('))
+				{
+					return ParseFunctionDecl(state, type, ptrTo, prevtok);
+				}
 				else
 				{
 					if(state->m_log)
@@ -925,7 +929,7 @@ ERRCODE BviewC::ParseClassDecl(BefState* state, LPCTSTR pType, bool& popscope)
 				break;
 			case kwBuiltinType:
 			case kwQuoted:	// error at global scope
-			case kwBuiltin:				
+			case kwBuiltin:
 			case kwBuiltinFunc:
 			case kwAddonFunc:
 			case kwMacro:	// preproc

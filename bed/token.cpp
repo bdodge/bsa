@@ -6,7 +6,7 @@ bool Bview::IsDelim(TCHAR ic)
 {
 	if(
 		ic == _T(' ')  || ic == _T('\t') || ic == _T('\n') || ic == _T('(')  ||
-		ic == _T(')')  || ic == _T(',')  || ic == _T(';')  || ic == _T('+')  || 
+		ic == _T(')')  || ic == _T(',')  || ic == _T(';')  || ic == _T('+')  ||
 		ic == _T(':')  || ic == _T('<')  || ic == _T('>')  || ic == _T('.')  ||
 		ic == _T('-')  || ic == _T('/')  || ic == _T('\\') || ic == _T('*')  ||
 		ic == _T('^')  || ic == _T('|')  || ic == _T('"')  || ic == _T('\'') ||
@@ -60,7 +60,7 @@ void Bview::AddComment(LPCTSTR lpText, TokenState state)
 {
 	BcommentList* pComment;
 	TokenState*   nstate;
-	
+
 	nstate = new TokenState [ 1 ];
 
 	*nstate  = state;
@@ -73,7 +73,7 @@ void Bview::AddPrefix(LPCTSTR lpPrefix, BkwType type)
 {
 	BprefixList* pPref;
 	BkwType*     ntype;
-	
+
 	ntype = new BkwType [ 1 ];
 
 	*ntype  = type;
@@ -130,7 +130,7 @@ TokenRet Bview::GetToken(
 				whitespace = true;
 				if(m_showtabs)
 				{
-					if (nToken >= MAX_TAB_SPACE) 
+					if (nToken >= MAX_TAB_SPACE)
 					{
 						gotToken = true;
 						break;
@@ -185,7 +185,7 @@ TokenRet Bview::GetToken(
 				if(state == tsQuotedString)
 					if(inc <= 0 || lpText[inc - 1] != _T('\\') || (inc < 2 || (lpText[inc - 2] == _T('\\'))))
 						state = tsBase;
-				if(kw == kwPlain) 
+				if(kw == kwPlain)
 				{
 					state = tsQuotedString;
 					kw = kwQuoted;
@@ -213,7 +213,7 @@ TokenRet Bview::GetToken(
 				if(state == tsQuotedLiteral)
 					if(inc <= 0 || lpText[inc - 1] != _T('\\') || (inc < 2 || (lpText[inc - 2] == _T('\\'))))
 						state = tsBase;
-				if(kw == kwPlain) 
+				if(kw == kwPlain)
 				{
 					state = tsQuotedLiteral;
 					kw = kwQuoted;
@@ -301,7 +301,7 @@ TokenRet Bview::GetToken(
 		default:
 
 			// strange comments that are non-delims
-			if(whitespace) 
+			if(whitespace)
 			{
 				gotToken = true;
 			}
@@ -361,11 +361,11 @@ TokenRet Bview::GetToken(
 			break;
 		}
 	}
-	
+
 	incol   = inc + 1;
-	
+
 	//_tprintf(_T("tok=" _Pfs_ "=%d\n"), lpToken, nToken);
-	
+
 	return trOK;
 }
 
@@ -386,13 +386,13 @@ TokenRet Bview::GetToken(
 {
 	TokenRet tr;
 	BkwType kw;
-	
+
 	tr = GetToken(lpText, nText, line, incol, outcol, state,
 			lpToken, nToken, kw);
-	
+
 	if(tr != trOK)
 		return tr;
-	
+
 	if(kw == kwPlain)
 		kw = KeyWord(lpToken, nToken);
 
@@ -554,7 +554,7 @@ BkwType Bview::KeyWord(LPCTSTR lpText, int nText)
 bool Bview::NonWhite(LPCTSTR lpToken, int nToken)
 {
 	int i;
-	
+
 	for(i = 0; i < nToken; i++)
 		if(lpToken[i] != _T(' ') && lpToken[i] != _T('\t'))
 			return true;
@@ -573,7 +573,7 @@ ERRCODE Bview::GetMatchingPhrase(
 	if(! lpPhrase || ! lpMatch || nMatch <= 1)
 		return errBAD_PARAMETER;
 
-	if((IsDelim(lpPhrase[0]) && lpPhrase[1] == _T('\0')) || lpPhrase[0] == m_macro_prefix) 
+	if((IsDelim(lpPhrase[0]) && lpPhrase[1] == _T('\0')) || lpPhrase[0] == m_macro_prefix)
 	{
 		switch(lpPhrase[0])
 		{
@@ -634,7 +634,7 @@ ERRCODE Bview::FindMatchingPhrase(LPCTSTR pPhrase, LPCTSTR pMatch, int& line, in
 		ec = m_buffer->Locate(mline, mcol, pMatch, nMatch, true, true);
 
 		// if no match text, no match
-		if(ec != errOK) return ec; 
+		if(ec != errOK) return ec;
 
 		oline = sline;
 		ocol  = scol;
@@ -700,7 +700,7 @@ ERRCODE Bview::GetFirstNonBlankColumn(
 
 	ec = m_buffer->GetLineText(line, lpText, nText);
 	if(ec != errOK) return ec;
-	
+
 	incol	= 1;
 	outcol	= 1;
 	col 	= 0;
@@ -721,7 +721,7 @@ ERRCODE Bview::GetFirstNonBlankColumn(
 	do
 	{
 		tokcol = outcol;
-		
+
 		tr = GetToken(
 					(LPTSTR&)lpText,
 					nText,
@@ -733,14 +733,14 @@ ERRCODE Bview::GetFirstNonBlankColumn(
 					nToken,
 					kw
 				);
-		
+
 		if(tr == trOK && nToken > 0)
 		{
 			if(! incComments && state == tsComment)
 				break;
 			if(! incMacros && state == tsMacro)
 				break;
-			
+
 			if(
 					(incComments || (state != tsSpanningComment && kw != kwComment))	&&
 					(incMacros	 || (state != tsMacro))
@@ -756,7 +756,7 @@ ERRCODE Bview::GetFirstNonBlankColumn(
 					if(kw == kwOperator || incMacros || state != tsMacro)
 					{
 						if(! col) col = tokcol;
-					
+
 						if(firstdelimcol <= 0)
 						{
 							firstdelimkw  = kw;
@@ -772,6 +772,109 @@ ERRCODE Bview::GetFirstNonBlankColumn(
 						case _T(':'): colons++; break;
 						}
 						lastdelim = lpToken[0];
+					}
+				}
+			}
+		}
+	}
+	while(tr == trOK);
+
+	return errOK;
+}
+
+//**************************************************************************
+ERRCODE Bview::GetIsLabel(
+										int		line,
+										bool	&label
+									)
+{
+	TokenRet	tr;
+	ERRCODE		ec;
+	LPCTSTR 	lpText;
+	int			nText;
+	LPTSTR		lpToken;
+	int			nToken;
+	TokenState 	state;
+	int			incol, outcol, tokcol;
+	int			lablen, labcol;
+	BkwType		kw;
+	BlineInfo	info;
+
+	label = false;
+
+	ec = m_buffer->GetLineText(line, lpText, nText);
+	if(ec != errOK) return ec;
+
+	incol	= 1;
+	outcol	= 1;
+
+	lablen = 0;
+	labcol = 0;
+
+	info = m_buffer->GetLineCommentInfo(line);
+
+	if(info == liInSpanning || info == liEndsSpanning)
+		state = tsSpanningComment;
+	else
+		state = tsBase;
+
+	do
+	{
+		tokcol = outcol;
+
+		tr = GetToken(
+					(LPTSTR&)lpText,
+					nText,
+					line,
+					incol,
+					outcol,
+					state,
+					lpToken,
+					nToken,
+					kw
+				);
+
+		if(tr == trOK && nToken > 0)
+		{
+			if(state == tsComment)
+				break;
+			if(state == tsMacro)
+				break;
+
+			if(
+					(state != tsSpanningComment && kw != kwComment)	&&
+					(state != tsMacro)
+			)
+			{
+				if(NonWhite(lpToken, nToken))
+				{
+					if(kw == kwPlain)
+						kw = KeyWord(lpToken, nToken);
+					if(kw == kwMacro)
+						return errOK;
+					if (kw == kwPlain)
+					{
+						if(lablen || labcol)
+						{
+							return errOK;
+						}
+						lablen = nToken;
+						labcol = incol;
+					}
+					if(kw == kwOperator)
+					{
+						switch(lpToken[0])
+						{
+						case _T(':'):
+							if (incol == (lablen + labcol))
+							{
+								label = true;
+							}
+							break;
+						default:
+							break;
+						}
+						return errOK;
 					}
 				}
 			}
@@ -804,7 +907,7 @@ ERRCODE Bview::GetStatement(
 
 	ec = m_buffer->GetLineText(line, lpText, nText);
 	if(ec != errOK) return ec;
-	
+
 	incol	 = 1;
 	outcol	 = 1;
 	col 	 = 0;
@@ -820,7 +923,7 @@ ERRCODE Bview::GetStatement(
 	do
 	{
 		tokcol = outcol;
-		
+
 		tr = GetToken(
 					(LPTSTR&)lpText,
 					nText,
@@ -832,12 +935,12 @@ ERRCODE Bview::GetStatement(
 					nToken,
 					kw
 				);
-		
+
 		if(tr == trOK && nToken > 0)
 		{
 			if(state == tsComment)
 				break;
-			
+
 			if(state != tsSpanningComment && kw != kwComment)
 			{
 				if(NonWhite(lpToken, nToken))
@@ -853,7 +956,7 @@ ERRCODE Bview::GetStatement(
 							_tcsncpy(pStatement, lpToken, nStatement - 1);
 							pStatement[nStatement - 1] = _T('\0');
 						}
-						if(! last) 
+						if(! last)
 							return errOK;
 					}
 				}
@@ -886,7 +989,7 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 	int			netdent;
 
 	BkwType		firstdelimkw;
-	
+
 	bool		matching = false;
 
 	LPCTSTR 	lpText;
@@ -894,15 +997,15 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 	int			nCut = 0;
 	int			cutcol;
 	int			coldelta;
-	
+
 	if(! m_buffer) return errFAILURE;
-	
+
 	// get the output column of the first non-blank token
 	// on this line
 	//
 	sl = line;
 	sc = col;
-	
+
 	ec = GetFirstNonBlankColumn(
 									line,
 									curfirstcol,
@@ -934,7 +1037,7 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 
 		ds[0] = firstdelim;
 		ds[1] = _T('\0');
-		
+
 		if((ec = GetMatchingPhrase(ds, md, 256)) == errOK)
 		{
 			if((ec = FindMatchingPhrase(ds, md, bline, bcol)) == errOK)
@@ -957,8 +1060,8 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 		return errOK;
 	}
 	// if the previous line is part of a spanning comment
-	// then so are we, so just match the indent of the 
-	// previous line exactly 
+	// then so are we, so just match the indent of the
+	// previous line exactly
 	//
 	BlineInfo info;
 
@@ -1025,7 +1128,7 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 				// non blank line
 				if(prevlastdelim == m_statement_term)
 				{
-					// saw a line ending with statement term so accumulate 
+					// saw a line ending with statement term so accumulate
 					sawEOS = m_statement_term;
 				}
 				if(prevparens >= 0 || prevfirstdelim == ')')
@@ -1049,11 +1152,11 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 	}
 
 	// use the prototype line as a template to find the basal indent
-	// and convert the leading white space to all spaces 
+	// and convert the leading white space to all spaces
 	//
 	ec = m_buffer->GetLineText(protoline, lpText, nText);
 	if(ec != errOK) return ec;
-	
+
 	// calculate the net indentation by converting to all spaces
 	//
 	for(incol = protocol = 0; incol < nText; incol++)
@@ -1077,18 +1180,18 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 	//
 	line = sl;
 	col  = sc;
-	
+
 	if(! prevnb)
 		return errOK;
 
 	// assume indent exactly like prototype line
 	//
 	netdent = 0;
-	
+
 	// adjust target lines indent target
 	//
 	protocol += (netdent * m_tabspace);
-	
+
 	// found the proper (hopefully) indentation for this line, first remove all
 	// existing indentation, since it can be replaced cleaner
 	//
@@ -1112,8 +1215,8 @@ ERRCODE Bview::Indent(WORD key, int& line, int& col)
 	while(nText > 1);
 
 	//_tprintf(_T("indent to col:%d adj=%d\n"), protocol, netdent);
-		
-	// now that the line is indent free, add tabs and/or spaces to 
+
+	// now that the line is indent free, add tabs and/or spaces to
 	// get first non-blank char at proper spot
 	//
 	for(incol = outcol = 0; incol < protocol && outcol < (sizeof(m_tabBuf)/sizeof(TCHAR));)
@@ -1205,7 +1308,7 @@ ERRCODE Bview::SetupCommentInfo(int firstline, int lastline)
 		do
 		{
 			tokcol = outcol;
-			
+
 			tr = GetToken(
 						(LPTSTR&)lpText,
 						nText,
@@ -1219,7 +1322,7 @@ ERRCODE Bview::SetupCommentInfo(int firstline, int lastline)
 					);
 		}
 		while(tr == trOK);
-		
+
 		if(state == tsSpanningComment)
 		{
 			volatile int a;

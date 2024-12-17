@@ -487,6 +487,7 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 	int			nStatement;
 
 	bool		matching = false;
+	bool		label = false;
 
 	LPCTSTR 	lpText;
 	int			nText;
@@ -596,7 +597,7 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 	{
 		TCHAR sawEOS = _T('\0');
 
-		// look back in buffer for last non-blank non-comment
+		// look back in buffer for last non-blank non-comment non-label
 		// line and get the column number of the first non-white
 		//
 		for(prevnb = false, sawEOS = _T('\0'); ! nonblank && line >= 1; line--)
@@ -619,6 +620,8 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 				line = sl; col = sc;
 				return ec;
 			}
+			label = false;
+			//_tprintf(_T("pl %d  pc=%d  fd=%c ld=%c\n"), line, prevcolons, prevfirstdelim, prevlastdelim);
 			if(prevfirstcol > 0)
 			{
 				// non blank line
@@ -627,7 +630,13 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 					// saw a line ending with statement term so accumulate
 					sawEOS = m_statement_term;
 				}
-				if(prevparens >= 0 || prevfirstdelim == ')')
+				else if (prevcolons == 1 && prevlastdelim == ':' &&
+						prevfirstcol == 1 && prevparens == 0 && prevbraces == 0)
+				{
+					// saw a line ending with colon, if it starts at left assume label
+					label = true;
+				}
+				if(! label && (prevparens >= 0 || prevfirstdelim == ')'))
 				{
 					// line has >= 0 parens, so could be the start line unless the
 					// firstdelim is an )
@@ -638,6 +647,7 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 				}
 			}
 		}
+		label = false;
 		prevlastdelim = sawEOS;
 
 		// as a bonus, look at previous lines to first prev nblank one, and
@@ -798,9 +808,18 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 													prevcolons
 												);
 						if(ec == errOK)
+						{
 							protoline = bline;
+						}
 					}
 				}
+			}
+			else
+			{
+				// might be a label, if there is only one token on line
+				// and no-white space betweeen it and colon, its a label
+				//
+				GetIsLabel(sl, label);
 			}
 		}
 	}
@@ -840,7 +859,12 @@ ERRCODE BviewC::Indent(WORD key, int& line, int& col)
 	//
 	netdent = 0;
 
-	if(! matching)
+	if(label)
+	{
+		protocol = 0;
+		netdent = 0;
+	}
+	else if(! matching)
 	{
 		// add an indent space if the proto previous line has more
 		// right parens than left, and if the current line has more close parens
