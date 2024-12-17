@@ -20,6 +20,7 @@
 	// pad font heights by these many lines. later ubuntu (16.04) has crappy font metrics
 	#define X_TRA_PADDING 0
 	#include <signal.h>
+	#include <sys/time.h>
 	#if XFT_FONT
 		#include <ft2build.h>
 		#include <X11/Xft/Xft.h>

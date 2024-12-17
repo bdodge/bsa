@@ -39,10 +39,10 @@ void RepositionSandR(HWND hWnd, Bview* pView)
 	if(y < 0) y = 0;
 	w = rcme.right - rcme.left;
 	h = rcme.bottom - rcme.top;
-	
+
 	if(x < 0) x = 0;
 	if(y < 0) y = 0;
-		
+
 	MoveWindow(hWnd, x, y, w, h, FALSE);
 }
 
@@ -55,12 +55,12 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	ERRCODE ec;
 	bool    visitedRT = false;
-	
+
 	TCHAR tmp[512];
 	TCHAR tmp2[1024];
 	int   len;
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_INITDIALOG:
 
@@ -75,6 +75,7 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			sl = pView->GetCurLine();
 			sc = pView->GetCurCol();
 		}
+		SendMessage(GetDlgItem(hWnd, IDC_FT), EM_SETSEL, 0, MAKELONG(0, 1000));
 		SetFocus(GetDlgItem(hWnd, IDC_FT));
 		return FALSE;
 
@@ -100,12 +101,12 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
 				ec = pView->Dispatch(SetSearch);
-				
+
 				GetDlgItemText(hWnd, IDC_RT, tmp, 512);
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
 				ec = pView->Dispatch(SetReplace);
-				
+
 				if(pView->OnFoundText())
 				{
 					ec = pView->Dispatch(ReplaceFoundText);
@@ -134,7 +135,7 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
 				ec = pView->Dispatch(SetSearch);
-				
+
 				GetDlgItemText(hWnd, IDC_RT, tmp, 512);
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
@@ -159,12 +160,12 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if(pView)
 			{
 				int sl, el;
-			
+
 				GetDlgItemText(hWnd, IDC_FT, tmp, 512);
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
 				ec = pView->Dispatch(SetSearch);
-				
+
 				GetDlgItemText(hWnd, IDC_RT, tmp, 512);
 				len = Bview::UnescapeString(tmp2, tmp, false);
 				pView->PushParm(tmp2, len, ptString);
@@ -194,7 +195,7 @@ BOOL CALLBACK SRProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				el = pView->GetCurLine();
 				pView->Dispatch(EnableRefresh);
-				
+
 				if(pView->RegionSet())
 				{
 					pView->MoveAbs(sl, sc);

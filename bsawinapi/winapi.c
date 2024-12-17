@@ -685,15 +685,15 @@ void _w_deleteZGDIOBJ(LPZGDIOBJ zGDIO)
 LPZTIMER _w_newZTIMER(HWND hWnd, UINT id, UINT elapse, TIMERPROC proc)
 {
 	LPZTIMER timer;
-	struct timeb ftb;
+	struct timeval ftv;
 
 	if(! (timer = (LPZTIMER)malloc(sizeof(ZTIMER))))
 		return NULL;
 
-	ftime(&ftb);
+	gettimeofday(&ftv, NULL);
 
-	timer->firetime	   = ftb.time + elapse / 1000;
-	timer->firemillitm = ftb.millitm + (elapse - ((elapse / 1000) * 1000));
+	timer->firetime	   = ftv.tv_sec + elapse / 1000;
+	timer->firemillitm = (ftv.tv_usec * 1000) + (elapse - ((elapse / 1000) * 1000));
 
 	timer->tag		= ZTIMER_TAG;
 	timer->hWnd 	= hWnd;
@@ -799,7 +799,7 @@ void __w_caret(int state)
 void __w_toggle_caret()
 {
 	LPZWND zWnd;
-	struct timeb ftb;
+	struct timeval ftv;
 
 	zWnd = Zwindow(_zg_caret.owner);
 	if(! zWnd) return;
@@ -814,20 +814,20 @@ void __w_toggle_caret()
 	if(! _zg_caret.owner || (_zg_caret.state == cstOFF && _zg_caret.scnt <= 0))
 		return;
 
-	ftime(&ftb);
+	gettimeofday(&ftv, NULL);
 
-	if(ftb.time < _zg_caret.nextblinksecs)
+	if(ftv.tv_sec < _zg_caret.nextblinksecs)
 		return;
-	if(ftb.time == _zg_caret.nextblinksecs)
-		if(ftb.millitm < (_zg_caret.nextblinkms))
+	if(ftv.tv_sec == _zg_caret.nextblinksecs)
+		if((ftv.tv_usec * 1000) < (_zg_caret.nextblinkms))
 			return;
 	/*
 	_tprintf(_T("toggle now=%d.%d then=%d.%d\n"),
-		_zg_caret.nextblinksecs, _zg_caret.nextblinkms, ftb.time, ftb.millitm);
+		_zg_caret.nextblinksecs, _zg_caret.nextblinkms, ftv.tv_sec, (ftv.tv_usec * 1000));
 	*/
-	ftime(&ftb);
-	_zg_caret.nextblinksecs = ftb.time;
-	_zg_caret.nextblinkms   = ftb.millitm + _zg_caret.blink;
+	gettimeofday(&ftv, NULL);
+	_zg_caret.nextblinksecs = ftv.tv_sec;
+	_zg_caret.nextblinkms   = (ftv.tv_usec * 1000) + _zg_caret.blink;
 
 	while(_zg_caret.nextblinkms > 1000)
 	{
@@ -840,13 +840,13 @@ void __w_toggle_caret()
 //**************************************************************************
 int __w_timer_window(LPZTIMER* ppTimer)
 {
-	LPZTIMER 	 ztimer;
-	struct timeb ftb;
-	BOOL   	  gott = FALSE;
-	time_t		 mins = 10000;
-	time_t		 minm = 10000;
-	time_t		 ts;
-	time_t		 tm;
+	LPZTIMER 	   ztimer;
+	struct timeval ftv;
+	BOOL   	  	   gott = FALSE;
+	time_t		   mins = 10000;
+	time_t		   minm = 10000;
+	time_t		   ts;
+	time_t		   tm;
 
 	*ppTimer = NULL;
 
@@ -856,19 +856,19 @@ int __w_timer_window(LPZTIMER* ppTimer)
 		{
 			if(! gott)
 			{
-				ftime(&ftb);
+				gettimeofday(&ftv, NULL);
 				gott = TRUE;
 			}
-			ts = ztimer->firetime - ftb.time;
-			tm = ztimer->firemillitm - ftb.millitm;
+			ts = ztimer->firetime - ftv.tv_sec;
+			tm = ztimer->firemillitm - (ftv.tv_usec * 1000);
 
 			if(ts < 0 || (ts == 0 && tm < 0))
 			{
-				ztimer->firetime 	= ftb.time + ztimer->elapse / 1000;
-				ztimer->firemillitm = ftb.millitm +
+				ztimer->firetime 	= ftv.tv_sec + ztimer->elapse / 1000;
+				ztimer->firemillitm = (ftv.tv_usec * 1000) +
 						(ztimer->elapse - ((ztimer->elapse / 1000) * 1000));
-				ts = ztimer->firetime - ftb.time;
-				tm = ztimer->firemillitm - ftb.millitm;
+				ts = ztimer->firetime - ftv.tv_sec;
+				tm = ztimer->firemillitm - (ftv.tv_usec * 1000);
 				*ppTimer = ztimer;
 				return 0;
 			}
