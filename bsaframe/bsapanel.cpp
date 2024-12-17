@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 //
 // File: bsapane.cpp
-// Desc: application framework 
+// Desc: application framework
 // Auth: Brian Dodge
 //
 // (C)opyright 2003 - 2005 - BSA and Brian Dodge
@@ -133,7 +133,7 @@ void BappPanel::SetPaneTabs()
 	int			x, y;
 
 	hWnd = GetWindow();
-	
+
 	hdc = GetDC(hWnd);
 	GetClientRect(hWnd, &rc);
 
@@ -153,6 +153,8 @@ void BappPanel::SetPaneTabs()
 		case frBottom:
 			rc.top		+= HSIZER_HEIGHT;
 			break;
+		case frFloat:
+			break;
 		}
 	}
 	topTabs = GetBorder() == frTopTabs && HasMultiplePanes();
@@ -171,7 +173,7 @@ void BappPanel::SetPaneTabs()
 	{
 		lpText = pPane->GetName();
 		nText  = _tcslen(lpText);
-		
+
 		hOldFont = (HFONT)SelectObject(hdc, pPane->GetActive() ? m_hFont /*m_hBoldFont*/ : m_hFont);
 
 		GetTextExtentPoint32(hdc, lpText, nText, &sizeText);
@@ -186,7 +188,7 @@ void BappPanel::SetPaneTabs()
 	}
 	ReleaseDC(hWnd, hdc);
 }
-	
+
 //***********************************************************************
 LRESULT BappPanel::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -231,6 +233,8 @@ LRESULT BappPanel::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			case frBottom:
 				rc.top		+= HSIZER_HEIGHT;
 				break;
+			case frFloat:
+				break;
 			}
 		}
 		topTabs = GetBorder() == frTopTabs && HasMultiplePanes();
@@ -261,7 +265,7 @@ LRESULT BappPanel::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				lpText = pPane->GetName();
 				nText  = _tcslen(lpText);
-				
+
 				hOldFont = (HFONT)SelectObject(hdc, pPane->GetActive() ? m_hFont /*m_hBoldFont*/ : m_hFont);
 
 				GetTextExtentPoint32(hdc, lpText, nText, &sizeText);
@@ -362,7 +366,7 @@ LRESULT BappPanel::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				lpText = pPane->GetName();
 				nText  = _tcslen(lpText);
-				
+
 				hOldFont = (HFONT)SelectObject(hdc, pPane->GetActive() ? m_hFont /*m_hBoldFont*/ : m_hFont);
 
 				GetTextExtentPoint32(hdc, lpText, nText, &sizeText);
@@ -651,7 +655,7 @@ ERRCODE BappPanel::SetPrimary(bool primary)
 		//
 		for(pc = this; pc->GetPrev();)
 			pc = pc->GetPrev();
-		for(pc; pc = pc->GetNext();)
+		for(;pc; pc = pc->GetNext())
 		{
 			if(pc->GetPrimary() && pc != this)
 			{
@@ -849,7 +853,7 @@ ERRCODE BappPanel::Dock(BappPanel* pPanel, BAF_EDGE edge, LPRECT pprc, bool exte
 		}
 		break;
 	}
-	// dock the panel at the end of the list unless there is a 
+	// dock the panel at the end of the list unless there is a
 	// previous primary panel already in the list, in which case
 	// dock it right before the current primary panel
 	//
@@ -869,7 +873,7 @@ ERRCODE BappPanel::Dock(BappPanel* pPanel, BAF_EDGE edge, LPRECT pprc, bool exte
 				break;
 		if(px->GetPrimary() && ! primary)
 		{
-			// we need to insert ourselves between last panel 
+			// we need to insert ourselves between last panel
 			// (which is primary) and last panels prev panel
 			//
 			pPanel->SetNext(px);
@@ -959,7 +963,7 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 	bool	clipped = false;
 
 	if(! pm) return errOK;
-	
+
 	// Get panels window's postion in client area of parent
 	//
 	GetWindowPos(pm->GetWindow(), &rcw);
@@ -971,7 +975,7 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 		if(rcw.left != prc->left || (pm->GetPrimary() && (rcw.right != prc->right)))
 		{
 			int w;
-			
+
 			if(pm->GetPrimary())
 				w = prc->right - prc->left;
 			else
@@ -1017,7 +1021,7 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 		if(rcw.top != prc->top || (pm->GetPrimary() && (rcw.bottom != prc->bottom)))
 		{
 			int h;
-			
+
 			if(pm->GetPrimary())
 				h = prc->bottom - prc->top;
 			else
@@ -1056,6 +1060,9 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 			rcw.top = prc->top;
 			clipped = true;
 		}
+		break;
+
+	case frFloat:
 		break;
 	}
 
@@ -1096,8 +1103,11 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 			clipped   = true;
 		}
 		break;
+
+	case frFloat:
+		break;
 	}
-	if(rcw.right > rcw.right)
+	if(rcw.left > rcw.right)
 	{
 		rcw.right = rcw.left;
 		clipped = true;
@@ -1196,6 +1206,9 @@ ERRCODE BappPanel::FitPanel(PBAFPANEL pm, LPRECT prc, BAF_EDGE edge)
 			FitPanel((PBAFPANEL)pm->GetNext(), &rcx, edge);
 		}
 		break;
+
+	case frFloat:
+		break;
 	}
 	return errOK;
 }
@@ -1281,7 +1294,7 @@ ERRCODE BappPanel::OnResized(PBAFCOMP pby)
 	while(0);
 
 	if(! pc)	// no such panel
-		return errFAILURE; 
+		return errFAILURE;
 
 	GetPanelClientRect(&rcc);
 
@@ -1580,6 +1593,9 @@ ERRCODE BappPanel::OnResized(PBAFCOMP pby)
 			FitPanel(m_panels[frRight], &rcr, frRight);
 		}
 		break;
+
+	case frFloat:
+		break;
 	}
 	return errOK;
 }
@@ -1704,6 +1720,8 @@ ERRCODE BappPanel::GetPanelClientRect(LPRECT prc)
 				break;
 			case frBottom:
 				prc->top	+= HSIZER_HEIGHT;
+				break;
+			case frFloat:
 				break;
 			}
 		}

@@ -72,10 +72,10 @@ ERRCODE Bview::PlayMacro(LPMACROREC pRec)
 	ERRCODE ec = errOK;
 
 	m_playing = true;
-	
+
 	if(m_buffer)
 		m_buffer->GetEditor()->SetStatus(_T("Playing Macro"));
-	
+
 	while(pRec && ec == errOK)
 	{
 		switch(pRec->m_type)
@@ -97,6 +97,9 @@ ERRCODE Bview::PlayMacro(LPMACROREC pRec)
 		case ptColor:
 
 			PushParm(pRec->m_nParm, pRec->m_type);
+			break;
+
+		default:
 			break;
 		}
 		ec = Dispatch(pRec->m_command);

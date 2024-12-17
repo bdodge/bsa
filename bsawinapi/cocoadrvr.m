@@ -16,8 +16,8 @@ extern LPZWND _zg_lastFocus;
 
 #define zXGC(z)  ((NSGraphicsContext *)((z)->drvrData[0]))
 #define zZWND(z) ((LPZWND)((z)->drvrData[2]))
-#define zCURX(z) ((int)((z)->drvrData[4]))
-#define zCURY(z) ((int)((z)->drvrData[5]))
+#define zCURX(z) ((int)(intptr_t)((z)->drvrData[4]))
+#define zCURY(z) ((int)(intptr_t)((z)->drvrData[5]))
 
 CGColorSpaceRef space = NULL;
 CGColorRef foreground = NULL, background = NULL;
@@ -185,11 +185,13 @@ static int _fillRect(NSGraphicsContext *context, CGColorRef color, CGBlendMode b
 		printf("draw outside drawrect!\n");
 		return 0;
 	}
+	//_tprintf(_T("fr %d.%d %d,%d\n"), x,y,w,h);
+
 	fr.origin.x = (CGFloat)x;
 	fr.origin.y = (CGFloat)y;
 	fr.size.width = (CGFloat)w;
 	fr.size.height = (CGFloat)h;
-	CGContextRef cgcontext = [context graphicsPort];
+	CGContextRef cgcontext = [context CGContext];
 	CGContextSetFillColorWithColor(cgcontext, color);
 	CGContextSetBlendMode(cgcontext, blendMode);
 	CGContextFillRect(cgcontext, fr);
@@ -219,7 +221,7 @@ BOOL _cocoa_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 
 	if(zFont)
 	{
-		CGContextRef context = [zXGC(zDrvr) graphicsPort];
+		CGContextRef context = [zXGC(zDrvr) CGContext];
 
 		if (! context)
 		{
@@ -378,7 +380,7 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 				//printf("ntfont\n");
 			}
 		}
-		CGContextRef context = [zXGC(zGC->zDrvr) graphicsPort];
+		CGContextRef context = [zXGC(zGC->zDrvr) CGContext];
 
 		if (! context)
 		{
@@ -450,7 +452,7 @@ int _w_textExtents(LPZGC zGC, LPZFONT zFont, LPCTSTR lpText, int nText, int *wid
 				return FALSE;
 			}
 		}
-		#if 0
+		#if 1
 		CFMutableAttributedStringRef attrString =
 		         CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
 
@@ -503,7 +505,7 @@ BOOL _cocoa_lineTo(LPZDRVR zDrvr, int x, int y)
 		return 0;
 	}
 	NSBezierPath* aPath = [NSBezierPath bezierPath];
-	CGContextRef cgcontext = [zXGC(zDrvr) graphicsPort];
+	CGContextRef cgcontext = [zXGC(zDrvr) CGContext];
 	CGContextSetFillColorWithColor(cgcontext, foreground);
 	CGContextSetStrokeColorWithColor(cgcontext, foreground);
 
@@ -528,6 +530,7 @@ int	 _cocoa_fillRect(LPZDRVR zDrvr, LPRECT lprc, HBRUSH hbrush)
 
 	if(! zObj || (zObj->tag != ZGDIO_TAG) || (zObj->type != gdiBrush))
 		return -1;
+
 	zcolor = ((LPZCOLOR)zObj->obj);
 	fr = (CGFloat)zcolor->r / 255.0;
 	fg = (CGFloat)zcolor->g / 255.0;
@@ -547,6 +550,7 @@ int	 _cocoa_fillRect(LPZDRVR zDrvr, LPRECT lprc, HBRUSH hbrush)
 	_fillRect(zXGC(zDrvr), color, kCGBlendModeNormal, lprc->left, lprc->top,
 			lprc->right - lprc->left + 1, lprc->bottom - lprc->top + 1);
 
+	//_tprintf(_T("fr %d,%d %d,%d\n"), lprc->top, lprc->left, lprc->bottom, lprc->right);
 	CFRelease(color);
 	return 1;
 }
@@ -573,7 +577,7 @@ int _w_drawImage(LPZDRVR zDrvr, LPZBITMAP zImage, int x, int y, int w, int h)
 		printf("draw outside drawrect!\n");
 		return 0;
 	}
-	CGContextRef cgcontext = [zXGC(zDrvr) graphicsPort];
+	CGContextRef cgcontext = [zXGC(zDrvr) CGContext];
 	CGImageRef cgImage = CGBitmapContextCreateImage((CGContextRef)zImage->ximg);
 
 	ri.origin.x = (CGFloat)x;
@@ -742,7 +746,7 @@ void _w_drawCaret(HDC hdc, LPZWND zWnd, LPRECT lprc, int onoff)
 	NSGraphicsContext *context = zXGC(zGC->zDrvr);
 //	[context saveGraphicsState];
 
-	CGContextRef cgcontext = [context graphicsPort];
+	CGContextRef cgcontext = [context CGContext];
 
 	LPZGDIOBJ zObj = (LPZGDIOBJ)hbrush;
 	LPZCOLOR zcolor;
@@ -973,6 +977,26 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		long	 rv;
 		int      fErase;
 
+		GetWindowRect(zWnd, &rcd);
+
+		// clip dirty rect to window
+		if (dirtyRect.origin.x < 0)
+		{
+			dirtyRect.origin.x = 0;
+		}
+		if (dirtyRect.origin.y < 0)
+		{
+			dirtyRect.origin.y = 0;
+		}
+		if (dirtyRect.size.height > (rcd.bottom - rcd.top))
+		{
+			dirtyRect.size.height = rcd.bottom - rcd.top + 1;
+		}
+		if (dirtyRect.size.width > (rcd.bottom - rcd.top))
+		{
+			dirtyRect.size.width = rcd.right - rcd.left + 1;
+		}
+
 		rcd.left   = (int)dirtyRect.origin.x;
 		rcd.top    = (int)dirtyRect.origin.y;
 		rcd.right  = rcd.left + (int)dirtyRect.size.width;
@@ -1014,8 +1038,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		//_tprintf(_T("%ls mouse down %d %08X   %d,%d\n"), zWnd->name, clicks, mods, bx, by);
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 
 		PostMessage((HWND)zWnd, WM_LBUTTONDOWN, wParam, lParam);
 		if(clicks > 1)
@@ -1039,8 +1063,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 
 		//_tprintf(_T("%ls mouse UP %d,%d\n"), zWnd->name, bx, by);
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_LBUTTONUP, wParam, lParam);
 	}
 }
@@ -1065,8 +1089,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		int  wParam  = MK_RBUTTON;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_RBUTTONDOWN, wParam, lParam);
 	}
 }
@@ -1092,8 +1116,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		int  wParam  = MK_RBUTTON;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_RBUTTONUP, wParam, lParam);
 	}
 	else
@@ -1120,8 +1144,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		int lParam = (by << 16) | (bx & 0xffff);
 		int wParam  = 0;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_MOUSEMOVE, wParam, lParam);
 	}
 }
@@ -1144,8 +1168,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		int lParam = (by << 16) | (bx & 0xffff);
 		int wParam  = MK_LBUTTON;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_MOUSEMOVE, wParam, lParam);
 	}
 }
@@ -1170,8 +1194,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		int  wParam  = 0;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 
 		if(_zg_mouseTrack.hwndTrack == (HWND)zWnd)
 		{
@@ -1205,8 +1229,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		int  wParam  = 0;
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_MOUSEMOVE, wParam, lParam);
 	}
 }
@@ -1242,8 +1266,8 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		LONG lParam = (by << 16) | (bx & 0xffff);
 		int  wParam = (by << 16);
 
-		wParam |= (mods & NSShiftKeyMask) ? MK_SHIFT : 0;
-		wParam |= (mods & NSControlKeyMask) ? MK_CONTROL : 0;
+		wParam |= (mods & NSEventModifierFlagShift) ? MK_SHIFT : 0;
+		wParam |= (mods & NSEventModifierFlagControl) ? MK_CONTROL : 0;
 		PostMessage((HWND)zWnd, WM_MOUSEWHEEL, wParam, lParam);
 	}
 }
@@ -1279,26 +1303,26 @@ static unsigned _nskeyToWindows(unsigned kcode)
 		unsigned mods;
 		int wParam, lParam;
 
-		mods = [theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask;
+		mods = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
 		if(mods != (keymods & ~HackNumLock))
 		{
-			if((mods ^ keymods) & NSShiftKeyMask)
+			if((mods ^ keymods) & NSEventModifierFlagShift)
 			{
 				wParam = VK_SHIFT;
 				lParam = 0x04000000;
-				PostMessage((HWND)zWnd, (mods & NSShiftKeyMask) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
+				PostMessage((HWND)zWnd, (mods & NSEventModifierFlagShift) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
 			}
-			if((mods ^ keymods) & NSControlKeyMask)
+			if((mods ^ keymods) & NSEventModifierFlagControl)
 			{
 				wParam = VK_CONTROL;
 				lParam = 0x04000000;
-				PostMessage((HWND)zWnd, (mods & NSControlKeyMask) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
+				PostMessage((HWND)zWnd, (mods & NSEventModifierFlagControl) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
 			}
-			if((mods ^ keymods) & NSCommandKeyMask)
+			if((mods ^ keymods) & NSEventModifierFlagCommand)
 			{
 				wParam = VK_CONTROL;
 				lParam = 0x04000000;
-				PostMessage((HWND)zWnd, (mods & NSCommandKeyMask) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
+				PostMessage((HWND)zWnd, (mods & NSEventModifierFlagCommand) ? WM_KEYDOWN : WM_KEYUP, wParam, lParam);
 			}
 			keymods = mods | (keymods & HackNumLock);
 		}
@@ -1312,7 +1336,7 @@ static unsigned _nskeyToWindows(unsigned kcode)
 			{
 				keymods ^= HackNumLock;
 			}
-			if (keymods & NSNumericPadKeyMask)
+			if (keymods & NSEventModifierFlagNumericPad)
 			{
 				if(! (keymods & HackNumLock))
 				{
@@ -1342,12 +1366,12 @@ static unsigned _nskeyToWindows(unsigned kcode)
 		}
 		else if(wParam >= 'A' && wParam <= 'Z')
 		{
-			if(keymods & (NSControlKeyMask | NSCommandKeyMask))
+			if(keymods & (NSEventModifierFlagControl | NSEventModifierFlagCommand))
 				wParam &= 0x1F;
-			else if(! ((keymods & NSShiftKeyMask) ^ (keymods & NSAlphaShiftKeyMask)))
+			else if(! ((keymods & NSEventModifierFlagShift) ^ (keymods & NSEventModifierFlagCapsLock)))
 				wParam += 'a' - 'A';
 		}
-		else if(keymods & NSShiftKeyMask)
+		else if(keymods & NSEventModifierFlagShift)
 		{
 			switch(wParam)
 			{
@@ -1375,7 +1399,7 @@ static unsigned _nskeyToWindows(unsigned kcode)
 			}
 		}
 		//_tprintf(_T("KeyD %ls %d %d %c\n"), zWnd->name, [theEvent keyCode], wParam, wParam);
-		PostMessage((HWND)zWnd, (keymods & NSAlternateKeyMask) ?
+		PostMessage((HWND)zWnd, (keymods & NSEventModifierFlagOption) ?
 					WM_SYSKEYDOWN : WM_KEYDOWN, wParam, lParam);
 	}
 }
@@ -1397,13 +1421,13 @@ static unsigned _nskeyToWindows(unsigned kcode)
 		}
 		else if(wParam >= 'A' && wParam <= 'Z')
 		{
-			if(keymods & NSControlKeyMask)
+			if(keymods & NSEventModifierFlagControl)
 				wParam &= 0x1F;
-			else if(keymods & NSShiftKeyMask)
+			else if(keymods & NSEventModifierFlagShift)
 				wParam += 'a' - 'A';
 		}
 		//_tprintf(_T("KeyU %ls %d %d %c\n"), zWnd->name, [theEvent keyCode], wParam, wParam);
-		PostMessage((HWND)zWnd, (keymods & NSAlternateKeyMask) ?
+		PostMessage((HWND)zWnd, (keymods & NSEventModifierFlagOption) ?
 					WM_SYSKEYUP : WM_KEYUP, wParam, lParam);
 	}
 }
@@ -1427,7 +1451,9 @@ static unsigned _nskeyToWindows(unsigned kcode)
 			{
 	    		[self addCursorRect: [self bounds]
 	        		  cursor: (NSCursor *)zCursor->cursor];
+				/* deprecated
 				[(NSCursor *)zCursor->cursor setOnMouseEntered:YES];
+				*/
 				return;
 			}
 		}
@@ -1704,6 +1730,8 @@ int _w_redrawWindow(Window nw, int x, int y, int w, int h, int erase)
 	NSRect dirtyRect;
 
 	if(! nw) return -1;
+
+	//_tprintf(_T("redraw %d.%d %d,%d   %d\n"), x,y,w,h,erase);
 
 	dirtyRect.origin.x = (CGFloat)x;
 	dirtyRect.origin.y = (CGFloat)y;
@@ -2041,12 +2069,12 @@ Window _w_createWindow(const char *title, DWORD dwStyle, HBRUSH bkg, int bkga,
 
 	style = 0;
 	if (dwStyle & (WS_SYSMENU | WS_CAPTION))
-		style |= NSTitledWindowMask;
+		style |= NSWindowStyleMaskTitled;
 
 	if (dwStyle & WS_SYSMENU)
-		style |= NSClosableWindowMask |
-				 NSMiniaturizableWindowMask |
-				 NSResizableWindowMask;
+		style |= NSWindowStyleMaskClosable |
+				 NSWindowStyleMaskMiniaturizable |
+				 NSWindowStyleMaskResizable;
 
 	if(noframe)
 	{
@@ -2289,7 +2317,7 @@ static BOOL keepRunning;
 	NSEvent *event;
 
 	event = [self
-                nextEventMatchingMask:NSAnyEventMask
+                nextEventMatchingMask:NSEventMaskAny
                 untilDate:timeout
                 inMode:NSDefaultRunLoopMode
                 dequeue:YES];
@@ -2326,7 +2354,7 @@ int _w_init(void)
     NSRect contentRect;
 
     contentRect = [NSWindow contentRectForFrameRect: frame
-                            styleMask: NSTitledWindowMask];
+                            styleMask: NSWindowStyleMaskTitled];
 
 	g_dech = (int)(frame.size.height - contentRect.size.height);
 	/*
@@ -2354,7 +2382,7 @@ int _w_init(void)
 	[application finishLaunching];
 
     [[NSRunningApplication currentApplication] activateWithOptions:
-          (NSApplicationActivateAllWindows | NSApplicationActivateIgnoringOtherApps)];
+          (NSApplicationActivateAllWindows /*| NSApplicationActivateIgnoringOtherApps*/)];
 	return 0;
 }
 

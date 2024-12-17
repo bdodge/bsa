@@ -17,7 +17,7 @@ Bmutex::~Bmutex()
 {
 	DeleteCriticalSection(&cs);
 }
-    
+
 //**************************************************************************
 void Bmutex::Lock()
 {
@@ -26,7 +26,7 @@ void Bmutex::Lock()
 
 //**************************************************************************
 void Bmutex::Unlock()
-{ 
+{
 	LeaveCriticalSection(&cs);
 }
 
@@ -35,7 +35,7 @@ void Bmutex::Unlock()
 Bmutex::Bmutex()
 {
 	int s;
-	
+
 #ifdef Linux
     pthread_mutexattr_t attr;
 
@@ -52,7 +52,7 @@ Bmutex::~Bmutex()
 {
 	pthread_mutex_destroy(&cs);
 }
-    
+
 //**************************************************************************
 void Bmutex::Lock()
 {
@@ -157,6 +157,9 @@ void Blog::Log(logType type, int level, LPCTSTR format, ...)
 	case logInfo:
 		pszType = _T("INFO   ");
 		break;
+	case logWarning:
+		pszType = _T("Warning");
+		break;
 	case logError:
 		pszType = _T("ERROR--");
 		break;
@@ -180,9 +183,9 @@ void Blog::Log(logType type, int level, LPCTSTR format, ...)
 	case logtoFILE:
 	case logtoFILEAPPEND:
 #ifdef UNICODE
-		fwprintf(m_plf,  L"%ls %ls", pszType, m_emsg);	
+		fwprintf(m_plf,  L"%ls %ls", pszType, m_emsg);
 #else
-		fprintf(m_plf,  "%s %s", pszType, m_emsg);	
+		fprintf(m_plf,  "%s %s", pszType, m_emsg);
 #endif
 		fflush(m_plf);
 		break;
@@ -205,7 +208,7 @@ void Blog::SetLogfile(LPCTSTR logfile)
 #else
 #ifdef UNICODE
 		char alfn[MAX_PATH];
-		
+
 		BUtil::Utf8Encode(alfn, logfile, false);
 		m_plf = fopen(alfn, (m_logdest == logtoFILEAPPEND) ? "a" : "w");
 #else
@@ -241,7 +244,7 @@ ERRCODE BUtil::LoadLibrary(HDYNLIB& hLib, LPCTSTR pName)
 {
 #ifdef Windows
 	hLib = ::LoadLibrary(pName);
-	if(! hLib) 
+	if(! hLib)
 	{
 		int werr= GetLastError();
 		int a = werr;
@@ -385,7 +388,7 @@ ERRCODE BUtil::UrlParse(LPCSTR pURL, LPSTR proto, LPSTR host, short* port, LPSTR
 		if(purl > pURL)
 		{
 			// all of the rest is unterminated host name
-			while(*purl) 
+			while(*purl)
 				purl++;
 			if(! phostend)
 				phostend = purl;
@@ -397,7 +400,7 @@ ERRCODE BUtil::UrlParse(LPCSTR pURL, LPSTR proto, LPSTR host, short* port, LPSTR
 			if(! phostend)
 				phostend = purl;
 			ppath = purl;
-			while(*purl && *purl != '?') 
+			while(*purl && *purl != '?')
 				purl++;
 		}
 	}
@@ -419,7 +422,7 @@ ERRCODE BUtil::UrlParse(LPCSTR pURL, LPSTR proto, LPSTR host, short* port, LPSTR
 
 	if(*ppath != '?')
 		return errOK;
-	else 
+	else
 		ppath++;
 
 	// copy parm string over
@@ -521,7 +524,7 @@ ERRCODE BUtil::UrlExtractParms(LPCSTR pParmBuf, BkeyVal*& pList)
 		for(pvalue = pparm; *pvalue && *pvalue != '\02'; pvalue++)
 			;
 
-		if(*pvalue == '\02') 
+		if(*pvalue == '\02')
 		{
 			*pvalue++ = '\0';
 		}
@@ -650,7 +653,7 @@ int BUtil::EncodeBase64(LPSTR pDst, LPBYTE pSrc, int cbSrc, bool hexescape)
 		b3 = (k+2 < cbSrc) ? pSrc[k+2] : 0;
 
 		d = (b1 << 16) | (b2 << 8) | b3;
-        
+
 		if(hexescape)
 		{
 			char b;
@@ -782,7 +785,7 @@ LPCTSTR BUtil::SimplePatternMatch(LPCTSTR string, LPCTSTR pattern)
 				if(*string == *pattern)
 				{
 					LPCTSTR pm = SimplePatternMatch(string + 1, pattern + 1);
-				
+
 					if(pm) return pm;
 				}
 				string++;
@@ -822,7 +825,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
     len = wcslen((WCHAR*)pSrc);
 #else
 	WCHAR* ps = (WCHAR*)pSrc;
-	
+
 	for(len = 0; ps && *ps; ps++)
 		len++;
 #endif
@@ -836,7 +839,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
         nc = ca | (cb << 8);
 #else
         nc = (ca << 8) | cb;
-#endif        
+#endif
         if(sizeof(WCHAR) == 4) // it is on Linux, etc.
         {
          cc = (unsigned char)*src++;
@@ -852,7 +855,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
         /* next, UTF-8 encode it
         */
         j = 0;
-        
+
         if (nc < 0x80) {
             utfbuf[j++] = (unsigned char)nc;
         }
@@ -871,7 +874,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
             utfbuf[j++] = 0x80 | ((nc >> 6) & 0x3F);
             utfbuf[j++] = 0x80 | (nc  & 0x3F);
         }
- 
+
         /* next, quoted-printable encode it or copy to output
         */
         if(bQuoteIt)
@@ -879,7 +882,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
             for(k = 0; k < j; k++)
             {
                 ic = utfbuf[k];
-            
+
                 if(
                     (ic >= 33 && ic <= 60)          ||
                     (ic >= 62 && ic <= 126)
@@ -889,7 +892,7 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
                 }
                 else
                 {
-                    *dst++ = '=';                        
+                    *dst++ = '=';
                     xd = ic >> 4;
                     if(xd < 10) xd += '0';
                     else        xd += ('A' - 10);
@@ -912,16 +915,16 @@ bool BUtil::Utf8Encode(char* dst, const WCHAR* pSrc, bool bQuoteIt)
     *dst = '\0';
     return false;
 }
- 
+
 //**************************************************************************
 bool  BUtil::Utf8Decode(WCHAR* dst, const char* src)
 {
 	unsigned long b, c;
-	
+
 	while(*src)
 	{
 		b = *src++;
-		
+
 		if(b & 0x80)
 		{
 			if(b & 0x20)
@@ -1135,7 +1138,7 @@ ERRCODE BUtil::GetTempPath(LPTSTR pbuf, int nBuf)
 #else
 	const char* rv;
 	int   len;
-	
+
 	if((rv = getenv("TEMP")) == NULL)
 	{
 		if((rv = getenv("TMP")) == NULL)
@@ -1174,12 +1177,12 @@ ERRCODE BUtil::FileExists(LPCTSTR pName)
 	}
 #ifdef UNICODE
 	char* aname = new char [ _tcslen(pName) * 3 + 2 ];
-	
+
 	WCharToChar(aname, pName);
 	srep = stat(aname, &finfo);
-	
+
 	delete [] aname;
-#else	
+#else
 	srep = stat(pName, &finfo);
 #endif
 	if(srep) 					return errFAILURE;
@@ -1195,7 +1198,7 @@ ERRCODE BUtil::DirectoryExists(LPCTSTR pName)
 
 	len = _tcslen(pName);
 	char* aname = new char [ len * 2 + 322 ];
-	
+
 	TCharToChar(aname, pName);
 	len = strlen(aname);
 	if(len > 0 && aname[len-1] == '/' || aname[len-1] == '\\')
@@ -1307,7 +1310,7 @@ BlistElement* BlistElement::FindKey(LPCTSTR pName, const BlistElement* pList)
 
 
 //**************************************************************************
-Bmsg::Bmsg(int initSize) 
+Bmsg::Bmsg(int initSize)
 			:
 			m_bufAlloc(initSize)
 {
@@ -1474,12 +1477,12 @@ ERRCODE Bmsg::GetSwappedDWORD(DWORD& w)
 int wcscasecmp(LPCWSTR pA, LPCWSTR pB)
 {
 	WCHAR a, b;
-	
+
 	while(*pA && *pB)
 	{
 		a = *pA++;
 		b = *pB++;
-		
+
 		if(! a)
 			if(b)
 				return -1;
@@ -1487,7 +1490,7 @@ int wcscasecmp(LPCWSTR pA, LPCWSTR pB)
 				return 0;
 		else if(! b)
 			return 1;
-		
+
 		if(a >= L'a' && a <= L'z')
 			a = a - L'a' + L'A';
 		if(b >= L'a' && b <= L'z')
@@ -1508,13 +1511,13 @@ int wcscasecmp(LPCWSTR pA, LPCWSTR pB)
 int wcsncasecmp(LPCWSTR pA, LPCWSTR pB, int n)
 {
 	WCHAR a, b;
-	
+
 	while(*pA && *pB && (n > 0))
 	{
 		a = *pA++;
 		b = *pB++;
 		n--;
-		
+
 		if(! a)
 			if(b)
 				return -1;
@@ -1522,7 +1525,7 @@ int wcsncasecmp(LPCWSTR pA, LPCWSTR pB, int n)
 				return 0;
 		else if(! b)
 			return 1;
-		
+
 		if(a >= L'a' && a <= L'z')
 			a = a - L'a' + L'A';
 		if(b >= L'a' && b <= L'z')
@@ -1588,7 +1591,7 @@ LPCTSTR BUtil::ExplainError(ERRCODE ec)
 	case errBAD_OID_CHAR_FORMAT:		return _T("BAD_OID_CHAR_FORMAT");
 	case errBAD_OID_FORMAT:				return _T("BAD_OID_FORMAT");
 	case errNO_OID:						return _T("NO_OID");
-	
+
 	case errBAD_RESPONSE_LENGTH:		return _T("BAD_RESPONSE_LENGTH");
 	case errBAD_RESPONSE_HEADER:		return _T("BAD_RESPONSE_HEADER");
 	case errBAD_RESPONSE_VERSION_FORMAT:return _T("BAD_RESPONSE_VERSION_FORMAT");
@@ -1604,7 +1607,7 @@ LPCTSTR BUtil::ExplainError(ERRCODE ec)
 	case errBAD_RESPONSE_OID:			return _T("BAD_RESPONSE_OID");
 
 	case errOBJECT_NOT_FOUND:			return _T("OBJECT_NOT_FOUND");
-	
+
 	case errUNHANDLED_TYPE:				return _T("UNHANDLED_TYPE");
 	case errUNHANDLED_VARBIND:			return _T("UNHANDLED_VARBIND");
 	case errUNHANDLED_PDU:				return _T("UNHANDLED_PDU");
@@ -1645,7 +1648,7 @@ LPCTSTR BUtil::ExplainError(ERRCODE ec)
 	case errDBC_QUERY_FAILED:			return _T("DBC_QUERY_FAILED");
 	case errDBC_COLUMN_ASCENSION:		return _T("DBC_COLUMN_ASCENSION");
 	case errDBC_ROW_ASCENSION:			return _T("DBC_ROW_ASCENSION");
-	
+
 	// url errors
 	case errURL_TOO_LONG:				return _T("URL_TOO_LONG");
 	case errURL_NO_ACCESS:				return _T("URL_NO_ACCESS");

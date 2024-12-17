@@ -4,8 +4,8 @@
 #define zEB(z)   ((LPSTR)((z)->drvrData[0]))
 #define zFILE(z)  ((FILE*)((z)->drvrData[1]))
 #define zZWND(z) ((LPZWND)((z)->drvrData[2]))
-#define zCOLOR(z) ((int)((z)->drvrData[3]))
-#define zPAGES(z) ((int)((z)->drvrData[4]))
+#define zCOLOR(z) ((int)(uintptr_t)((z)->drvrData[3]))
+#define zPAGES(z) ((int)(uintptr_t)((z)->drvrData[4]))
 
 //**************************************************************************
 void _emit(LPZDRVR zDrvr, char* lpcmd)
@@ -22,7 +22,7 @@ void _ps_setfrg(LPZDRVR zDrvr, HBRUSH hbrFrg)
 	LPZGDIOBJ zObj;
 	LPZCOLOR  zColor;
 	char*     emitBuf;
-	
+
 	if(! zDrvr || ! (zObj = (LPZGDIOBJ)hbrFrg)) return;
 	if(! (zColor = (LPZCOLOR)zObj->obj))        return;
 	if(! (emitBuf = zEB(zDrvr)))			    return;
@@ -49,19 +49,19 @@ void _ps_setbkg(LPZDRVR zDrvr,  HBRUSH hbrBkg)
 BOOL _ps_setFont(LPZDRVR zDrvr, HFONT hFont)
 {
 	LPZFONT		zFont;
-	
+
 	if(hFont)
 	{
 		char*     emitBuf;
-	
+
 		if(! zDrvr)						return FALSE;
 		if(! (emitBuf = zEB(zDrvr))) 	return FALSE;
-		
+
 		zFont = (LPZFONT)(((LPZGDIOBJ)hFont)->obj);
-		
+
 		sprintf(emitBuf, "/Courier FF %ld CF SF\r\n",
 				BSA_SCALE_CHAR_TO_PS(zFont->tm.tmAscent));
-				
+
 		_emit(zDrvr, emitBuf);
 		return TRUE;
 	}
@@ -70,7 +70,7 @@ BOOL _ps_setFont(LPZDRVR zDrvr, HFONT hFont)
 
 //**************************************************************************
 BOOL _ps_setPen(LPZDRVR zDrvr, HPEN hPen)
-{	
+{
 //	LPZGDIOBJ zObj;
 //	LPZPEN	  zPen;
 
@@ -84,24 +84,24 @@ BOOL _ps_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 	LPSTR 		pAnsi;
 	int			h;
 	char*		emitBuf;
-	
+
 	if(nText == 0 || ! lpText)	 return FALSE;
 	if(! zDrvr)	      			 return FALSE;
 	if(! (emitBuf = zEB(zDrvr))) return FALSE;
-	
+
 	zFont = NULL;
 	if(zDrvr->zGC && zDrvr->zGC->hFONT)
 		zFont = (LPZFONT)(((LPZGDIOBJ)(zDrvr->zGC->hFONT))->obj);
-	
+
 	if(! zFont)
 		h = 13;
 	else
 		h = zFont->tm.tmAscent;
-	
+
 	if((pAnsi = (LPSTR)malloc(3*nText + sizeof(TCHAR))) != NULL)
 	{
 		int i, j;
-		
+
 		for(i = j = 0; i < nText; i++)
 		{
 			switch((char)lpText[i])
@@ -142,12 +142,12 @@ BOOL _ps_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 BOOL _ps_moveTo(LPZDRVR zDrvr, int x, int y)
 {
 	char*		emitBuf;
-	
+
 	if(! zDrvr)	      			 return FALSE;
 	if(! (emitBuf = zEB(zDrvr))) return FALSE;
-		
+
 	sprintf(emitBuf, "%d %d M\r\n", x, y);
-	_emit(zDrvr, emitBuf);	
+	_emit(zDrvr, emitBuf);
 	return TRUE;
 }
 
@@ -155,12 +155,12 @@ BOOL _ps_moveTo(LPZDRVR zDrvr, int x, int y)
 BOOL _ps_lineTo(LPZDRVR zDrvr, int x, int y)
 {
 	char*		emitBuf;
-	
+
 	if(! zDrvr)	      			 return FALSE;
 	if(! (emitBuf = zEB(zDrvr))) return FALSE;
-		
+
 	sprintf(emitBuf, "%d %d M\r\n", x, y);
-	_emit(zDrvr, emitBuf);	
+	_emit(zDrvr, emitBuf);
 	return TRUE;
 }
 
@@ -168,18 +168,18 @@ BOOL _ps_lineTo(LPZDRVR zDrvr, int x, int y)
 int	 _ps_fillRect(LPZDRVR zDrvr, LPRECT lprc, HBRUSH hbrush)
 {
 	char*		emitBuf;
-	
+
 	if(! zDrvr)	      			 return 0;
 	if(! (emitBuf = zEB(zDrvr))) return 0;
-		
+
 	sprintf(emitBuf, "%d %d M\r\n", lprc->left, lprc->top);
-	_emit(zDrvr, emitBuf);	
+	_emit(zDrvr, emitBuf);
 	sprintf(emitBuf, "%d %d L %d %d L %d %d L closepath F N\r\n",
 			lprc->right, lprc->top,
 			lprc->right, lprc->bottom,
 			lprc->left, lprc->bottom
 			);
-	_emit(zDrvr, emitBuf);	
+	_emit(zDrvr, emitBuf);
 	return 1;
 }
 
@@ -194,29 +194,29 @@ int _ps_devCaps(LPZDRVR zDrvr, int cap)
 {
 	switch(cap)
 	{
-	case DRIVERVERSION: 	     // Device driver version                    
+	case DRIVERVERSION: 	     // Device driver version
 		return 1;
-	case TECHNOLOGY:    	     // Device classification                  
+	case TECHNOLOGY:    	     // Device classification
 		return DT_RASPRINTER;
-	case HORZSIZE:      	     // Horizontal size in millimeters 
+	case HORZSIZE:      	     // Horizontal size in millimeters
 		return (zDrvr->vpw * 254) / (zDrvr->xres * 10);
-	case VERTSIZE:      	     // Vertical size in millimeters    
+	case VERTSIZE:      	     // Vertical size in millimeters
 		return (zDrvr->vph * 254) / (zDrvr->yres * 10);
-	case HORZRES:       	     // Horizontal width in pixels        
+	case HORZRES:       	     // Horizontal width in pixels
 		return zDrvr->vpw;
-	case VERTRES:       	     // Vertical height in pixels           
+	case VERTRES:       	     // Vertical height in pixels
 		return zDrvr->vph;
-	case BITSPIXEL:     	     // Number of bits per pixel         
+	case BITSPIXEL:     	     // Number of bits per pixel
 		return zDrvr->vpd;
 	case PLANES:        	     // Number of planes
 		return 1;
-	case NUMBRUSHES:    	     // Number of brushes the device has 
-	case NUMPENS:       	     // Number of pens the device has   
-	case NUMMARKERS:    	     // Number of markers the device has 
-	case NUMFONTS:      	     // Number of fonts the device has 
-	case NUMCOLORS:     	     // Number of colors the device supports  
+	case NUMBRUSHES:    	     // Number of brushes the device has
+	case NUMPENS:       	     // Number of pens the device has
+	case NUMMARKERS:    	     // Number of markers the device has
+	case NUMFONTS:      	     // Number of fonts the device has
+	case NUMCOLORS:     	     // Number of colors the device supports
 		return 0;
-	case PDEVICESIZE:   	     // Size required for device descriptor 
+	case PDEVICESIZE:   	     // Size required for device descriptor
 		return 0;
 	case CURVECAPS:     	     // Curve capabilities
 	case LINECAPS:      	     // Line capabilities
@@ -232,9 +232,9 @@ int _ps_devCaps(LPZDRVR zDrvr, int cap)
 		return 1;
 	case ASPECTXY:      	     // Length of the hypotenuse
 		return 1;
-	case LOGPIXELSX:   		    // Logical pixels/inch in X 
+	case LOGPIXELSX:   		    // Logical pixels/inch in X
 		return 72;
-	case LOGPIXELSY:   		    // Logical pixels/inch in Y 
+	case LOGPIXELSY:   		    // Logical pixels/inch in Y
 		return 72;
 	case SIZEPALETTE:  		    // Number of entries in physical palette
 		return 256;
@@ -248,10 +248,10 @@ int _ps_devCaps(LPZDRVR zDrvr, int cap)
 		return zDrvr->vph;
 	case PHYSICALOFFSETX: 		// Physical Printable Area x margin
 		return zDrvr->xmar;
-	case PHYSICALOFFSETY: 		// Physical Printable Area y margin 
+	case PHYSICALOFFSETY: 		// Physical Printable Area y margin
 		return zDrvr->ymar;
-	case SCALINGFACTORX:  		// Scaling factor x 
-	case SCALINGFACTORY:  		// Scaling factor y 
+	case SCALINGFACTORX:  		// Scaling factor x
+	case SCALINGFACTORY:  		// Scaling factor y
 		return 1;
 	default:
 		return -1;
@@ -263,22 +263,22 @@ BOOL _ps_startDoc(LPZDRVR zDrvr, CONST DOCINFO* pInfo)
 {
 	// output file
 	zDrvr->drvrData[1] = stdout;
-	// colordevice	
+	// colordevice
 	zDrvr->drvrData[3] = (LPVOID)(long)((zDrvr->vpd > 1) ? 1 : 0);
 	// page count
 	zDrvr->drvrData[4] = (LPVOID)(long)0;
-	
+
 	if(pInfo && pInfo->lpszOutput)
 	{
 		FILE* outf;
 		char  fname[MAX_PATH];
-		
+
 		TCharToChar(fname, pInfo->lpszOutput);
-		
-		outf = fopen(fname, "wb");		
+
+		outf = fopen(fname, "wb");
 		if(outf) zDrvr->drvrData[1] = outf;
 	}
-	
+
 	// emit ps header
 	//
 	_emit(zDrvr, "%!PS-Adobe-3.0\r\n%%Creator: bsawinapi\r\n%%\r\n");
@@ -306,13 +306,13 @@ BOOL _ps_endDoc(LPZDRVR zDrvr)
 			fclose(zFILE(zDrvr));
 	return TRUE;
 }
-	
+
 //**************************************************************************
 BOOL _ps_startPage(LPZDRVR zDrvr)
 {
 	char* emitBuffer;
 	int page;
-	
+
 	emitBuffer 	= zEB(zDrvr);
 	page		= zPAGES(zDrvr);
 	zDrvr->drvrData[4] = (LPVOID)(long)++page;
@@ -327,7 +327,7 @@ BOOL _ps_endPage(LPZDRVR zDrvr)
 	_emit(zDrvr, "showpage\r\n");
 	return TRUE;
 }
-	
+
 //**************************************************************************
 void _w_deletePSDRVR(LPZDRVR zDrvr)
 {
@@ -345,10 +345,10 @@ LPZDRVR _w_newPSDRVR(LPZGC zGC, LPZWND zWnd)
 	int		papl, papr;
 
 	if(! (zDrvr = (LPZDRVR)malloc(sizeof(ZDRVR))))
-		return NULL;	
+		return NULL;
 	memset(zDrvr, 0, sizeof(ZDRVR));
 
-	// postscript base units are 72 dpi (1/10 points) 
+	// postscript base units are 72 dpi (1/10 points)
 	// which is fine really... paper table units are
 	// in mm, so need to convert.  since yorg is flipped
 	// top margin is already accounted for by using only
@@ -356,8 +356,8 @@ LPZDRVR _w_newPSDRVR(LPZGC zGC, LPZWND zWnd)
 	// is used as a negative top margin, to move printed
 	// area up on the page
 	//
-	papx = 800 * 254 / 1000;  	// 8.0 inches 
-	papy = 1050 * 254 / 1000;  	// 10.5 inches 
+	papx = 800 * 254 / 1000;  	// 8.0 inches
+	papy = 1050 * 254 / 1000;  	// 10.5 inches
 	papt = 25 * 254 / 1000;		// top margin = 0.25 inches
 	papb = 25 * 254 / 1000;		// bot margin = 0.25 inches
 	papl = 25 * 254 / 1000;		// left margin = 0.25 inches
@@ -372,11 +372,11 @@ LPZDRVR _w_newPSDRVR(LPZGC zGC, LPZWND zWnd)
 	zDrvr->vpw  =  papx * zDrvr->xres * 10 / 254;
 	zDrvr->vph  =  papy * zDrvr->yres * 10 / 254;
 	zDrvr->vpd  =  24; // color device
-	
+
 	zDrvr->drvrData[0] = malloc(256);
 	zDrvr->drvrData[1] = zGC;
 	zDrvr->drvrData[2] = zWnd;
-	
+
 	zDrvr->_delete 	= _w_deletePSDRVR;
 	zDrvr->_setFrg 	= _ps_setfrg;
 	zDrvr->_setBkg 	= _ps_setbkg;
@@ -391,9 +391,9 @@ LPZDRVR _w_newPSDRVR(LPZGC zGC, LPZWND zWnd)
 
 	zDrvr->_startDoc 	= _ps_startDoc;
 	zDrvr->_endDoc 		= _ps_endDoc;
-	zDrvr->_startPage 	= _ps_startPage;	
-	zDrvr->_endPage 	= _ps_endPage;	
-	
+	zDrvr->_startPage 	= _ps_startPage;
+	zDrvr->_endPage 	= _ps_endPage;
+
 	return zDrvr;
 }
 

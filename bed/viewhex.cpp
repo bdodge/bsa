@@ -38,7 +38,7 @@ TokenRet BviewHex::GetToken(
 	kw = kwPlain;
 	if(incol < 0)		return trFAILURE;
 	if(nText <= 0)		return trEOLLINE;
-	
+
 	switch (state)
 	{
 	case tsBase:
@@ -74,7 +74,7 @@ TokenRet BviewHex::GetToken(
 
 	case tsSpanningElement:
 
-		// inside a line of text	
+		// inside a line of text
 		if (incol == 0)
 			incol = 1;
 		if (m_buffer->GetRaw())
@@ -175,15 +175,15 @@ TokenRet BviewHex::GetToken(
 				{
 					if(m_binformat & 0x20)
 					{
-						_sntprintf(m_tabBuf, 32, _T("%08X "), 
+						_sntprintf(m_tabBuf, 32, _T("%08X "),
 							((DWORD)lpText[bc+3] << 24) | (((DWORD)lpText[bc+2]) << 16) |
-							(((DWORD)lpText[bc+1]) << 8) | (((DWORD)lpText[bc]))); 
+							(((DWORD)lpText[bc+1]) << 8) | (((DWORD)lpText[bc])));
 					}
 					else
 					{
-						_sntprintf(m_tabBuf, 32, _T("%08X "), 
+						_sntprintf(m_tabBuf, 32, _T("%08X "),
 							((DWORD)lpText[bc] << 24) | (((DWORD)lpText[bc+1]) << 16) |
-							(((DWORD)lpText[bc+2]) << 8) | (((DWORD)lpText[bc+3]))); 
+							(((DWORD)lpText[bc+2]) << 8) | (((DWORD)lpText[bc+3])));
 					}
 					lpToken += 2 * ((incol-1) & 0x3);
 					if(((incol-1) & 0x3) == 3)
@@ -277,12 +277,15 @@ TokenRet BviewHex::GetToken(
 		kw		= kwMacro;
 		rv		= trOK;
 		break;
-		
+
 	case tsComment:
 
 		// after text is returned
 		state	= tsBase;
 		rv		= trEOLLINE;
+		break;
+
+	default:
 		break;
 	}
 	frgColor = m_view_colors[kw];

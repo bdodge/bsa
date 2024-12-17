@@ -14,7 +14,7 @@ BOOL CALLBACK DBGdialog(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	BdbgProgram program;
 	TCHAR	tmp[MAX_PATH];
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_INITDIALOG:
 
@@ -69,10 +69,10 @@ BOOL CALLBACK DBGdialog(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		pdbg->GetShell(tmp, sizeof(tmp)/sizeof(TCHAR));
 		SetDlgItemText(hWnd, IDC_DBGSHELL, tmp);
-		
+
 		pdbg->GetShellSwitches(tmp, sizeof(tmp)/sizeof(TCHAR));
 		SetDlgItemText(hWnd, IDC_DBGSHELLSWITCH, tmp);
-	
+
 		pdbg->GetShellSep(tmp, sizeof(tmp)/sizeof(TCHAR));
 		SetDlgItemText(hWnd, IDC_DBGSHELLSEP, tmp);
 
@@ -448,16 +448,16 @@ ERRCODE	Bdbg::ConfirmBreak(Bbreak* pbp)
 	if(m_editor && m_editor->GetViews())
 	{
 		Bview* pView;
-		
+
 		for(pView = m_editor->GetViews(); pView; pView = pView->GetNext(pView))
 		{
 			Bbuffer* pBuf;
-		
+
 			pBuf = pView->GetBuffer();
 			if(pBuf && ! _tcscmp(pBuf->GetName(), pbp->m_name))
 			{
 				BlineInfo info;
-				
+
 				info = pBuf->GetLineIsInfo(pbp->m_line);
 				if(info & liIsBreakpoint)
 				{
@@ -474,7 +474,7 @@ ERRCODE	Bdbg::ConfirmBreak(Bbreak* pbp)
 ERRCODE	Bdbg::AddBreakpoint(LPCTSTR pName, LPCTSTR pCond, BbreakType type, int line, bool en)
 {
 	Bbreak* pbp;
-	
+
 	for(pbp = m_breaks; pbp; pbp = pbp->m_next)
 	{
 		if(pbp->m_line == line && pbp->m_type == type)
@@ -516,16 +516,16 @@ ERRCODE	Bdbg::AddBreakpoint(LPCTSTR pName, LPCTSTR pCond, BbreakType type, int l
 	if(m_editor && m_editor->GetViews())
 	{
 		Bview* pView;
-		
+
 		for(pView = m_editor->GetViews(); pView; pView = pView->GetNext(pView))
 		{
 			Bbuffer* pBuf;
-		
+
 			pBuf = pView->GetBuffer();
 			if(pBuf && ! _tcscmp(pBuf->GetName(), pbp->m_name))
 			{
 				BlineInfo info;
-				
+
 				info = pBuf->GetLineIsInfo(pbp->m_line);
 				if(info & liIsBreakpoint)
 				{
@@ -591,7 +591,7 @@ ERRCODE	Bdbg::RestoreBreakpoints(Bproject* pProj, bool recheck)
 	if(m_editor && m_editor->GetViews())
 	{
 		Bview* pView;
-		
+
 		for(pView = m_editor->GetViews(); pView; pView = pView->GetNext(pView))
 		{
 			Bbuffer* pBuf;
@@ -602,7 +602,7 @@ ERRCODE	Bdbg::RestoreBreakpoints(Bproject* pProj, bool recheck)
 				int			lines, lino, maxcol;
 				int			minl, maxl;
 				BlineInfo	info;
-				
+
 				lines = pBuf->GetLineCount(maxcol);
 				minl  = lines;
 				maxl  = 1;
@@ -610,7 +610,7 @@ ERRCODE	Bdbg::RestoreBreakpoints(Bproject* pProj, bool recheck)
 				for(lino = 1; lino < lines; lino++)
 				{
 					info = pBuf->GetLineIsInfo(lino);
-					
+
 					if(info & liIsBreakpoint)
 					{
 						if(lino < minl) minl = lino;
@@ -656,7 +656,7 @@ ERRCODE	Bdbg::SetBreak(LPCTSTR filename, DWORD line, int& refNum)
 	ERRCODE ec = errOK;
 	Bbreak	bp, *pbp;
 	int		n;
-	
+
 	for(pbp = m_breaks, n = 0; pbp; n++, pbp = pbp->m_next)
 	{
 		if(pbp->m_line == (int)line && ! _tcscmp(pbp->m_name, filename))
@@ -940,7 +940,7 @@ bool Bdbg::OnWiz(int* step, wizMethod method, LPCTSTR typecode, LPCTSTR var, LPT
 			TCHAR shell[MAX_PATH];
 
 			m_persist->GetNvStr(_T("Debug/Shell"), shell, MAX_PATH, _T(""));
-			
+
 			if(shell[0] == _T('\0'))
 			{
 				MessageBox(NULL, _T("Shell Program must be specified"), _T("BED - Debug Setup"), MB_OK);
@@ -993,7 +993,7 @@ bool Bdbg::OnDebugSetupData(LPVOID cookie, int* step, wizMethod method, LPCTSTR 
 
 	}
 	pdbg = (Bdbg*)cookie;
-	
+
 	if(pdbg)
 	{
 		return pdbg->OnWiz(step, method, typecode, tc, val);
@@ -1051,7 +1051,7 @@ BdbgGDB::~BdbgGDB()
 //**************************************************************************
 ERRCODE	BdbgGDB::Init()
 {
-	if(! m_infopane) 
+	if(! m_infopane)
 	{
 		return errFAILURE;
 	}
@@ -1070,7 +1070,7 @@ ERRCODE	BdbgGDB::SetBreak(LPCTSTR filename, DWORD line, int& refNum)
 	strcpy(cb + 6, BfileInfo::FilePart((LPTSTR)filename));
 #endif
 	strcat(cb, ":");
-	sprintf(cb + strlen(cb), "%u\n", line);
+	snprintf(cb + strlen(cb), sizeof(cb) - strlen(cb), "%u\n", line);
 	if(RunCommand(cb) == errOK)
 		return Bdbg::SetBreak(filename, line, refNum);
 	return errFAILURE;
@@ -1100,7 +1100,7 @@ ERRCODE	BdbgGDB::ClearBreak(LPCTSTR filename, DWORD line)
 	strcpy(cb+6, BfileInfo::FilePart((LPTSTR)filename));
 #endif
 	strcat(cb, ":");
-	sprintf(cb + strlen(cb), "%u\n", line);
+	snprintf(cb + strlen(cb), sizeof(cb) - strlen(cb), "%u\n", line);
 	if(RunCommand(cb) == errOK)
 		return Bdbg::ClearBreak(filename, line);
 	return errFAILURE;
@@ -1141,7 +1141,7 @@ ERRCODE	BdbgGDB::ClearAllWatchs(void)
 ERRCODE	BdbgGDB::Run(BdbgRunCode to)
 {
 	LPCSTR cmd = NULL;
-	
+
 	switch(to)
 	{
 	case rcStop:
@@ -1165,7 +1165,7 @@ ERRCODE	BdbgGDB::Run(BdbgRunCode to)
 	default:
 		cmd = NULL;
 		break;
-	}	
+	}
 	RunCommand(cmd);
 	return Bdbg::Run(to);
 }
@@ -1197,13 +1197,13 @@ ERRCODE	BdbgGDB::OnDebuggerData(LPCTSTR pLine)
 	if(px[0] == 0x1A)
 	{
 		px += 2;
-		
+
 		// breakpoint
 		ec = BshellInfo::GetErrorLine(px, fName, MAX_PATH, &line);
 		if(ec == errOK && m_editor && m_editor->GetCurrentView())
 		{
 			pView = m_editor->GetCurrentView();
-			
+
 			ec = pView->PushParm(btAny, ptBufferType);
 			ec = pView->PushParm(ltLF, ptTextLineTerm);
 			ec = pView->PushParm(-1, ptTextEncoding);

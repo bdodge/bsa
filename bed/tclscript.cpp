@@ -12,12 +12,12 @@ extern PTcl_EvalFile pTcl_Eval;
 typedef int	FAR (FAR *PTcl_Init)	(
 										Tcl_Interp FAR * interp
 									);
-typedef Tcl_Command	(FAR *PTcl_CreateCommand)	
+typedef Tcl_Command	(FAR *PTcl_CreateCommand)
 									(
-										Tcl_Interp FAR * interp, 
+										Tcl_Interp FAR * interp,
 										char FAR* cmdName,
-										Tcl_CmdProc FAR * proc, 
-										ClientData clientData, 
+										Tcl_CmdProc FAR * proc,
+										ClientData clientData,
 										Tcl_CmdDeleteProc FAR * deleteProc
 									);
 typedef Tcl_Interp FAR *(FAR *PTcl_CreateInterp)(void);
@@ -140,7 +140,7 @@ LPCTSTR Btcl::FindTCLfile(LPCTSTR nameIn, LPTSTR nameOut, int& useTk)
 	if(BUtil::FileExists(nameOut) != errOK)
 	{
 		LPTSTR bcpath;
-		
+
 		// file as specified not there, try same name with ".tcl" appended
 		//
 		_tcscat(nameOut, _T(".tcl"));
@@ -228,14 +228,14 @@ void Btcl::BuildTCLfileList(void)
 
 	if(m_tclCommandFiles)
 		m_tclCommandFiles = BtclCommandList::FreeList(m_tclCommandFiles);
-	
+
 	// enumerate files in current directory
 	//
 	_tcscpy(tclPath, _T("."));
 	_tcscat(tclPath, _PTS_);
 
 	ec = BfileInfo::ListDirectory(hDir, tclPath);
-	
+
 	while(BfileInfo::NextFile(hDir, lpFilename, isDir, isLink, isReadOnly) == errOK)
 	{
 		if(! isDir && IsTCLfile(lpFilename))
@@ -268,7 +268,7 @@ void Btcl::BuildTCLfileList(void)
 		_tcscat(tclPath, _PTS_);
 
 		ec = BfileInfo::ListDirectory(hDir, tclPath);
-		
+
 		while(BfileInfo::NextFile(hDir, lpFilename, isDir, isLink, isReadOnly) == errOK)
 		{
 			if(! isDir && IsTCLfile(lpFilename))
@@ -395,7 +395,7 @@ int Btcl::TclExec(Tcl_Interp *pTerp, int argc, const char* argv[])
 	EditCommand cmd;
 	ERRCODE		ec;
 	const char*	str;
-	LPCTSTR		ucsstr; 
+	LPCTSTR		ucsstr;
 	int			i, num, len;
 
 	// resolve object to act on
@@ -414,7 +414,7 @@ int Btcl::TclExec(Tcl_Interp *pTerp, int argc, const char* argv[])
 	{
 		str = argv[argc];
 		len = strlen(str);
-		
+
 		for(i = 0, num = 1; i < len && num; i++)
 			if(str[i] < '0' || str[i] > '9')
 				num = 0;
@@ -436,7 +436,7 @@ int Btcl::TclExec(Tcl_Interp *pTerp, int argc, const char* argv[])
 	if(cmd >= MaxEditCommand || cmd < UnknownCommand)
 	{
 		// this MUST be a (recursive) TCL invokation, since
-		// the only way to get here is if we told tcl about 
+		// the only way to get here is if we told tcl about
 		// the name, and it isn't a command, so there
 		//
 		/*printf("TCL Command=%s\n", argv[0]);*/
@@ -496,7 +496,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 	bool		isTK;
 	char		ebuf[512];
 	ERRCODE		ec;
-	
+
 	// see if this is a visual(.tk) versus batch(.tcl)
 	//
 	isTK = bIsTK || (_tcsstr(pName, _T("tk")) != NULL);
@@ -516,7 +516,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 		pszTcl = _T("libtcl");
 #endif
 		ec = BUtil::LoadLibrary(hModTcl, pszTcl);
-		
+
 #ifdef Windows
 		if(ec != errOK)
 		{
@@ -548,7 +548,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 		pTcl_Init			= Tcl_Init;
 		pTk_DoOneEvent		= Tcl_DoOneEvent;
 #endif
-	}	
+	}
 	if(isTK && ! m_tk_is_loaded)
 	{
 #ifndef STATIC_LINK_TCL
@@ -562,7 +562,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 		pszTk = _T("libtk");
 #endif
 		ec = BUtil::LoadLibrary(hModTk, pszTk);
-		
+
 		if(ec == errOK)
 		{
 			ec = BUtil::ResolveFunction(hModTk, _T("Tk_Init"),	 		   (PDYNFUNCTION&)pTk_Init);
@@ -578,7 +578,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 		pTk_GetNumMainWindows = Tk_GetNumMainWindows;
 #endif
 	}
-	
+
 	if(! m_tcl_is_loaded)
 	{
 		EvalError(_T("TCL cannot be loaded"), "");
@@ -586,7 +586,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 	}
 	m_evalerror = false;
 	int rv;
-	
+
 	do // TRY
 	{
 		BcmdName*		 pCmd;
@@ -598,7 +598,7 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 			break;
 		}
 		if(isTK)
-		{		
+		{
 			if(! m_tk_is_loaded)
 			{
 				EvalError(_T("TK cannot be loaded"), "");
@@ -618,11 +618,11 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 				EvalError(_T("TCL/TK:"), pInterp->result);
 				break;
 			}
-		}		
+		}
 
 		//pTcl_CreateCommand(pInterp, "error", TclBkgError, (ClientData)this, NULL);
 		//pTcl_CreateCommand(pInterp, "bgerror", TclBkgError, (ClientData)this, NULL);
-		
+
 		// Create a TCL command for all the edit commands
 		//
 		for(pCmd = commandNames; pCmd && pCmd->cmd != MaxEditCommand; pCmd++)
@@ -691,17 +691,17 @@ ERRCODE Btcl::Interpret(LPCTSTR pName, bool bFromFile, bool bIsTK)
 		//
 		rv = pTcl_Eval(pInterp, (char*)Utf8Encode(pName));
 	}
-	
+
 	if(rv)
-	{			
-		sprintf(ebuf, "%s Line:%d", pInterp->result, pInterp->errorLine);
+	{
+		snprintf(ebuf, sizeof(ebuf), "%s Line:%d", pInterp->result, pInterp->errorLine);
 		EvalError(_T("TCL Error: "), ebuf);
 	}
 	else
 	{
 		EvalMessage(_T("TCL Complete, no errors"), _T(""));
 	}
-	
+
 	if(! isTK || m_evalerror)
 	{
 		pTcl_DeleteInterp(pInterp);

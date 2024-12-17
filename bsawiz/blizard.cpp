@@ -4,8 +4,8 @@ HINSTANCE gbliz_hInstance;
 
 #if defined(WIN32)&&defined(BSAWIZ_DLL)
 //***********************************************************************
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
 {
@@ -29,7 +29,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 #endif
 
 //***********************************************************************
-static 
+static
 #ifdef RUNAS_DIALOG
 BOOL
 #else
@@ -44,7 +44,7 @@ CALLBACK BlizProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	pwiz = (Bwizard*)GetWindowLong(hWnd, GWL_USERDATA);
 
-	switch (message) 
+	switch (message)
 	{
 	#ifdef RUNAS_DIALOG
 	case WM_INITDIALOG:
@@ -52,8 +52,8 @@ CALLBACK BlizProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	#endif
 	case WM_COMMAND:
 
-		wmId    = LOWORD(wParam); 
-		wmEvent = HIWORD(wParam); 
+		wmId    = LOWORD(wParam);
+		wmEvent = HIWORD(wParam);
 
 		switch(wmId)
 		{
@@ -67,7 +67,7 @@ CALLBACK BlizProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				HWND  bwnd = GetDlgItem(hWnd, IDC_CANCEL);
 				TCHAR wt[256];
-				
+
 				wt[0] = _T('\0');
 				GetWindowText(bwnd, wt, sizeof(wt)/sizeof(TCHAR));
 				if(pwiz) pwiz->End((_tcscmp(wt, _T("Cancel")) == 0) ? errFAILURE : errOK);
@@ -90,19 +90,19 @@ CALLBACK BlizProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KEYDOWN:
-		
+
 		switch(wParam)
 		{
 		case VK_TAB:
 			pwiz->OnKey(wParam);
 			break;
-			
+
 		default:
 			pwiz->OnKey(wParam);
 			break;
 		}
 		break;
-		
+
 	case WM_PAINT:
 
 		hdc = BeginPaint(hWnd, &ps);
@@ -235,9 +235,9 @@ static LRESULT CALLBACK BitmapProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 	hBM = (HBITMAP)GetWindowLong(hWnd, GWL_USERDATA);
 
-	switch (message) 
+	switch (message)
 	{
-		
+
 	case WM_PAINT:
 
 		hdc = BeginPaint(hWnd, &ps);
@@ -277,9 +277,9 @@ static LRESULT CALLBACK IconProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 	hIcon = (HICON)GetWindowLong(hWnd, GWL_USERDATA);
 
-	switch (message) 
+	switch (message)
 	{
-		
+
 	case WM_PAINT:
 
 		hdc = BeginPaint(hWnd, &ps);
@@ -329,7 +329,7 @@ Bwizard::Bwizard()
 	m_hfName = NULL;
 	m_hfBig  = NULL;
 	m_hfDesc = NULL;
-	
+
 	m_hInstance = gbliz_hInstance;
 	m_hwndPanel = NULL;
 }
@@ -356,19 +356,19 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 {
 	ERRCODE ec;
 
-	if(! title || ! script) 
+	if(! title || ! script)
 		return errBAD_PARAMETER;
 
 	m_done   = false;
 	m_cookie = cookie;
-	
+
 	m_hInstance = hInstance;
 
 	m_script = new TCHAR [ _tcslen(script) + 4 ];
 	_tcscpy(m_script, script);
 
 	_tcscpy(m_title, title);
-	m_script = m_script;
+	//m_script = m_script;
 	m_ptr    = m_script;
 
 	m_callback = callback;
@@ -461,7 +461,7 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 		}
 
 		RECT	rScreen;
-		
+
 		GetWindowRect(GetDesktopWindow(), &rScreen);
 
 		int w = m_panw > 0 ? m_panw : 540;
@@ -477,14 +477,14 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 		LPWORD			ps;
 		LPTSTR			pt;
 		short			hu, vu;
-	
+
 		hu = (short)LOWORD(GetDialogBaseUnits());
 		vu = (short)HIWORD(GetDialogBaseUnits());
 
 		// create a dialog template
 		//
 		ptemp = (LPDLGTEMPLATE)db;
-		
+
 		ptemp->style           = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		ptemp->dwExtendedStyle = 0;
 		ptemp->cdit = 0;
@@ -492,17 +492,17 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 		ptemp->y 	= 8*y / vu;
 		ptemp->cx 	= 4*w / hu;
 		ptemp->cy 	= 8*h / vu;
-		
+
 		ps = (LPWORD)(db + 18);
-		
+
 		*ps++ = 0;	// menu
 		*ps++ = 0;	// class
-		
+
 		// title;
 		for(pt = (LPTSTR)m_title; pt && *pt;)
 			*ps++ = (WORD)*pt++;
 		*ps++ = 0;
-		
+
 		// DWORD align
 		while((DWORD)ps & 3)
 			ps++;
@@ -513,9 +513,9 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 
 		m_hwndPanel = CreateWindow(
 								_T("blizpanel"),
-								m_title, 
+								m_title,
 								WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
-								x, y, 
+								x, y,
 								w, h,
 								NULL, NULL,
 								m_hInstance,
@@ -531,7 +531,7 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 
 		SetWindowLong(m_hwndPanel, GWL_USERDATA, (LONG)this);
 		GetClientRect(m_hwndPanel, &rPanel);
-		
+
 		x = 240;
 		y = rPanel.bottom - rPanel.top - 24 - 10;
 		w = 80;
@@ -539,9 +539,9 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 
 		m_hwndBack = CreateWindow(
 								_T("Button"),
-								_T("< Back"), 
+								_T("< Back"),
 								WS_CHILD | ((m_default_mask & EB_BACK) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON),
-								x, y, 
+								x, y,
 								w, h,
 								m_hwndPanel,
 								NULL,
@@ -558,9 +558,9 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 
 		m_hwndNext = CreateWindow(
 								_T("Button"),
-								_T("Next >"), 
+								_T("Next >"),
 								WS_CHILD | ((m_default_mask & EB_NEXT) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON),
-								x, y, 
+								x, y,
 								w, h,
 								m_hwndPanel,
 								NULL,
@@ -577,9 +577,9 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 
 		m_hwndCancel = CreateWindow(
 								_T("Button"),
-								_T("Cancel"), 
+								_T("Cancel"),
 								WS_CHILD | ((m_default_mask & EB_CANCEL) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON),
-								x, y, 
+								x, y,
 								w, h,
 								m_hwndPanel,
 								NULL,
@@ -608,7 +608,7 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 							DEFAULT_QUALITY,FF_SWISS,_T("Arial"));
 
 
-		
+
 		ShowWindow(m_hwndPanel, SW_SHOW);
 		UpdateWindow(m_hwndPanel);
 	}
@@ -616,10 +616,10 @@ ERRCODE Bwizard::Begin(LPCTSTR title, LPCTSTR script, BWIZCALLBACK callback, LPV
 	// open panel 1
 	//
 	ec = StepForward();
-	
+
 	MSG msg;
 
-	while (GetMessage(&msg, NULL, 0, 0)) 
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		#ifdef RUNAS_DIALOG
 		if(! m_hwndPanel || ! IsDialogMessage(m_hwndPanel, &msg))
@@ -975,7 +975,7 @@ ERRCODE Bwizard::Step(int from, int to)
 ERRCODE Bwizard::Panel(int step, LPCTSTR name)
 {
 	BwizList*	pItem;
-	
+
 	m_default_mask = EB_NEXT;
 
 	// set default and enabled state of buttons
@@ -1026,7 +1026,7 @@ ERRCODE Bwizard::Panel(int step, LPCTSTR name)
 	}
 	if(! pItem)
 		SetFocus(m_hwndPanel);
-	
+
 	InvalidateRect(m_hwndPanel, NULL, false);
 	return errOK;
 }
@@ -1089,25 +1089,25 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 	case wwiLabel:
 		szClass = _T("Static");
 		style = WS_CHILD | SS_LEFT;
-		xi = 0; 
+		xi = 0;
 		yi = fh + 2;
 		break;
 	case wwiChoiceGroup:
 		szClass = _T("Static");
 		style = WS_CHILD | SS_LEFT | WS_GROUP;
-		xi = 0; 
+		xi = 0;
 		yi = fh + 8;
 		break;
 	case wwiChoice:
 		szClass = _T("Button");
 		style = WS_CHILD | BS_AUTORADIOBUTTON | WS_TABSTOP;
-		xi = 0; 
+		xi = 0;
 		yi = fh + 6;
 		break;
 	case wwiCheckbox:
 		szClass = _T("Button");
 		style = WS_CHILD | BS_AUTOCHECKBOX | WS_TABSTOP;
-		xi = 0; 
+		xi = 0;
 		yi = fh + 6;
 		break;
 	case wwiEdit:
@@ -1115,7 +1115,7 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 		style = WS_CHILD | WS_BORDER | WS_TABSTOP;
 		if(m_anumeric) style |= ES_NUMBER;
 		if(m_apasswd)  style |= ES_PASSWORD;
-		xi = 0; 
+		xi = 0;
 		yi = fh + 6;
 		break;
 	case wwiInitialBitmap:
@@ -1130,7 +1130,7 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 		hbm  = NULL;
 		{
 			DWORD idb;
-			
+
 			if(name && name[0])
 				idb = _tcstol(name, NULL, 0);
 			else
@@ -1166,7 +1166,7 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 		if(type == wwiIconBitmap)
 		{
 			RECT rcp;
-			
+
 			GetClientRect(m_hwndPanel, &rcp);
 
 			m_ix = rcp.right - m_iw - 32;
@@ -1193,7 +1193,7 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 	else
 		xo = 0;
 
-	item->GetValue()->f_hwnd = hwnd = 
+	item->GetValue()->f_hwnd = hwnd =
 		CreateWindow(
 						szClass,
 						winname,
@@ -1239,6 +1239,8 @@ ERRCODE Bwizard::AddItem(BwizItemType type, LPCTSTR name)
 		m_iw = 300;
 		m_ih = 32;
 		break;
+	case wwiCheckbox:
+		break;
 	}
 	ShowWindow(hwnd, SW_SHOW);
 	SetWindowText(hwnd, m_aname);
@@ -1260,7 +1262,7 @@ void Bwizard::GetControl(int id)
 	val[0] = _T('\0');
 
 	_sntprintf(itemname, 32, _T("%d"), id);
-	
+
 	if((pItem = BwizList::FindKey(itemname, m_items)) != NULL)
 	{
 		BwwiItem* item = pItem->GetValue();
@@ -1290,6 +1292,9 @@ void Bwizard::GetControl(int id)
 				SetWindowText(item->f_hwnd, item->f_sval);
 			}
 			break;
+		case wwiIconBitmap:
+		case wwiInitialBitmap:
+			break;
 		}
 	}
 }
@@ -1299,14 +1304,14 @@ void Bwizard::GetControl(int id)
 void Bwizard::OnKey(WPARAM key)
 {
 	BwizList* pItem;
-	
+
 	switch(key)
 	{
 	case VK_TAB:
 		for(pItem = m_items, m_curedit = NULL; pItem; pItem = pItem->GetNext(pItem))
 		{
 			BwwiItem* item = pItem->GetValue();
-				
+
 			if(item && item->f_type == wwiEdit)
 			{
 				if(item->f_hwnd == GetFocus())
@@ -1323,7 +1328,7 @@ void Bwizard::OnKey(WPARAM key)
 		while(pItem)
 		{
 			BwwiItem* item = pItem->GetValue();
-				
+
 			if(item && item->f_type == wwiEdit)
 			{
 				m_curedit = pItem;
@@ -1364,7 +1369,7 @@ void Bwizard::OnKey(WPARAM key)
 
 		End(errFAILURE);
 		break;
-		
+
 	default:
 		break;
 	}
@@ -1378,7 +1383,7 @@ void Bwizard::OnControl(int id)
 	LPTSTR	  val = (LPTSTR)_T("");
 
 	_sntprintf(itemname, 32, _T("%d"), id);
-	
+
 	if((pItem = BwizList::FindKey(itemname, m_items)) != NULL)
 	{
 		BwwiItem* item = pItem->GetValue();
@@ -1401,6 +1406,11 @@ void Bwizard::OnControl(int id)
 			val = item->f_sval;
 			if(! val) val = (LPTSTR)_T("");
 			break;
+
+		case wwiIconBitmap:
+		case wwiInitialBitmap:
+			break;
+
 		}
 		if(m_callback)
 			m_callback(m_cookie, &m_step, wizSetValue, item->f_varname, val);

@@ -59,7 +59,7 @@ static BOOL CALLBACK PrtMediaProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 	TVINSERTSTRUCT  tvItem;
 	HTREEITEM		hItem;
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_INITDIALOG:
 
@@ -144,12 +144,12 @@ static BOOL CALLBACK PrtMediaProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 		nmhdr = (LPNMHDR)lParam;
 		if(! nmhdr) break;
-		
+
 		switch(nmhdr->code)
 		{
 		case TVN_SELCHANGED:
-			
-			break;	
+
+			break;
 		}
 		break;
 
@@ -170,8 +170,8 @@ static BOOL CALLBACK PrtPrinterProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 	int		mrc;
 
 	static PRINTDLG* pps = NULL;
-	
-	switch (message) 
+
+	switch (message)
 	{
 	case WM_INITDIALOG:
 
@@ -202,12 +202,12 @@ static BOOL CALLBACK PrtPrinterProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 			{
 			LPBYTE  res;
 			DWORD	cbdata;
-			
+
 			// find dialog in resource file
 			//
 			res = (LPBYTE)__FindResource(RT_Dialog, MAKEINTRESOURCE(IDD_PRTMEDIA), _zg_winapires, _cb_zg_winapires);
-			
-			if(! res) 
+
+			if(! res)
 			{
 				SetLastError(ERROR_RESOURCE_DATA_NOT_FOUND);
 				return FALSE;
@@ -218,20 +218,20 @@ static BOOL CALLBACK PrtPrinterProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 			cbdata = RESDWORD(res);			// hdr size
 			res -= 8;
 			res += ((cbdata + 3) & ~3);
-			
+
 			mrc = DialogBoxIndirectParam(
 										(HINSTANCE)0xBEEF,
 										(LPDLGTEMPLATE)res,
 										pps->hwndOwner,
 										PrtPrinterProc,
-										(DWORD)pps
+										(DWORD)(uintptr_t)pps
 									);
 			if(mrc == IDOK)
 			{
 			}
 			}
 			break;
-			
+
 		case IDOK:
 
 			EndDialog(hWnd, IDOK);
@@ -252,12 +252,12 @@ static BOOL CALLBACK PrtPrinterProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 		nmhdr = (LPNMHDR)lParam;
 		if(! nmhdr) break;
-		
+
 		switch(nmhdr->code)
 		{
 		case TVN_SELCHANGED:
-			
-			break;	
+
+			break;
 		}
 		break;
 
@@ -273,12 +273,12 @@ BOOL WINAPI PrintDlg(LPPRINTDLG pps)
 	LPBYTE  res;
 	DWORD	cbdata;
 	int		rc;
-	
+
 	// find dialog in resource file
 	//
 	res = (LPBYTE)__FindResource(RT_Dialog, MAKEINTRESOURCE(IDD_PRINTER), _zg_winapires, _cb_zg_winapires);
-	
-	if(! res) 
+
+	if(! res)
 	{
 		SetLastError(ERROR_RESOURCE_DATA_NOT_FOUND);
 		return FALSE;
@@ -289,13 +289,13 @@ BOOL WINAPI PrintDlg(LPPRINTDLG pps)
 	cbdata = RESDWORD(res);			// hdr size
 	res -= 8;
 	res += ((cbdata + 3) & ~3);
-	
+
 	rc = DialogBoxIndirectParam(
 								(HINSTANCE)0xBEEF,
 								(LPDLGTEMPLATE)res,
 								pps->hwndOwner,
 								PrtPrinterProc,
-								(DWORD)pps
+								(DWORD)(uintptr_t)pps
 							);
 	return rc == IDOK;
 }

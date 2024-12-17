@@ -396,8 +396,8 @@ LRESULT CALLBACK DispProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hdc = BeginPaint(hWnd, &ps);
 		GetClientRect(hWnd, &rc);
 
-		rc.left;
-		rc.top;
+		//rc.left;
+		//rc.top;
 		rc.right--;
 		rc.bottom--;
 
@@ -499,8 +499,8 @@ LRESULT CALLBACK ButtonProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 		GetClientRect(hWnd, &rc);
 
-		rc.left;
-		rc.top;
+		//rc.left;
+		//rc.top;
 		rc.right--;
 		rc.bottom--;
 

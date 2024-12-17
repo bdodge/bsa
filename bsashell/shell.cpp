@@ -247,6 +247,7 @@ ERRCODE Bshell::Poll(int fd, int tos, int tous)
 		return errSTREAM_TIMEOUT;
 	else if(sv < 0)
 		return errFAILURE;
+	return errOK;
 }
 
 //**************************************************************************

@@ -11,7 +11,7 @@ BOOL CALLBACK PickBinFormatWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 	RECT	rcme;
 	int		x, y, w, h;
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_INITDIALOG:
 
@@ -47,7 +47,7 @@ BOOL CALLBACK PickBinFormatWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 			hWndParent = GetDesktopWindow();
 		GetClientRect(hWndParent, &rc);
 		GetWindowRect(hDlg, &rcme);
-		
+
 		x = ((rc.right - rc.left) - (rcme.right - rcme.left)) / 2;
 		y = ((rc.bottom - rc.top) - (rcme.bottom - rcme.top)) / 2;
 		w = rcme.right - rcme.left;
@@ -70,7 +70,7 @@ BOOL CALLBACK PickBinFormatWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 		case IDCANCEL:
 			EndDialog(hDlg, LOWORD(wParam));
 			return TRUE;
-		
+
 		case IDC_VIEW_BYTES:
 			lpParm->nString &= ~0xF;
 			lpParm->nString |= 1;
@@ -105,7 +105,7 @@ BOOL CALLBACK PickBinFormatWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARA
 int PickBinFormatDialog(LPPARMPASS pParm, HWND hwndParent)
 {
 	int rc = DialogBoxParam(
-							g_hInstance, 
+							g_hInstance,
 							MAKEINTRESOURCE(IDD_HEXFORMAT),
 							hwndParent,
 							PickBinFormatWndProc,
@@ -123,10 +123,10 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 	bool   done;
 	int    iv;
 	int	   radix;
-		
-	if(! pSrc || ! pRes) 
+
+	if(! pSrc || ! pRes)
 		return 0;
-	
+
 	done  = false;
 	pBase = pRes;
 
@@ -138,27 +138,27 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 
 			pRes += iv;
 			pSrc++;
-			
+
 			if(iv > 0 && pRes[-1] == _PTC_)
 				if(*pSrc == _PTC_)
 					pSrc++;
 		}
 	}
-	
+
 	do
 	{
 		c = *pSrc++;
-		
+
 		switch(c)
 		{
 		case _T('\0'):
-			
+
 			*pRes++ = c;
 			done = true;
 			break;
-		
+
 		case _T('\\'):
-			
+
 			if(isPath && _PTC_ == c)
 			{
 				*pRes++ = c;
@@ -181,7 +181,7 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 				{
 					*pRes++ = 0;
 					break;
-				}					
+				}
 				iv = _tcstol(pSrc, &pEon, radix);
 				pSrc = (LPCTSTR)pEon;
 				*pRes++ = iv;
@@ -193,17 +193,17 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 				pSrc = (LPCTSTR)pEon;
 				*pRes++ = iv;
 				break;
-				
-			case _T('x'): 
+
+			case _T('x'):
 				iv = _tcstol(pSrc, &pEon, 16);
 				pSrc = (LPCTSTR)pEon;
 				*pRes++ = iv;
 				break;
-				
+
 			case _T('e'):
 				*pRes++ = 27;
 				break;
-				
+
 			case _T('r'):
 				*pRes++ = 13;
 				break;
@@ -211,7 +211,7 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 			case _T('f'):
 				*pRes++ = 12;
 				break;
-				
+
 			case _T('v'):
 				*pRes++ = 11;
 				break;
@@ -219,11 +219,11 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 			case _T('n'):
 				*pRes++ = 10;
 				break;
-				
+
 			case _T('t'):
 				*pRes++ = 9;
 				break;
-				
+
 			case _T('b'):
 				*pRes++ = 8;
 				break;
@@ -238,15 +238,15 @@ int Bview::UnescapeString(LPTSTR pRes, LPCTSTR pSrc, bool isPath)
 				break;
 			}
 			break;
-			
+
 		default:
-			
+
 			*pRes++ = c;
 			break;
 		}
 	}
 	while(! done);
-	
+
 	return pRes - pBase - 1;
 }
 
@@ -259,49 +259,49 @@ int Bview::EscapeString(LPTSTR pRes, LPCTSTR pSrc)
 	bool   done;
 	int    iv;
 	int	   radix;
-		
-	if(! pSrc || ! pRes) 
+
+	if(! pSrc || ! pRes)
 		return 0;
-	
+
 	done  = false;
 	pBase = pRes;
 
 	do
 	{
 		c = *pSrc++;
-		
+
 		switch(c)
 		{
 		case _T('\0'):
 			*pRes++ = c;
 			done = true;
 			break;
-	
+
 		case 8:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('b');
 			break;
-			
+
 		case 9:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('t');
 			break;
-			
+
 		case 10:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('n');
 			break;
-			
+
 		case 11:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('v');
 			break;
-			
+
 		case 12:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('f');
 			break;
-			
+
 		case 13:
 			*pRes++ = _T('\\');
 			*pRes++ = _T('r');
@@ -316,7 +316,7 @@ int Bview::EscapeString(LPTSTR pRes, LPCTSTR pSrc)
 			*pRes++ = _T('\\');
 			*pRes++ = _T('\\');
 			break;
-			
+
 		default:
 			if(c < 0x20 || c > 0x7E)
 			{
@@ -348,7 +348,7 @@ int Bview::EscapeString(LPTSTR pRes, LPCTSTR pSrc)
 		}
 	}
 	while(! done);
-	
+
 	return pRes - pBase - 1;
 }
 
@@ -363,7 +363,7 @@ BOOL CALLBACK StringProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HWND	hwndString;
 	HWND	hwndParent;
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_INITDIALOG:
 		lpParm = (LPPARMPASS)lParam;
@@ -411,7 +411,7 @@ BOOL CALLBACK StringProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if(lpParm)
 			{
 				LPTSTR tmp = new TCHAR [ lpParm->nString + MAX_PATH + 32 ];
-				
+
 				GetDlgItemText(hWnd, IDC_STRING, tmp, lpParm->nString);
 				lpParm->nString = Bview::UnescapeString(lpParm->lpString, tmp, false);
 				delete [] tmp;
@@ -538,14 +538,14 @@ ERRCODE Bview::PopParm(LPCTSTR pPrompt, ParmType type, LPCTSTR& pParm, int& nPar
 				}
 			}
 			rc = PickFileDialog(titleBuffer, type == ptOpenExistingFilename,
-				type == ptOpenFilename || type == ptOpenExistingFilename, 
+				type == ptOpenFilename || type == ptOpenExistingFilename,
 				stringBuffer, MAX_PATH, encoding, lineterm, buftype, m_hwnd);
 
 			if(rc == IDOK)
 			{
 				LPTSTR tmp;
 				int    nString;
-				
+
 				PushParm(buftype,  ptBufferType);
 				PushParm(lineterm, ptTextLineTerm);
 				PushParm(encoding, ptTextEncoding);
@@ -563,7 +563,7 @@ ERRCODE Bview::PopParm(LPCTSTR pPrompt, ParmType type, LPCTSTR& pParm, int& nPar
 		case ptBufferType:
 
 			rc = DialogBoxParam(
-								g_hInstance, 
+								g_hInstance,
 								MAKEINTRESOURCE(IDD_GENSTRING),
 								m_hwnd,
 								StringProc,
@@ -614,6 +614,9 @@ ERRCODE Bview::PopParm(LPCTSTR pPrompt, ParmType type, LPCTSTR& pParm, int& nPar
 			{
 				PushParm(parm.lpString, parm.nString, ptColor);
 			}
+			break;
+
+		default:
 			break;
 		}
 	}
@@ -700,7 +703,7 @@ ERRCODE Bview::PopParm(LPCTSTR pPrompt, ParmType type, int& parm)
 	LPCTSTR pParm;
 	TCHAR	szInit[32];
 	int		nParm;
-	
+
 	nParm = parm;
 	if(parm != 0)
 		_sntprintf(szInit, 32, _T("%d"), parm);

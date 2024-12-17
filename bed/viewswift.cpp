@@ -125,16 +125,16 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 	enum {	psBase,
 			psFuncDecl, psClassFuncDecl,
 			psInFunc, psInClassFunc,
-			psClassDecl, psInClass, 
+			psClassDecl, psInClass,
 			psProtocolDecl, psInProtocol,
 			psExtensionDecl, psInExtension,
 	} parseState = psBase;
-	
+
 	do
 	{
 		ec = m_buffer->GetLineText(line, (LPCTSTR&)lpText, nText);
 		if(ec != errOK) return errOK;
-		
+
 		incol	 = 1;
 		outcol	 = 1;
 		state 	 = tsBase;
@@ -142,7 +142,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 		do
 		{
 			tokcol = outcol;
-			
+
 			tr = GetToken(
 						(LPTSTR&)lpText,
 						nText,
@@ -154,8 +154,8 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						nToken,
 						kw
 					);
-			
-			if(tr != trOK) 
+
+			if(tr != trOK)
 			{
 				ec = errOK;
 				break;
@@ -163,12 +163,12 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 
 			if(
 					(state != tsSpanningComment)		&&
-					(kw != kwComment)					&& 
+					(kw != kwComment)					&&
 					(lpToken[0] != _T(' '))				&&
 					(lpToken[0] != _T('\t'))
 			)
 			{
-				switch(parseState) 
+				switch(parseState)
 				{
 				case psBase:
 
@@ -221,7 +221,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						break;
 					}
 					break;
-					
+
 				case psFuncDecl:
 				case psClassFuncDecl:
 
@@ -233,7 +233,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						ec = pCallback(cookie, lpToken, lpToken, 0, line, efFunction);
 						lpToken[nToken] = svc;
 						break;
-						
+
 					case kwOperator:
 
 						switch(lpToken[0])
@@ -260,6 +260,9 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 							break;
 						}
 						break;
+
+					default:
+						break;
 					}
 					break;
 
@@ -273,7 +276,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						ec = pCallback(cookie, lpToken, lpToken, 0, line, efClass);
 						lpToken[nToken] = svc;
 						break;
-						
+
 					case kwOperator:
 
 						switch(lpToken[0])
@@ -293,6 +296,9 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 							break;
 						}
 						break;
+
+					default:
+						break;
 					}
 					break;
 
@@ -307,7 +313,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						ec = pCallback(cookie, lpToken, lpToken, 0, line, efInterface);
 						lpToken[nToken] = svc;
 						break;
-						
+
 					case kwOperator:
 
 						switch(lpToken[0])
@@ -335,6 +341,9 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						default:
 							break;
 						}
+						break;
+
+					default:
 						break;
 					}
 					break;
@@ -376,7 +385,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 						break;
 					}
 					break;
-					
+
 				case psInClass:
 				case psInExtension:
 				case psInProtocol:
@@ -397,7 +406,7 @@ ERRCODE BviewSwift::EnumFunctions(EnumFuncsCallback pCallback, LPVOID cookie, Bl
 							{
 								svc = lpToken[nToken];
 								lpToken[nToken] = _T('\0');
-								ec = pCallback(cookie, _T(""), _T(""), 0, line, 
+								ec = pCallback(cookie, _T(""), _T(""), 0, line,
 									(parseState == psInClass) ? efEndClass : efEndInterface);
 								lpToken[nToken] = svc;
 								parseState = psBase;

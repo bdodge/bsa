@@ -1,6 +1,6 @@
 
 #include "bftpx.h"
- 
+
 #define FTP_CTRL_PORT 21
 #define FTP_DATA_PORT 20
 
@@ -27,7 +27,7 @@ Bftp::Bftp(int loglevel)
 		BsocketStream::Init();
 		m_initialized = true;
 	}
-		
+
 }
 
 //**************************************************************************
@@ -59,7 +59,7 @@ ERRCODE Bftp::CheckResponse(int* code, int& rcode)
 #endif
 
 	rcode = atoi((char*)m_response);
-	
+
 	for(; code && *code; code++)
 		if(*code == rcode || *code == -1)
 			return errOK;
@@ -86,7 +86,7 @@ ERRCODE Bftp::SendCommand(LPCSTR command, LPCTSTR param)
 	strcat(aParm, "\r\n");
 
 	nParm = strlen(aParm);
-	ec = m_ctrl->Write((LPBYTE)aParm, nParm); 
+	ec = m_ctrl->Write((LPBYTE)aParm, nParm);
 
 	delete [] aParm;
 	return ec;
@@ -100,7 +100,7 @@ ERRCODE Bftp::Login(LPCTSTR hostname, LPCTSTR username, LPCTSTR password)
 	int     rcode;
 	int		codes[32];
 
-	
+
 	TCharToChar(ahost, hostname);
 	m_ctrl = new BtcpStream();
 
@@ -226,10 +226,10 @@ ERRCODE Bftp::SetupPassive()
 	p1 = strtol(++rp, &rp, 10);
 	if(! rp) { ec = errFAILURE; return ec; }
 	p2 = strtol(++rp, &rp, 10);
-	
+
 	port = ((WORD)((BYTE)p1) << 8) | (BYTE)p2;
 
-	sprintf(ipaddr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+	snprintf(ipaddr, sizeof(ipaddr), "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 
 	// should have ip address and port for data now
 	// open a TCP connection to that address
@@ -332,7 +332,7 @@ ERRCODE Bftp::FileXfer(
 	SplitRemotePath(lpRemoteName, host, file);
 	lpRemoteFile = file;
 
-	if(! host[0]) return errBAD_PARAMETER; 
+	if(! host[0]) return errBAD_PARAMETER;
 
 	// open the local file
 	//
@@ -374,7 +374,7 @@ ERRCODE Bftp::FileXfer(
 					codes[0] = 150; codes[1] = 0;
 					rcode = 500;
 					ec = CheckResponse(codes, rcode);
-					if(ec != errOK)	
+					if(ec != errOK)
 					{
 						// normally a 150 (mark) is sent by the server, but as long
 						// as its not an error, we continue
@@ -392,7 +392,7 @@ ERRCODE Bftp::FileXfer(
 							break;
 						}
 					}
-					// pump file data to server 
+					// pump file data to server
 					//
 					do
 					{
@@ -416,7 +416,7 @@ ERRCODE Bftp::FileXfer(
 					codes[0] = 150; codes[1] = 0;
 					rcode = 500;
 					ec = CheckResponse(codes, rcode);
-					if(ec != errOK)	
+					if(ec != errOK)
 					{
 						// normally a 150 (mark) is sent by the server, but as long
 						// as its not an error, we continue
@@ -425,7 +425,7 @@ ERRCODE Bftp::FileXfer(
 						{
 							if(rcode < 400)
 								ec = errOK;
-							else 
+							else
 							{
 								switch(rcode)
 								{
@@ -543,7 +543,7 @@ ERRCODE Bftp::ListRemoteDirectory(
 	SplitRemotePath(lpRemoteDirectory, host, file);
 	lpRemoteDirectory = file;
 
-	if(! host[0]) return errBAD_PARAMETER; 
+	if(! host[0]) return errBAD_PARAMETER;
 
 	ec = Login(host, lpUserName, lpPassword);
 	if(ec != errOK)
@@ -552,7 +552,7 @@ ERRCODE Bftp::ListRemoteDirectory(
 		Log(logDebug, 2, _T("FTP: Login Failed\n"));
 #endif
 	}
-	else 
+	else
 	{
 		ec = SetupPassive();
 		if(ec == errOK)
@@ -581,7 +581,7 @@ ERRCODE Bftp::ListRemoteDirectory(
 				nRead = 0;
 				lc    = 0;
 				ic    = 0;
-				
+
 				do
 				{
 					while(ic < nRead)

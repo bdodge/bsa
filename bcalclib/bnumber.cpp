@@ -68,9 +68,9 @@ ERRCODE Bstack::Execute(execRange to)
 	do
 	{
 		pn = Pop(code);
-		if(! pn) 
+		if(! pn)
 			return errUNDERFLOW;
-	
+
 		switch(code)
 		{
 		case ID_OPR_EQUAL:
@@ -193,6 +193,8 @@ ERRCODE Bstack::Execute(execRange to)
 		case toBottom:
 			if(! GetTop() || (! (GetTop()->m_next) && (GetTop()->m_code == ID_OPR_EQUAL)))
 				return ec;
+		case toParen:
+			break;
 		}
 	}
 	while(ec == errOK);

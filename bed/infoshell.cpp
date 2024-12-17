@@ -105,7 +105,7 @@ void BshellInfo::Select(LPTVITEM pItem)
 				if(m_editor->GetCurrentView()->Dispatch(MoveToLine) == errOK)
 				{
 					BlineInfo type = GetLineIsType();
-					
+
 					m_editor->GetCurrentView()->PushParm(type, ptNumber);
 					m_editor->GetCurrentView()->PushParm(line, ptNumber);
 					m_editor->GetCurrentView()->Dispatch(SetLineType);
@@ -129,7 +129,7 @@ ERRCODE BshellInfo::ShellThread()
 	int		nRoom;
 	int		endwait = 0;
 	int		empty   = 5;
-	
+
 	ec = Init(m_szShellCommand);
 	if(ec != errOK) return ec;
 
@@ -149,7 +149,7 @@ ERRCODE BshellInfo::ShellThread()
 		if(Poll(m_hsioRead, 0, 10000) == errSTREAM_DATA_PENDING)
 		{
 			if(m_cnt < m_size)
-			{	
+			{
 				if(m_head >= m_tail)
 					nRoom = m_size - m_head;
 				else
@@ -160,11 +160,11 @@ ERRCODE BshellInfo::ShellThread()
 				nRoom = 0;
 			}
 			if(nRoom > 0)
-			{	
+			{
 				Block lock(&m_bufex);
 
 				if((nRead = Read(m_hsioRead, m_iobuf + m_head, nRoom)) > 0)
-				{				
+				{
 					m_head += nRead;
 					if (m_head >= m_size)
 						m_head = 0;
@@ -181,16 +181,16 @@ ERRCODE BshellInfo::ShellThread()
 		if(m_hsioErrRead != m_hsioRead && Poll(m_hsioErrRead, 0, 10000) == errSTREAM_DATA_PENDING)
 		{
 			if(m_cnt < m_size)
-			{				
+			{
 				Block lock(&m_bufex);
 
 				if(m_head >= m_tail)
 					nRoom = m_size - m_head;
 				else
 					nRoom = m_tail - m_head;
-				
+
 				if((nRead = Read(m_hsioErrRead, m_iobuf + m_head, nRoom)) > 0)
-				{			
+				{
 					m_head += nRead;
 					if (m_head >= m_size)
 						m_head = 0;
@@ -258,7 +258,7 @@ void BshellInfo::AppendItem(LPCTSTR pLine)
 
 	hItem = TreeView_InsertItem(m_hwndTree, &tvItem);
 	TreeView_SelectItem(m_hwndTree, hItem);
-	
+
 //	if((ni++ & 0x1f) == 0x1f)
 //	{
 //		SendMessage(m_hwndTree, WM_PAINT, 0, 0);
@@ -267,14 +267,14 @@ void BshellInfo::AppendItem(LPCTSTR pLine)
 
 //**************************************************************************
 void BshellInfo::Event(LPARAM lParam)
-{		
+{
 	TCHAR 	szBuffer[SHELL_IO_SIZE * 2 + 2];
 	int     nText;
 	char    c;
 	int		i;
 
 	if (m_cnt > 0)
-	{	
+	{
 		if(m_tail >= m_head)
 			nText = m_size - m_tail;
 		else
@@ -294,7 +294,7 @@ void BshellInfo::Event(LPARAM lParam)
 		m_iobuf[m_tail + nText] = 0;
 
 		//printf("event, tok=%s n=%d\n", m_iobuf+m_tail, nText);
-		
+
 #ifdef UNICODE
 		BUtil::Utf8Decode(szBuffer, m_iobuf + m_tail);
 #else
@@ -306,7 +306,7 @@ void BshellInfo::Event(LPARAM lParam)
 			printf("%02X %c\n", m_iobuf[i + m_tail], m_iobuf[i + m_tail]);
 			//printf("%02X %c\n", szBuffer[i], szBuffer[i]);
 		}
-#endif	
+#endif
 		m_iobuf[m_tail + nText] = c;
 		m_tail += nText;
 		m_cnt -= nText;
@@ -318,7 +318,7 @@ void BshellInfo::Event(LPARAM lParam)
 			m_head = 0;
 		}
 		m_bufex.Unlock();
-		
+
 		// parse strings into lines
 		nText = _tcslen(szBuffer);
 
@@ -358,7 +358,7 @@ void BshellInfo::Finished()
 {
 	m_pid = 0;
 #ifdef THREAD_BASED_SHELLPOLL
-	m_devent.Signal();	
+	m_devent.Signal();
 #endif
 	Deinit();
 }
@@ -393,7 +393,7 @@ ERRCODE BshellInfo::Startup(void)
 void CALLBACK BshellInfo::OnTimer(HWND hWnd, UINT msg, UINT id, DWORD now)
 {
 	BshellInfo* pShellTab = (BshellInfo*)GetWindowLong(hWnd, GWL_USERDATA);
-	
+
 	if(pShellTab)
 		pShellTab->Event(0);
 }
@@ -457,7 +457,7 @@ ERRCODE BshellInfo::GetErrorLine(LPCTSTR lpText, LPTSTR fName, int nfName, int* 
 
 	if(*fp < '0' || *fp > '9')
 	{
-		// no error number 
+		// no error number
 		//
 		return errFAILURE;
 	}
@@ -469,7 +469,7 @@ ERRCODE BshellInfo::GetErrorLine(LPCTSTR lpText, LPTSTR fName, int nfName, int* 
 	//
 	while(*fp != _T('.') && *fp != _T('\\') && *fp != _T('/') && fp >= lpText)
 		fp--;
-	
+
 	// now find the end of the filename
 	//
 	while(IsPathChar(*fp))
@@ -483,7 +483,7 @@ ERRCODE BshellInfo::GetErrorLine(LPCTSTR lpText, LPTSTR fName, int nfName, int* 
 
 	/*printf("begin=%s\n", fp);*/
 	// Now find the beginning of a filename
-	//	
+	//
 	// this assumes there is a least one non-white space
 	// between filename and line number text
 	//
@@ -527,4 +527,4 @@ ERRCODE BshellInfo::GetErrorLine(LPCTSTR lpText, LPTSTR fName, int nfName, int* 
 	if(lino && fName[0])
 		return errOK;
 	return errFAILURE;
-}	
+}

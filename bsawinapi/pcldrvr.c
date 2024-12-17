@@ -4,8 +4,8 @@
 #define zEB(z)   ((LPSTR)((z)->drvrData[0]))
 #define zFILE(z)  ((FILE*)((z)->drvrData[1]))
 #define zZWND(z) ((LPZWND)((z)->drvrData[2]))
-#define zCOLOR(z) ((int)((z)->drvrData[3]))
-#define zPAGES(z) ((int)((z)->drvrData[4]))
+#define zCOLOR(z) ((int)(uintptr_t)((z)->drvrData[3]))
+#define zPAGES(z) ((int)(uintptr_t)((z)->drvrData[4]))
 
 //**************************************************************************
 extern void _emit(LPZDRVR zDrvr, char* lpcmd);
@@ -24,18 +24,18 @@ void _pcl_setbkg(LPZDRVR zDrvr,  HBRUSH hbrBkg)
 BOOL _pcl_setFont(LPZDRVR zDrvr, HFONT hFont)
 {
 	LPZFONT		zFont;
-	
+
 	if(hFont)
 	{
 		char*     emitBuf;
-	
+
 		if(! zDrvr)						return FALSE;
 		if(! (emitBuf = zEB(zDrvr))) 	return FALSE;
-		
+
 		zFont = (LPZFONT)(((LPZGDIOBJ)hFont)->obj);
-		
+
 		sprintf(emitBuf, "\033(s%ldV",
-				BSA_SCALE_CHAR_TO_PS(zFont->tm.tmAscent));				
+				BSA_SCALE_CHAR_TO_PS(zFont->tm.tmAscent));
 		_emit(zDrvr, emitBuf);
 		sprintf(emitBuf, "\033(s%dS", zFont->tm.tmItalic ? 1 : 0);
 		_emit(zDrvr, emitBuf);
@@ -50,7 +50,7 @@ BOOL _pcl_setFont(LPZDRVR zDrvr, HFONT hFont)
 
 //**************************************************************************
 BOOL _pcl_setPen(LPZDRVR zDrvr, HPEN hPen)
-{	
+{
 //	LPZGDIOBJ zObj;
 //	LPZPEN	  zPen;
 
@@ -64,24 +64,24 @@ BOOL _pcl_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 	LPSTR 		pAnsi;
 	int			h;
 	char*		emitBuf;
-	
+
 	if(nText == 0 || ! lpText)	 return FALSE;
 	if(! zDrvr)	      			 return FALSE;
 	if(! (emitBuf = zEB(zDrvr))) return FALSE;
-	
+
 	zFont = NULL;
 	if(zDrvr->zGC && zDrvr->zGC->hFONT)
 		zFont = (LPZFONT)(((LPZGDIOBJ)(zDrvr->zGC->hFONT))->obj);
-	
+
 	if(! zFont)
 		h = 13;
 	else
 		h = zFont->tm.tmAscent;
-	
+
 	if((pAnsi = (LPSTR)malloc(3*nText + sizeof(TCHAR))) != NULL)
 	{
 		int i, j;
-		
+
 		for(i = j = 0; i < nText; i++)
 		{
 			pAnsi[j++] = (char)lpText[i];
@@ -101,12 +101,12 @@ BOOL _pcl_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 BOOL _pcl_moveTo(LPZDRVR zDrvr, int x, int y)
 {
 	char*		emitBuf;
-	
+
 	if(! zDrvr)	      			 return FALSE;
 	if(! (emitBuf = zEB(zDrvr))) return FALSE;
-		
+
 	sprintf(emitBuf, "\033*p%dX\033*p%dY", x, y);
-	_emit(zDrvr, emitBuf);	
+	_emit(zDrvr, emitBuf);
 	return TRUE;
 }
 
@@ -133,29 +133,29 @@ int _pcl_devCaps(LPZDRVR zDrvr, int cap)
 {
 	switch(cap)
 	{
-	case DRIVERVERSION: 	    // Device driver version                    
+	case DRIVERVERSION: 	    // Device driver version
 		return 1;
-	case TECHNOLOGY:    	    // Device classification                  
+	case TECHNOLOGY:    	    // Device classification
 		return DT_RASPRINTER;
-	case HORZSIZE:      	    // Horizontal size in millimeters 
+	case HORZSIZE:      	    // Horizontal size in millimeters
 		return (zDrvr->vpw * 254) / (zDrvr->xres * 10);
-	case VERTSIZE:      	    // Vertical size in millimeters    
+	case VERTSIZE:      	    // Vertical size in millimeters
 		return (zDrvr->vph * 254) / (zDrvr->yres * 10);
-	case HORZRES:       	    // Horizontal width in pixels        
+	case HORZRES:       	    // Horizontal width in pixels
 		return zDrvr->vpw;
-	case VERTRES:       	    // Vertical height in pixels           
+	case VERTRES:       	    // Vertical height in pixels
 		return zDrvr->vph;
-	case BITSPIXEL:     	    // Number of bits per pixel         
+	case BITSPIXEL:     	    // Number of bits per pixel
 		return zDrvr->vpd;
 	case PLANES:        	    // Number of planes
 		return 1;
-	case NUMBRUSHES:    	    // Number of brushes the device has 
-	case NUMPENS:       	    // Number of pens the device has   
-	case NUMMARKERS:    	    // Number of markers the device has 
-	case NUMFONTS:      	    // Number of fonts the device has 
-	case NUMCOLORS:     	    // Number of colors the device supports  
+	case NUMBRUSHES:    	    // Number of brushes the device has
+	case NUMPENS:       	    // Number of pens the device has
+	case NUMMARKERS:    	    // Number of markers the device has
+	case NUMFONTS:      	    // Number of fonts the device has
+	case NUMCOLORS:     	    // Number of colors the device supports
 		return 0;
-	case PDEVICESIZE:   	    // Size required for device descriptor 
+	case PDEVICESIZE:   	    // Size required for device descriptor
 		return 0;
 	case CURVECAPS:     	    // Curve capabilities
 	case LINECAPS:      	    // Line capabilities
@@ -171,9 +171,9 @@ int _pcl_devCaps(LPZDRVR zDrvr, int cap)
 		return 1;
 	case ASPECTXY:      	    // Length of the hypotenuse
 		return 1;
-	case LOGPIXELSX:   		    // Logical pixels/inch in X 
+	case LOGPIXELSX:   		    // Logical pixels/inch in X
 		return 72;
-	case LOGPIXELSY:   		    // Logical pixels/inch in Y 
+	case LOGPIXELSY:   		    // Logical pixels/inch in Y
 		return 72;
 	case SIZEPALETTE:  		    // Number of entries in physical palette
 		return 256;
@@ -187,10 +187,10 @@ int _pcl_devCaps(LPZDRVR zDrvr, int cap)
 		return zDrvr->vph;
 	case PHYSICALOFFSETX: 		// Physical Printable Area x margin
 		return zDrvr->xmar;
-	case PHYSICALOFFSETY: 		// Physical Printable Area y margin 
+	case PHYSICALOFFSETY: 		// Physical Printable Area y margin
 		return zDrvr->ymar;
-	case SCALINGFACTORX:  		// Scaling factor x 
-	case SCALINGFACTORY:  		// Scaling factor y 
+	case SCALINGFACTORX:  		// Scaling factor x
+	case SCALINGFACTORY:  		// Scaling factor y
 		return 1;
 	default:
 		return -1;
@@ -202,19 +202,19 @@ BOOL _pcl_startDoc(LPZDRVR zDrvr, CONST DOCINFO* pInfo)
 {
 	// output file
 	zDrvr->drvrData[1] = stdout;
-	// colordevice	
+	// colordevice
 	zDrvr->drvrData[3] = (LPVOID)(long)((zDrvr->vpd > 1) ? 1 : 0);
 	// page count
 	zDrvr->drvrData[4] = (LPVOID)(long)0;
-	
+
 	if(pInfo && pInfo->lpszOutput)
 	{
 		FILE* outf;
 		char  fname[MAX_PATH];
-		
+
 		TCharToChar(fname, pInfo->lpszOutput);
-		
-		outf = fopen(fname, "wb");		
+
+		outf = fopen(fname, "wb");
 		if(outf) zDrvr->drvrData[1] = outf;
 	}
 	return TRUE;
@@ -228,17 +228,17 @@ BOOL _pcl_endDoc(LPZDRVR zDrvr)
 			fclose(zFILE(zDrvr));
 	return TRUE;
 }
-	
+
 //**************************************************************************
 BOOL _pcl_startPage(LPZDRVR zDrvr)
 {
 	char* emitBuffer;
 	int page;
-	
+
 	emitBuffer 	= zEB(zDrvr);
 	page		= zPAGES(zDrvr);
 	zDrvr->drvrData[4] = (LPVOID)(long)++page;
-	
+
 	// emit unit of measure, etc commands
 	//
 	_emit(zDrvr, "\033&u720D"); // decipoints
@@ -251,7 +251,7 @@ BOOL _pcl_endPage(LPZDRVR zDrvr)
 	_emit(zDrvr, "\033E");
 	return TRUE;
 }
-	
+
 //**************************************************************************
 void _w_deletePCLDRVR(LPZDRVR zDrvr)
 {
@@ -269,7 +269,7 @@ LPZDRVR _w_newPCLDRVR(LPZGC zGC, LPZWND zWnd)
 	int		papl, papr;
 
 	if(! (zDrvr = (LPZDRVR)malloc(sizeof(ZDRVR))))
-		return NULL;	
+		return NULL;
 	memset(zDrvr, 0, sizeof(ZDRVR));
 
 	// pcl base units are 1/300 inch, but I change that
@@ -277,10 +277,10 @@ LPZDRVR _w_newPCLDRVR(LPZGC zGC, LPZWND zWnd)
 	// is actually a more native pcl unit
 	//
 	// paper table units are
-	// in mm, so need to convert. 
+	// in mm, so need to convert.
 	//
-	papx = 800 * 254 / 1000;  	// 8.0 inches 
-	papy = 1050 * 254 / 1000;  	// 10.5 inches 
+	papx = 800 * 254 / 1000;  	// 8.0 inches
+	papy = 1050 * 254 / 1000;  	// 10.5 inches
 	papt = 25 * 254 / 1000;		// top margin = 0.25 inches
 	papb = 25 * 254 / 1000;		// bot margin = 0.25 inches
 	papl = 25 * 254 / 1000;		// left margin = 0.25 inches
@@ -295,11 +295,11 @@ LPZDRVR _w_newPCLDRVR(LPZGC zGC, LPZWND zWnd)
 	zDrvr->vpw  =  papx * zDrvr->xres * 10 / 254;
 	zDrvr->vph  =  papy * zDrvr->yres * 10 / 254;
 	zDrvr->vpd  =  24; // color device
-	
+
 	zDrvr->drvrData[0] = malloc(256);
 	zDrvr->drvrData[1] = zGC;
 	zDrvr->drvrData[2] = zWnd;
-	
+
 	zDrvr->_delete 	= _w_deletePCLDRVR;
 	zDrvr->_setFrg 	= _pcl_setfrg;
 	zDrvr->_setBkg 	= _pcl_setbkg;
@@ -314,9 +314,9 @@ LPZDRVR _w_newPCLDRVR(LPZGC zGC, LPZWND zWnd)
 
 	zDrvr->_startDoc 	= _pcl_startDoc;
 	zDrvr->_endDoc 		= _pcl_endDoc;
-	zDrvr->_startPage 	= _pcl_startPage;	
-	zDrvr->_endPage 	= _pcl_endPage;	
-	
+	zDrvr->_startPage 	= _pcl_startPage;
+	zDrvr->_endPage 	= _pcl_endPage;
+
 	return zDrvr;
 }
 
