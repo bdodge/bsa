@@ -41,7 +41,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	RECT	rc;
 	MSG		msg;
 	int		wx, wy, ww, wh;
-	
+
 	bool	showComments 		= false;
 	bool	showLineNums		= false;
 	bool	showTabs			= false;
@@ -50,7 +50,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	bool	viewallBuffers		= true;
 	bool	badswitch			= true;
 	bool	skiparg;
-	
+
 	BufType		 forceType		= btAny;
 	TEXTENCODING forceEncoding	= (TEXTENCODING)-1;
 
@@ -62,11 +62,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 #ifdef DBG_MEM_USE
 	_CrtMemCheckpoint(&memstate);
 #endif
-	g_hInstance = hInstance; 
+	g_hInstance = hInstance;
 
-	// Ensure that the common control DLL is loaded. 
-	InitCommonControls(); 
-	
+	// Ensure that the common control DLL is loaded.
+	InitCommonControls();
+
 	g_hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_BED);
 
 	// register class for text display window
@@ -84,7 +84,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 	ATOM aViewClass = RegisterClass(&wc);
 
-	
+
 	// window class for status bar entry
 	//
 	wc.style			= CS_HREDRAW | CS_VREDRAW;
@@ -103,7 +103,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	// get size of screen to form default window
 	//
 	GetClientRect(GetDesktopWindow(), &rc);
-	
+
 	// get command line to find application name invoked
 	//
 	_tcsncpy(szFile, GetCommandLine(), MAX_PATH);
@@ -161,7 +161,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	// get window size from persistance
 	//
 	Bpersist* pPersist = g_editor->GetPersist();
-	
+
 	// default window placement
 	ww = 8 * (rc.right - rc.left) / 12;
 	wh = 9 * (rc.bottom - rc.top) / 10;
@@ -172,7 +172,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	ERRCODE ec;
 
 	ec = pPersist->GetNvBool(_T("Setup"), isSetup, false);
-	
+
 	if(! isSetup || ec != errOK)
 	{
 		if(RunSetupWizard(pPersist) == errOK)
@@ -212,9 +212,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		return FALSE;
 	}
 	hWnd = g_editor->GetWindow();
-	
-	suppressTabPanes = (strstr(lpCmdLine, "-s") != NULL);
-	viewallBuffers   = (strstr(lpCmdLine, "-1") == NULL);
 
 	// first see if the whole commandline consists of one filename
 	// to take care of cases where another program (or OS shell)
@@ -251,7 +248,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 			for(lpCmd++, skiparg = false; *lpCmd != ' ' && *lpCmd != '\t' && *lpCmd != '\0'; lpCmd++)
 			{
 				lpSwitch = lpCmd;
-				
+
 				for(lpArg = lpSwitch; *lpArg != ' ' && *lpArg != '\t' && *lpArg != '\0';)
 					lpArg++;
 				for(; *lpArg == ' ' || *lpArg == '\t';)
@@ -260,58 +257,62 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 					CharToTChar(szArg, lpArg);
 				else
 					_tcscpy(szArg, _T("cmd line too long"));
-				
+
 				switch(lpSwitch[0])
 				{
 				case 'r':
 					skiparg = true;
 					g_editor->EditBuffer(szArg, true, btTelnet);
 					break;
-	
+
 				case 'h':
 					skiparg = true;
 					g_editor->EditBuffer(szArg, true, btSSH);
 					break;
-	
+
 				case 't':
 					forceType = btText;
 					break;
-	
+
 				case 'x':
 					forceType = btRaw;
 					break;
-	
+
 				case 'c':
 					forceType = btTerm;
 					break;
-	
+
 				case 'I':
 					showComments = true;
 					break;
-	
+
 				case 'B':
 					showTabs = true;
 					break;
-					
+
 				case 'N':
 				case 'n':
 					showLineNums = true;
 					break;
-					
+
 				case 'L':
 				case 'l':
 					g_editor->EditBuffer(NULL, true, btShell);
 					break;
-	
+
 				case 's':
 					suppressTabPanes = true;
 					break;
-					
+
 				case 'p':
 					openDefaultProject = true;
 					g_editor->SetProjectRestore(true);
 					break;
-	
+
+				case '1':
+					viewallBuffers = false;
+					break;
+
 				default:
 					badswitch = true;
 					break;
@@ -401,7 +402,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 				"        -I  show comment lines\n"
 				"        -L  default shell\n"
 				"        -l  shell, filename specifies program to run in shell view\n"
-				"        -s  suppress all other tab panes, just show view\n"				
+				"        -s  suppress all other tab panes, just show file view\n"
 				"        -p  open project file\n\n"
 			);
 #endif
@@ -460,7 +461,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		if(g_editor->GetCurrentView()->GetBuffer())
 			g_editor->SetBufferStatus(g_editor->GetCurrentView()->GetBuffer());
 	}
-	// if "always" run pdb, that means open project on program load, not 
+	// if "always" run pdb, that means open project on program load, not
 	// project load, so open a default project now (quietly) that there
 	// is most likely a view to get search paths from
 	//
@@ -471,7 +472,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		//
 		Bproject::OpenDefaultProject(NULL, g_editor, g_editor->GetProjectRestore(), false);
 	}
-	while(GetMessage(&msg, NULL, 0, 0)) 
+	while(GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -494,7 +495,7 @@ BOOL CALLBACK AboutBed(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_COMMAND:
 
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) 
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
 			return TRUE;
@@ -522,11 +523,11 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	pBed = (Bed*)GetWindowLong(hWnd, GWL_USERDATA);
 
-	switch (message) 
+	switch (message)
 	{
 	case WM_CREATE:
 
-		{ 
+		{
 			LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
 
 			SetWindowLong(hWnd, GWL_USERDATA, (LPARAM)pcs->lpCreateParams);
@@ -547,16 +548,16 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			MoveToEx(hdc, rc.left, rc.bottom, NULL);
 			LineTo(hdc, rc.right, rc.bottom);
 			LineTo(hdc, rc.right, rc.top);
-			SelectObject(hdc, hpenold);	
+			SelectObject(hdc, hpenold);
 			DeleteObject(hpen);
-			
+
 			// br inside
 			hpen	= CreatePen(PS_SOLID, 0, GetSysColor(COLOR_3DLIGHT));
 			hpenold = (HPEN)SelectObject(hdc, hpen);
 			MoveToEx(hdc, rc.left + 1, rc.bottom - 1, NULL);
 			LineTo(hdc, rc.right - 1, rc.bottom - 1);
 			LineTo(hdc, rc.right - 1, rc.top);
-			SelectObject(hdc, hpenold);	
+			SelectObject(hdc, hpenold);
 			DeleteObject(hpen);
 
 			// ul outside
@@ -564,7 +565,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hpenold = (HPEN)SelectObject(hdc, hpen);
 			MoveToEx(hdc, rc.left, rc.top, NULL);
 			LineTo(hdc, rc.right, rc.top);
-			SelectObject(hdc, hpenold);	
+			SelectObject(hdc, hpenold);
 			DeleteObject(hpen);
 
 			// ul inside
@@ -572,7 +573,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			hpenold = (HPEN)SelectObject(hdc, hpen);
 			MoveToEx(hdc, rc.left, rc.top + 1, NULL);
 			LineTo(hdc, rc.right, rc.top + 1);
-			SelectObject(hdc, hpenold);	
+			SelectObject(hdc, hpenold);
 			DeleteObject(hpen);
 		}
 		EndPaint(hWnd, &ps);
@@ -606,7 +607,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				if(w < 32) w = 32;
 				if(h < 32) h = 32;
-		
+
 				if(forceprimary)
 				{
 					// this opens the window in the primary screen
@@ -657,7 +658,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_INITMENU:
-		
+
 		/* build button prompts for default project
 		hMenu = (HMENU)wParam;
 		if(! pBed) pBed = g_editor;
@@ -668,7 +669,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		*/
 		break;
-		
+
 	case WM_INITMENUPOPUP:
 
 		hMenu = (HMENU)wParam;
@@ -684,12 +685,12 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int i;
 
 				// file menu
-			
+
 				// enable close file buttons
 				//
 				EnableMenuItem(hMenu, ID_FILE_CLOSE        , MF_BYCOMMAND | (pBed->GetCurrentView() ? MF_ENABLED : MF_GRAYED));
 				EnableMenuItem(hMenu, ID_FILE_CLOSE_PROJECT, MF_BYCOMMAND | (hasProj ? MF_ENABLED : MF_GRAYED));
-				
+
 				EnableMenuItem(hMenu, ID_FILE_CHECKOUT, MF_BYCOMMAND | (hasSCCS ? MF_ENABLED : MF_GRAYED));
 				EnableMenuItem(hMenu, ID_FILE_CHECKIN,  MF_BYCOMMAND | (hasSCCS ? MF_ENABLED : MF_GRAYED));
 				EnableMenuItem(hMenu, ID_FILE_REVERT,   MF_BYCOMMAND | (hasSCCS ? MF_ENABLED : MF_GRAYED));
@@ -702,7 +703,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					TCHAR  shortName[MAX_PATH];
 					LPTSTR pName;
-					
+
 					for(i = 1; i < 64; i++)
 						DeleteMenu(hRecent, 1, MF_BYPOSITION);
 					for(i = 1; i <= 64; i++)
@@ -721,7 +722,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if(hRecent)
 				{
 					LPTSTR pName;
-					
+
 					for(i = 1; i < 64; i++)
 						DeleteMenu(hRecent, 1, MF_BYPOSITION);
 					for(i = 1; i <= 64; i++)
@@ -756,11 +757,11 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				else
 					szMenuText = _T("Find in Files...");
 
-				ModifyMenu(hMenu, ID_EDIT_FINDINFILE, MF_BYCOMMAND | MF_STRING, 
+				ModifyMenu(hMenu, ID_EDIT_FINDINFILE, MF_BYCOMMAND | MF_STRING,
 					ID_EDIT_FINDINFILE, szMenuText);
 
 				pView = pBed ? pBed->GetCurrentView() : NULL;
-				
+
 				if(pView)
 				{
 					if(pView->GetBuffer())
@@ -770,10 +771,10 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						else
 							szMenuText = _T("Add CRs to Line-ends");
 
-						ModifyMenu(hMenu, ID_EDIT_ADVANCED_DROPCR, MF_BYCOMMAND | MF_STRING, 
+						ModifyMenu(hMenu, ID_EDIT_ADVANCED_DROPCR, MF_BYCOMMAND | MF_STRING,
 							ID_EDIT_ADVANCED_DROPCR, szMenuText);
 
-						EnableMenuItem(hMenu, ID_EDIT_ADVANCED_MAKEWRITABLE, 
+						EnableMenuItem(hMenu, ID_EDIT_ADVANCED_MAKEWRITABLE,
 								MF_BYCOMMAND | (pView->GetBuffer()->GetReadOnly() ? MF_ENABLED : MF_GRAYED));
 					}
 					else
@@ -781,7 +782,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						EnableMenuItem(hMenu, ID_EDIT_ADVANCED_MAKEWRITABLE,  MF_BYCOMMAND | MF_GRAYED);
 						EnableMenuItem(hMenu, ID_EDIT_ADVANCED_DROPCR,  MF_BYCOMMAND | MF_GRAYED);
 					}
-					// setup checks for 
+					// setup checks for
 					//
 					CheckMenuItem(
 									hMenu,
@@ -1204,7 +1205,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_VIEW_COLORS_HIGHLIGHTBACKGROUND:
 			if(pView) { pView->PushParm(kwHighlight, ptColor); pView->Dispatch(SetFrgColor); }
 			break;
-		case ID_VIEW_FONTS_NORMAL: 
+		case ID_VIEW_FONTS_NORMAL:
 		case ID_VIEW_FONTS_QUOTED:
 		case ID_VIEW_FONTS_COMMENT:
 		case ID_VIEW_FONTS_BUILTIN:
@@ -1218,7 +1219,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_VIEW_FONT:
 			{
 				int font;
-				
+
 				switch(wParam)
 				{
 				case ID_VIEW_FONTS_NORMAL:				font = kwPlain;			break;
@@ -1232,7 +1233,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				case ID_VIEW_FONTS_MACRO:				font = kwMacro;			break;
 				case ID_VIEW_FONTS_OPERATOR:			font = kwOperator;		break;
 				case ID_VIEW_FONTS_SPECIALTEXT:			font = kwSpecial;		break;
-				default:	
+				default:
 				case ID_VIEW_FONT:
 														font = -1;				break;
 				}
@@ -1279,7 +1280,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_TOOLS_SHELL:
 			if(pBed) pBed->EditBuffer(NULL, true, btShell);
 			break;
-		
+
 		case ID_TOOLS_REMOTESHELL:
 			if(pBed) pBed->EditBuffer(NULL, true, btTelnet);
 			break;
@@ -1404,7 +1405,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case ID_TOOLS_CLEAR:
 			{
 				bool   isTerm = FALSE;
-				
+
 				if(pView != NULL)
 				{
 					if(! _tcscmp(pView->GetTypeName(), _T("RS232")))
@@ -1480,7 +1481,7 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			bShowit = 0 != (GetMenuState(GetMenu(hWnd), ID_DEBUG_WINDOWS_MEMORY, MF_BYCOMMAND) ^ MF_CHECKED);
 			if(pBed) pBed->ShowPanel(_T("Debug"), _T("Memory"), bShowit);
 			break;
-			
+
 		case ID_HELP_COMMANDS:
 			if(pView) pView->Dispatch(ShowCommands);
 			break;
@@ -1496,9 +1497,9 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				TCHAR	fileName[MAX_PATH];
 				int 	id = wParam -ID_RCNT_FILES;
 				ERRCODE ec;
-				
+
 				ec = pBed->GetRecentFile(id, fileName, MAX_PATH);
-				
+
 				if(ec == errOK)
 					pBed->EditBuffer(fileName, true, btAny);
 			}
@@ -1507,9 +1508,9 @@ LRESULT Bed::OnMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				TCHAR	fileName[MAX_PATH];
 				int 	id = wParam -ID_RCNT_PROJECTS;
 				ERRCODE ec;
-				
+
 				ec = pBed->GetRecentProject(id, fileName, MAX_PATH);
-				
+
 				if(ec == errOK)
 					pBed->OpenProject(fileName, true);
 			}
@@ -1705,6 +1706,6 @@ ERRCODE RunSetupWizard(Bpersist* pPersist)
 	delete pwiz;
 	delete [] pdat;
 	delete [] setupScript;
-	
+
 	return ec;
 }
