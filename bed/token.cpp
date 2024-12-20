@@ -866,7 +866,7 @@ ERRCODE Bview::GetIsLabel(
 						switch(lpToken[0])
 						{
 						case _T(':'):
-							if (incol == (lablen + labcol))
+							if (incol == (labcol + 1))
 							{
 								label = true;
 							}

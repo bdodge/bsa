@@ -693,7 +693,7 @@ LPZTIMER _w_newZTIMER(HWND hWnd, UINT id, UINT elapse, TIMERPROC proc)
 	gettimeofday(&ftv, NULL);
 
 	timer->firetime	   = ftv.tv_sec + elapse / 1000;
-	timer->firemillitm = (ftv.tv_usec * 1000) + (elapse - ((elapse / 1000) * 1000));
+	timer->firemillitm = (ftv.tv_usec / 1000) + (elapse - ((elapse / 1000) * 1000));
 
 	timer->tag		= ZTIMER_TAG;
 	timer->hWnd 	= hWnd;
@@ -819,15 +819,15 @@ void __w_toggle_caret()
 	if(ftv.tv_sec < _zg_caret.nextblinksecs)
 		return;
 	if(ftv.tv_sec == _zg_caret.nextblinksecs)
-		if((ftv.tv_usec * 1000) < (_zg_caret.nextblinkms))
+		if((ftv.tv_usec / 1000) < (_zg_caret.nextblinkms))
 			return;
 	/*
 	_tprintf(_T("toggle now=%d.%d then=%d.%d\n"),
-		_zg_caret.nextblinksecs, _zg_caret.nextblinkms, ftv.tv_sec, (ftv.tv_usec * 1000));
+		_zg_caret.nextblinksecs, _zg_caret.nextblinkms, ftv.tv_sec, (ftv.tv_usec / 1000));
 	*/
 	gettimeofday(&ftv, NULL);
 	_zg_caret.nextblinksecs = ftv.tv_sec;
-	_zg_caret.nextblinkms   = (ftv.tv_usec * 1000) + _zg_caret.blink;
+	_zg_caret.nextblinkms   = (ftv.tv_usec / 1000) + _zg_caret.blink;
 
 	while(_zg_caret.nextblinkms > 1000)
 	{
@@ -860,15 +860,15 @@ int __w_timer_window(LPZTIMER* ppTimer)
 				gott = TRUE;
 			}
 			ts = ztimer->firetime - ftv.tv_sec;
-			tm = ztimer->firemillitm - (ftv.tv_usec * 1000);
+			tm = ztimer->firemillitm - (ftv.tv_usec / 1000);
 
 			if(ts < 0 || (ts == 0 && tm < 0))
 			{
 				ztimer->firetime 	= ftv.tv_sec + ztimer->elapse / 1000;
-				ztimer->firemillitm = (ftv.tv_usec * 1000) +
+				ztimer->firemillitm = (ftv.tv_usec / 1000) +
 						(ztimer->elapse - ((ztimer->elapse / 1000) * 1000));
 				ts = ztimer->firetime - ftv.tv_sec;
-				tm = ztimer->firemillitm - (ftv.tv_usec * 1000);
+				tm = ztimer->firemillitm - (ftv.tv_usec / 1000);
 				*ppTimer = ztimer;
 				return 0;
 			}
