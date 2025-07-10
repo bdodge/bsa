@@ -86,7 +86,7 @@ int _w_xclip_utf8_encode(BYTE* data, int datalen)
 	len = wcslen((WCHAR*)src);
 #else
 	WCHAR* ps = (WCHAR*)src;
-	
+
 	for(len = 0; ps && *ps; ps++)
 	{
 		len++;
@@ -118,7 +118,7 @@ int _w_xclip_utf8_encode(BYTE* data, int datalen)
 		nc = ca | (cb << 8);
 #else
 		nc = (ca << 8) | cb;
-#endif  	  
+#endif
 		if(sizeof(WCHAR) == 4) // it is on Linux, etc.
 		{
 		 cc = (unsigned char)*src++;
@@ -134,7 +134,7 @@ int _w_xclip_utf8_encode(BYTE* data, int datalen)
 		/* next, UTF-8 encode it
 		*/
 		j = 0;
-		
+
 		if (nc < 0x80) {
 			utfbuf[j++] = (unsigned char)nc;
 		}
@@ -159,7 +159,7 @@ int _w_xclip_utf8_encode(BYTE* data, int datalen)
 		}
 	}
 	*dst = '\0';
-	_zg_clipdatalen = dst - _zg_clipdata; 
+	_zg_clipdatalen = dst - _zg_clipdata;
 	return 0;
 }
 
@@ -177,7 +177,7 @@ int _w_xclip_copy(BYTE* data, int datalen)
 		return 1;
 	}
 	memcpy(_zg_clipdata, data, datalen);
-	_zg_clipdatalen = datalen; 
+	_zg_clipdatalen = datalen;
 	_zg_clipdata[_zg_clipdatalen] = 0;
 	_zg_clipdata[_zg_clipdatalen + 1] = 0;
 	_zg_clipdata[_zg_clipdatalen + 2] = 0;
@@ -208,12 +208,12 @@ int _w_xclip_utf8_decode(BYTE* src, int datalen)
 		return 1;
 	}
 	dst = (WCHAR*)_zg_clipdata;
-	
+
 	while(*src && (len > 0))
 	{
 		b = *src++;
 		len--;
-		
+
 		if(b & 0x80)
 		{
 			if(b & 0x20)
@@ -326,7 +326,7 @@ void _w_clipSelectionRequest(XEvent event)
 	XSelectionRequestEvent *req;
 	char* data = NULL;
 	int datalen = 0;
-		
+
 	req = &event.xselectionrequest;
 	/*
 	printf("handle_SelectionRequest: selection=%s, target=%s, property=%s\n",
@@ -359,7 +359,7 @@ void _w_clipSelectionRequest(XEvent event)
 		else
 		{
 			if(_zg_clipformat == CF_TEXT)
-			{			
+			{
 				xclip_provide_selection(req, req->target, 8, (BYTE*)data, datalen);
 			}
 			else
@@ -423,7 +423,7 @@ void _w_clipSelectionRequest(XEvent event)
 void _w_clipSelectionNotify(XEvent event)
 {
 	XSelectionEvent* sn;
-	
+
 	sn = &event.xselection;
 	if(sn->property == None)
 	{
@@ -474,7 +474,7 @@ char* _w_clipGetClipboardData(int* lenret, UINT format)
 
 	*lenret = 0;
 
-	so = XGetSelectionOwner(_zg_display, clipboard_atom);	
+	so = XGetSelectionOwner(_zg_display, clipboard_atom);
 	me = _zg_clipwindow;
 
 	if(so == None)
@@ -491,7 +491,7 @@ char* _w_clipGetClipboardData(int* lenret, UINT format)
 	if(so == me)
 	{
 		data = (BYTE*)XFetchBytes(_zg_display, lenret);
-		
+
 		if(format == CF_TEXT)
 		{
 			if(_zg_clipformat == CF_UNICODETEXT)
@@ -523,14 +523,14 @@ char* _w_clipGetClipboardData(int* lenret, UINT format)
 				//_tprintf(_T("my unidata to uni=%s\n"), data);
 				return (char*)data;
 			}
-		}		
+		}
 	}
 	else if(so != None)
 	{
 		int retformat;
 		unsigned long items, bytesrem;
 		Atom aFormat, type;
-		
+
 		if(format == CF_TEXT)
 		{
 			aFormat = format_string_atom;
@@ -557,16 +557,16 @@ char* _w_clipGetClipboardData(int* lenret, UINT format)
 				CurrentTime
 		);
 		XFlush(_zg_display);
-		
+
 		// pump a few messages to allow conversion to complete
 		// in foreign window (a success in property change)
 		//
 		{
 			MSG msg;
 			int cnt = 0;
-			
+
 			s_gotnot = 0;
-			while(GetMessage(&msg, NULL, 0, 0)) 
+			while(GetMessage(&msg, NULL, 0, 0))
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
@@ -580,7 +580,7 @@ char* _w_clipGetClipboardData(int* lenret, UINT format)
 			}
 		}
 		s_gotnot = 0;
-		
+
 		// see how big the data is
 		//
 		XGetWindowProperty(
@@ -702,7 +702,7 @@ void _w_clipInit(void)
 	// winapi sets _WINAPI_SELECTION_NOTIFY on the root window when acquiring the clipboard.
 	//
 	winapi_selection_notify_atom = XInternAtom(_zg_display, "_WINAPI_SELECTION_NOTIFY", False);
-	
+
 	winapi_clipboard_formats_atom	= XInternAtom(_zg_display, "_WINAPI_CLIPBOARD_FORMATS", False);
 	winapi_primary_owner_atom 		= XInternAtom(_zg_display, "_WINAPI_PRIMARY_OWNER", False);
 	winapi_clipboard_owner_atom		= XInternAtom(_zg_display, "_WINAPI_CLIPBOARD_OWNER", False);
@@ -718,7 +718,7 @@ void _w_clipInit(void)
 #endif
 	targets[num_targets++] = format_string_atom;
 	targets[num_targets++] = XA_STRING;
-	
+
 	// create a hidden unlinked window to own the clip contents
 	//
 	_zg_clipwindow = XCreateSimpleWindow(_zg_display, DefaultRootWindow(_zg_display),
@@ -746,10 +746,10 @@ void _w_clipDeinit(void)
 		_zg_clipdata = NULL;
 	}
 	xclip_notify_change();
-	
+
 	if(_zg_clipwindow)
 	{
-		XDestroyWindow(_zg_display, _zg_clipwindow);		
+		XDestroyWindow(_zg_display, _zg_clipwindow);
 		_zg_clipwindow = 0;
 	}
 }

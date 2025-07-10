@@ -264,7 +264,7 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 			LPTSTR	lpCopied;
 			int		nCopy;
 			int		temp, dex;
-
+			bool    sameline = false;
 
 			if(mla > mlb)
 			{
@@ -278,6 +278,7 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 			}
 			else if(mla == mlb)
 			{
+				sameline = true;
 				if(mca > mcb)
 				{
 					temp = mcb;
@@ -301,7 +302,8 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 					// set copied to the cut buffer (alloc a bunch more than needed since
 					// newlines dont have attributes and better to not count lines)
 					//
-					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, ((nCopy / 2) + 1) * sizeof(char));
+					int alloc_len = ((nCopy / 2) + 1) * sizeof(char);
+					HANDLE hMem = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, alloc_len);
 					LPSTR  pcp = (char*)GlobalLock(hMem);
 
 					EmptyClipboard();
@@ -309,12 +311,20 @@ ERRCODE BviewTerminal::Dispatch(EditCommand command)
 					for(temp = dex = 0; dex < nCopy; temp++)
 					{
 						pcp[temp] = (char)lpCopied[dex];
-						if(pcp[temp] == '\n')
+						if(pcp[temp] == '\n') {
+							if(sameline && (dex == nCopy - 1))
+								pcp[temp] = '\0';
 							dex++;
+						}
 						else
 							dex += 3;
 					}
-					pcp[temp] = '\0';
+
+					while (temp < alloc_len)
+					{
+						pcp[temp++] = '\0';
+					}
+
 					GlobalUnlock(hMem);
 					SetClipboardData(CF_TEXT, hMem);
 					CloseClipboard();

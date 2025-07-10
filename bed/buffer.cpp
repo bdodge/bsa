@@ -200,6 +200,7 @@ BufType Bbuffer::SniffType(LPCTSTR pFilename, TEXTENCODING& encoding)
 	case 't': case 'T':
 		if(! _tcsicmp(pExt, _T("tcl")))	return btTCL;
 		if(! _tcsicmp(pExt, _T("tk")))	return btTCL;
+		if(! _tcsicmp(pExt, _T("toy")))	return btJavaScript;
 		break;
 
 	case 'v': case 'V':

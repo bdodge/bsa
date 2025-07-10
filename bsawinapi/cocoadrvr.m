@@ -2224,8 +2224,13 @@ void _w_clipSetClipboardData(char *data, int len, UINT format)
 	if(format == CF_UNICODETEXT)
 		_w_xclip_utf8_encode((BYTE*)data, len);
 	else
+	{
+		xlen = strlen(data);
+		if (xlen < len) {
+			len = xlen;
+		}
 		_w_xclip_copy((BYTE*)data, len);
-
+	}
 	xdata = _w_xclip_data(&xlen);
 	if(xdata && xlen)
 	{
@@ -2235,8 +2240,11 @@ void _w_clipSetClipboardData(char *data, int len, UINT format)
 				length:xlen
 				encoding:NSUTF8StringEncoding
 				];
-	    NSArray *copiedObjects = [NSArray arrayWithObject:string];
-	    [pasteboard writeObjects:copiedObjects];
+		if (string)
+		{
+		    NSArray *copiedObjects = [NSArray arrayWithObject:string];
+		    [pasteboard writeObjects:copiedObjects];
+		}
 	}
 }
 
