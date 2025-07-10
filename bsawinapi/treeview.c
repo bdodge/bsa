@@ -1038,7 +1038,7 @@ void __w_drawTree(HDC hdc, HWND hWnd, LPRECT lprcUpdate, __ptv pTree, int type)
 	}
 	if(type == dtDraw)
 	{
-		// fill rect after last item if 
+		// fill rect after last item if
 		if(y >= lprcUpdate->top && y < lprcUpdate->bottom)
 		{
 			rcl.top    = max(y, lprcUpdate->top);

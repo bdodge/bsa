@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 //
 // File: bhsizer.cpp
-// Desc: application framework 
+// Desc: application framework
 // Auth: Brian Dodge
 //
 // (C)opyright 2003 - 2005 - BSA and Brian Dodge
@@ -51,7 +51,7 @@ ERRCODE Bsizer::Attach(PBAFPANEL pc)
 								(m_edge == frLeft || m_edge == frRight) ?
 										_T("baf_v") :
 										_T("baf_h"),
-								WS_CHILD, 
+								WS_CHILD | WS_CLIPCHILDREN,
 								x, y, w, h,
 								pc->GetWindow(),
 								NULL,
@@ -196,7 +196,7 @@ LRESULT BvertSizer::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				return 0;
 
 			GetClientRect(GetParent(GetParent(m_hwnd)), &rcc);
-			
+
 			if((ptp[0].x + w) > (rcc.right - rcc.left))
 				return 0;
 			if(ptp[0].x > (rcc.right - rcc.left))
@@ -205,7 +205,7 @@ LRESULT BvertSizer::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				return 0;
 
 			MoveWindow(GetParent(m_hwnd), ptp[0].x, ptp[0].y, w, rcp.bottom - rcp.top, TRUE);
-			
+
 			// tell upper structure to modify other windows to accomadate us
 			//
 			if(m_parent)
@@ -285,7 +285,7 @@ LRESULT BhorzSizer::OnMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			h = rcp.bottom - rcp.top;
 			GetCursorPos(&cp);
 			y = cp.y;
-			
+
 			if(m_edge == frBottom)
 			{
 				y -= rcp.top;

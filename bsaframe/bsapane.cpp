@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 //
 // File: bsapane.cpp
-// Desc: application framework 
+// Desc: application framework
 // Auth: Brian Dodge
 //
 // (C)opyright 2003 - 2005 - BSA and Brian Dodge
@@ -20,7 +20,7 @@ BappPane::BappPane(LPCTSTR pName, PBAFPANEL pPanel)
 	m_prev(NULL)
 {
 	SetName(pName);
-	
+
 	m_tabrc.left = m_tabrc.right = m_tabrc.top = m_tabrc.bottom = 0;
 
 	if(pPanel)

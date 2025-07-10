@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------
 //
 // File: bsacomp.cpp
-// Desc: application framework 
+// Desc: application framework
 // Auth: Brian Dodge
 //
 // (C)opyright 2003 - 2005 - BSA and Brian Dodge
@@ -79,7 +79,10 @@ ERRCODE BappComponent::OutlineBox(HDC hdc, LPRECT rc, bool in)
 	HPEN		hpen;
 	HPEN		hpenold;
 
-	if(! rc || ! hdc) return errBAD_PARAMETER;
+	if(! rc || ! hdc)
+	{
+		return errBAD_PARAMETER;
+	}
 
 	rc->right--;
 	rc->bottom--;
@@ -90,16 +93,16 @@ ERRCODE BappComponent::OutlineBox(HDC hdc, LPRECT rc, bool in)
 	MoveToEx(hdc, rc->left, rc->bottom, NULL);
 	LineTo(hdc, rc->right, rc->bottom);
 	LineTo(hdc, rc->right, rc->top - (in ? 0 : 1));
-	SelectObject(hdc, hpenold);	
+	SelectObject(hdc, hpenold);
 	DeleteObject(hpen);
-	
+
 	// br inside
 	hpen	= CreatePen(PS_SOLID, 0, GetSysColor(in ? COLOR_3DLIGHT : COLOR_BTNSHADOW));
 	hpenold = (HPEN)SelectObject(hdc, hpen);
 	MoveToEx(hdc, rc->left + 1, rc->bottom - 1, NULL);
 	LineTo(hdc, rc->right - 1, rc->bottom - 1);
 	LineTo(hdc, rc->right - 1, rc->top);
-	SelectObject(hdc, hpenold);	
+	SelectObject(hdc, hpenold);
 	DeleteObject(hpen);
 
 	// ul outside
@@ -108,7 +111,7 @@ ERRCODE BappComponent::OutlineBox(HDC hdc, LPRECT rc, bool in)
 	MoveToEx(hdc, rc->right - (in ? 0 : 1), rc->top, NULL);
 	LineTo(hdc, rc->left, rc->top);
 	LineTo(hdc, rc->left, rc->bottom);
-	SelectObject(hdc, hpenold);	
+	SelectObject(hdc, hpenold);
 	DeleteObject(hpen);
 
 	// ul inside
@@ -119,7 +122,7 @@ ERRCODE BappComponent::OutlineBox(HDC hdc, LPRECT rc, bool in)
 		MoveToEx(hdc, rc->right - 1 - (in ? 0 : 1), rc->top + 1, NULL);
 		LineTo(hdc, rc->left + 1, rc->top + 1);
 		LineTo(hdc, rc->left + 1, rc->bottom - 1);
-		SelectObject(hdc, hpenold);	
+		SelectObject(hdc, hpenold);
 		DeleteObject(hpen);
 	}
 	return errOK;

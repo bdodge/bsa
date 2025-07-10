@@ -182,7 +182,6 @@ static int _fillRect(NSGraphicsContext *context, CGColorRef color, CGBlendMode b
 
 	if(! g_indraw)
 	{
-		printf("draw outside drawrect!\n");
 		return 0;
 	}
 	//_tprintf(_T("fr %d.%d %d,%d\n"), x,y,w,h);
@@ -191,6 +190,7 @@ static int _fillRect(NSGraphicsContext *context, CGColorRef color, CGBlendMode b
 	fr.origin.y = (CGFloat)y;
 	fr.size.width = (CGFloat)w;
 	fr.size.height = (CGFloat)h;
+
 	CGContextRef cgcontext = [context CGContext];
 	CGContextSetFillColorWithColor(cgcontext, color);
 	CGContextSetBlendMode(cgcontext, blendMode);
@@ -314,8 +314,8 @@ BOOL _cocoa_textOut(LPZDRVR zDrvr, int x, int y, LPCTSTR lpText, int nText)
 		CGFloat lw, la, ld, ll;
 		lw = CTLineGetTypographicBounds(line, &la, &ld, &ll);
 		_fillRect(zXGC(zDrvr), background, kCGBlendModeNormal, x, y, (int)(lw + 0.9), (int)(la + ld + 0.8));
-		CGContextSetTextPosition(context, x, y + zFont->tm.tmAscent);
 
+		CGContextSetTextPosition(context, x, y + zFont->tm.tmAscent);
 		CTLineDraw(line, context);
 
 		CFRelease(line);
@@ -902,9 +902,16 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 		context = [NSGraphicsContext graphicsContextWithWindow:nw];
 	}
 	#endif
+	if (g_indraw && !context)
+	{
+		_tprintf(_T("Error - no ctx in draw\n"));
+	}
+
 	zDrvr->drvrData[0] = (LPVOID)context;
 	// push state
 	[context saveGraphicsState];
+
+	context.compositingOperation = NSCompositingOperationCopy;
 
 	zDrvr->_delete 	= _w_deleteCOCOADRVR;
 
@@ -972,35 +979,40 @@ LPZDRVR _w_newCOCOADRVR(LPZGC zGC, LPZWND zWnd)
 
 	if (zWnd)
 	{
+		RECT rcw;
 		RECT rcd;
 		WNDPROC  proc;
 		long	 rv;
 		int      fErase;
 
-		GetWindowRect(zWnd, &rcd);
-
-		// clip dirty rect to window
-		if (dirtyRect.origin.x < 0)
-		{
-			dirtyRect.origin.x = 0;
-		}
-		if (dirtyRect.origin.y < 0)
-		{
-			dirtyRect.origin.y = 0;
-		}
-		if (dirtyRect.size.height > (rcd.bottom - rcd.top))
-		{
-			dirtyRect.size.height = rcd.bottom - rcd.top + 1;
-		}
-		if (dirtyRect.size.width > (rcd.bottom - rcd.top))
-		{
-			dirtyRect.size.width = rcd.right - rcd.left + 1;
-		}
-
 		rcd.left   = (int)dirtyRect.origin.x;
 		rcd.top    = (int)dirtyRect.origin.y;
 		rcd.right  = rcd.left + (int)dirtyRect.size.width;
 		rcd.bottom = rcd.top  + (int)dirtyRect.size.height;
+
+		GetClientRect(zWnd, &rcw);
+
+		//_tprintf(_T("dr %d,%d %d,%d"), rcd.left,rcd.top,rcd.right,rcd.bottom);
+		//_tprintf(_T("   wr %d,%d %d,%d\n"), rcw.left,rcw.top,rcw.right,rcw.bottom);
+
+		// clip dirty rect to window area
+		if (rcd.left < rcw.left)
+		{
+			rcd.left = rcw.left;
+		}
+		if (rcd.top < rcw.top)
+		{
+			rcd.top = rcw.top;
+		}
+		if (rcd.right > rcw.right)
+		{
+			rcd.right = rcw.right;
+		}
+		if (rcd.bottom > rcw.bottom)
+		{
+			rcd.bottom = rcw.bottom;
+		}
+
 		fErase = [self needsErase] ? TRUE : FALSE;
 		[self setNeedsErase:NO];
 		InvalidateRect(zWnd, &rcd, fErase);
@@ -2066,6 +2078,7 @@ Window _w_createWindow(const char *title, DWORD dwStyle, HBRUSH bkg, int bkga,
 	//printf("CreateWind %s %d,%d %d,%d\n", title, x, y, w, h);
 
 	view = [[ZWindow alloc] initWithFrame:rcw];
+	view.clipsToBounds = true;
 
 	style = 0;
 	if (dwStyle & (WS_SYSMENU | WS_CAPTION))
@@ -2130,7 +2143,6 @@ Window _w_createWindow(const char *title, DWORD dwStyle, HBRUSH bkg, int bkga,
 			}
 		}
     	[nw setOpaque:YES];
-
 #if 1
 		if(dwStyle & (WS_SYSMENU | WS_CAPTION))
 		{
